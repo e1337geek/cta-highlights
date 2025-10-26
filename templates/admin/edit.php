@@ -33,6 +33,11 @@ $defaults = array(
 );
 
 $cta = wp_parse_args( $cta, $defaults );
+
+// Ensure arrays are actually arrays (in case of empty values from DB)
+$cta['post_types'] = is_array( $cta['post_types'] ) ? $cta['post_types'] : array();
+$cta['category_ids'] = is_array( $cta['category_ids'] ) ? $cta['category_ids'] : array();
+$cta['storage_conditions'] = is_array( $cta['storage_conditions'] ) ? $cta['storage_conditions'] : array();
 ?>
 
 <div class="wrap">
@@ -58,6 +63,7 @@ $cta = wp_parse_args( $cta, $defaults );
 
 	<form method="post" action="">
 		<?php wp_nonce_field( 'cta_auto_insert_save' ); ?>
+		<input type="hidden" name="page" value="cta-auto-insert">
 		<input type="hidden" name="cta_id" value="<?php echo esc_attr( $cta['id'] ); ?>">
 		<input type="hidden" name="cta_auto_insert_save" value="1">
 

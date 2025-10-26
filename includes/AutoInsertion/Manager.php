@@ -86,6 +86,9 @@ class Manager {
 
 		// Enqueue scripts for storage condition evaluation
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
+		// Check if we need to force enqueue base assets for auto-inserted CTAs with shortcodes
+		add_filter( 'cta_highlights_force_enqueue', array( $this, 'check_auto_insert_shortcodes' ) );
 	}
 
 	/**
@@ -212,6 +215,45 @@ class Manager {
 	}
 
 	/**
+	 * Check if auto-inserted CTAs contain the [cta_highlights] shortcode
+	 * This ensures base assets are enqueued for the highlight feature
+	 *
+	 * @param bool $force Current force enqueue value.
+	 * @return bool
+	 */
+	public function check_auto_insert_shortcodes( $force ) {
+		// If already forced, return early
+		if ( $force ) {
+			return $force;
+		}
+
+		// Only check on singular posts
+		if ( ! is_singular() ) {
+			return $force;
+		}
+
+		global $post;
+
+		if ( ! $post instanceof \WP_Post ) {
+			return $force;
+		}
+
+		// Get matching CTA for this post
+		$cta = $this->find_matching_cta( $post );
+
+		if ( ! $cta ) {
+			return $force;
+		}
+
+		// Check if CTA content contains the [cta_highlights] shortcode
+		if ( ! empty( $cta['content'] ) && has_shortcode( $cta['content'], 'cta_highlights' ) ) {
+			return true; // Force enqueue
+		}
+
+		return $force;
+	}
+
+	/**
 	 * Enqueue scripts for auto-insertion
 	 *
 	 * @return void
@@ -221,11 +263,13 @@ class Manager {
 			return;
 		}
 
-		// Enqueue auto-insertion JavaScript (depends on base script)
+		// Enqueue auto-insertion JavaScript
+		// Note: This script is independent and doesn't require cta-highlights-base
+		// It only evaluates storage conditions for auto-inserted CTAs
 		wp_enqueue_script(
 			'cta-highlights-auto-insert',
 			CTA_HIGHLIGHTS_URL . 'assets/js/auto-insert.js',
-			array( 'cta-highlights-base' ),
+			array(), // No dependencies - standalone script
 			CTA_HIGHLIGHTS_VERSION,
 			true
 		);

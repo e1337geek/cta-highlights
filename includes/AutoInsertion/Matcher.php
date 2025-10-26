@@ -40,8 +40,6 @@ class Matcher {
 		}
 
 		// Storage conditions are evaluated client-side in JavaScript
-		// We'll add a data attribute for JS to evaluate
-
 		return true;
 	}
 

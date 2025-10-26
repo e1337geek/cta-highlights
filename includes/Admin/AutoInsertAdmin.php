@@ -81,7 +81,9 @@ class AutoInsertAdmin {
 	 * @return void
 	 */
 	public function handle_actions() {
-		if ( ! isset( $_GET['page'] ) || 'cta-auto-insert' !== $_GET['page'] ) {
+		// Check if we're on the right page (check both GET and POST for page parameter)
+		$page = isset( $_GET['page'] ) ? $_GET['page'] : ( isset( $_POST['page'] ) ? $_POST['page'] : '' );
+		if ( 'cta-auto-insert' !== $page ) {
 			return;
 		}
 

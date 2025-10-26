@@ -154,11 +154,13 @@ class Inserter {
 			'cta-highlights-auto-inserted',
 		);
 
+		$has_storage_conditions = ! empty( $cta['storage_conditions'] );
+
 		$data_attrs = array(
-			'data-auto-insert'         => 'true',
-			'data-cta-id'              => absint( $cta['id'] ),
-			'data-storage-condition'   => esc_attr( $storage_condition_js ),
-			'data-has-storage-condition' => ! empty( $cta['storage_conditions'] ) ? 'true' : 'false',
+			'data-auto-insert'           => 'true',
+			'data-cta-id'                => absint( $cta['id'] ),
+			'data-storage-condition'     => esc_attr( $storage_condition_js ),
+			'data-has-storage-condition' => $has_storage_conditions ? 'true' : 'false',
 		);
 
 		$classes_str   = implode( ' ', array_map( 'esc_attr', $classes ) );
@@ -172,10 +174,15 @@ class Inserter {
 		// Process shortcodes in content
 		$content = do_shortcode( $content );
 
+		// Only hide with display:none if there are storage conditions to evaluate
+		// Otherwise, show it immediately
+		$style = $has_storage_conditions ? ' style="display:none;"' : '';
+
 		return sprintf(
-			'<div class="%s"%s style="display:none;">%s</div>',
+			'<div class="%s"%s%s>%s</div>',
 			$classes_str,
 			$data_attrs_str,
+			$style,
 			$content
 		);
 	}

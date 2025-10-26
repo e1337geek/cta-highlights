@@ -271,7 +271,20 @@ class Database {
 	 * @return array Prepared data.
 	 */
 	private function prepare_data( $data ) {
-		$prepared = array();
+		// Always initialize all fields with defaults to match DB column order
+		$prepared = array(
+			'name'                => '',
+			'content'             => '',
+			'status'              => 'active',
+			'post_types'          => wp_json_encode( array() ),
+			'category_mode'       => 'include',
+			'category_ids'        => wp_json_encode( array() ),
+			'storage_conditions'  => wp_json_encode( array() ),
+			'insertion_direction' => 'forward',
+			'insertion_position'  => 3,
+			'fallback_behavior'   => 'end',
+			'fallback_cta_id'     => null,
+		);
 
 		// String fields
 		if ( isset( $data['name'] ) ) {
@@ -315,7 +328,7 @@ class Database {
 			$prepared['fallback_cta_id'] = ! empty( $data['fallback_cta_id'] ) ? absint( $data['fallback_cta_id'] ) : null;
 		}
 
-		// JSON fields
+		// JSON fields - always encode arrays
 		if ( isset( $data['post_types'] ) ) {
 			$prepared['post_types'] = wp_json_encode( (array) $data['post_types'] );
 		}
