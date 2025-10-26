@@ -1,0 +1,21 @@
+# Claude Code user configuration
+CLAUDE.md
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Dependency directories
+node_modules/
+vendor/
+
+# Build files
+*.min.js
+*.min.css
+*.map

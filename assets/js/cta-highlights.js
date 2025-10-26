@@ -11,52 +11,163 @@
 
 	/**
 	 * Storage Manager
-	 * Handles cooldown tracking using localStorage
+	 * Handles cooldown tracking using localStorage with cookie fallback
 	 */
 	class StorageManager {
 		/**
+		 * Set a cookie
+		 *
+		 * @param {string} name Cookie name
+		 * @param {string} value Cookie value
+		 * @param {number} expirySeconds Expiry time in seconds
+		 */
+		setCookie(name, value, expirySeconds) {
+			const expiryDate = new Date();
+			expiryDate.setTime(expiryDate.getTime() + (expirySeconds * 1000));
+			const expires = `expires=${expiryDate.toUTCString()}`;
+
+			// Use path=/ to make cookie available across the entire site
+			document.cookie = `${name}=${value};${expires};path=/;SameSite=Lax`;
+		}
+
+		/**
+		 * Get a cookie value
+		 *
+		 * @param {string} name Cookie name
+		 * @returns {string|null} Cookie value or null if not found
+		 */
+		getCookie(name) {
+			const nameEQ = `${name}=`;
+			const cookies = document.cookie.split(';');
+
+			for (let i = 0; i < cookies.length; i++) {
+				let cookie = cookies[i];
+				while (cookie.charAt(0) === ' ') {
+					cookie = cookie.substring(1);
+				}
+				if (cookie.indexOf(nameEQ) === 0) {
+					return cookie.substring(nameEQ.length);
+				}
+			}
+			return null;
+		}
+
+		/**
+		 * Remove a cookie
+		 *
+		 * @param {string} name Cookie name
+		 */
+		removeCookie(name) {
+			document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+		}
+
+		/**
 		 * Set a value with expiry time
-		 * 
+		 * Uses localStorage first, falls back to cookies if unavailable
+		 *
 		 * @param {string} key Storage key
 		 * @param {number} expirySeconds Expiry time in seconds
 		 */
 		set(key, expirySeconds) {
 			const expiryTime = Date.now() + (expirySeconds * 1000);
-			
+			const data = JSON.stringify({
+				timestamp: Date.now(),
+				expiryTime: expiryTime
+			});
+
+			// Try localStorage first
 			try {
-				localStorage.setItem(key, JSON.stringify({
-					timestamp: Date.now(),
-					expiryTime: expiryTime
-				}));
+				localStorage.setItem(key, data);
+				this.log(`Set cooldown in localStorage: ${key}`);
+				return;
 			} catch (e) {
-				this.log('localStorage not available or quota exceeded', e);
+				this.log('localStorage not available or quota exceeded, falling back to cookies', e);
+			}
+
+			// Fallback to cookies
+			try {
+				this.setCookie(key, data, expirySeconds);
+				this.log(`Set cooldown in cookie: ${key}`);
+			} catch (e) {
+				this.log('Cookie storage also failed', e);
 			}
 		}
 
 		/**
 		 * Check if a cooldown is active
-		 * 
+		 * Checks localStorage first, then cookies
+		 *
 		 * @param {string} key Storage key
 		 * @returns {boolean} True if cooldown is active
 		 */
 		isCooldownActive(key) {
-			try {
-				const item = localStorage.getItem(key);
-				if (!item) return false;
+			let item = null;
+			let source = null;
 
+			// Try localStorage first
+			try {
+				item = localStorage.getItem(key);
+				if (item) {
+					source = 'localStorage';
+				}
+			} catch (e) {
+				this.log('Error accessing localStorage', e);
+			}
+
+			// Fallback to cookies if not found in localStorage
+			if (!item) {
+				try {
+					item = this.getCookie(key);
+					if (item) {
+						source = 'cookie';
+					}
+				} catch (e) {
+					this.log('Error accessing cookies', e);
+				}
+			}
+
+			// Not found in either storage
+			if (!item) {
+				return false;
+			}
+
+			// Parse and check expiry
+			try {
 				const data = JSON.parse(item);
 				const now = Date.now();
 
 				if (now < data.expiryTime) {
+					this.log(`Cooldown active (${source}): ${key}`);
 					return true;
 				}
 
-				// Expired, clean up
-				localStorage.removeItem(key);
+				// Expired, clean up from both storages
+				this.removeFromBothStorages(key);
 				return false;
 			} catch (e) {
-				this.log('Error checking cooldown', e);
+				this.log('Error parsing cooldown data', e);
+				// Clean up corrupted data
+				this.removeFromBothStorages(key);
 				return false;
+			}
+		}
+
+		/**
+		 * Remove a key from both localStorage and cookies
+		 *
+		 * @param {string} key Storage key
+		 */
+		removeFromBothStorages(key) {
+			try {
+				localStorage.removeItem(key);
+			} catch (e) {
+				// Silent fail - localStorage might not be available
+			}
+
+			try {
+				this.removeCookie(key);
+			} catch (e) {
+				// Silent fail - cookies might not be available
 			}
 		}
 
