@@ -55,6 +55,30 @@
 		<exclude-pattern>*/tests/*</exclude-pattern>
 	</rule>
 
+	<!-- Allow PHPUnit naming conventions in test files -->
+	<rule ref="WordPress.NamingConventions.ValidFunctionName">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+	</rule>
+
+	<!-- Relax documentation requirements for test files -->
+	<rule ref="Squiz.Commenting.FunctionComment">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.Commenting.ClassComment">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.Commenting.InlineComment">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+	</rule>
+	<rule ref="Generic.Commenting.DocComment">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+	</rule>
+
+	<!-- Allow non-Yoda conditions in test files for readability -->
+	<rule ref="WordPress.PHP.YodaConditions">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+	</rule>
+
 	<!-- Template files can have loose file structure -->
 	<rule ref="WordPress.Security.EscapeOutput">
 		<properties>

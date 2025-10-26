@@ -11,6 +11,8 @@
  * Domain Path: /languages
  * Requires at least: 5.8
  * Requires PHP: 7.4
+ *
+ * @package CTAHighlights
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -26,17 +28,17 @@ define( 'CTA_HIGHLIGHTS_URL', plugin_dir_url( __FILE__ ) );
  * PSR-4 Autoloader
  */
 spl_autoload_register(
-	function ( $class ) {
-		$prefix = 'CTAHighlights\\';
+	function ( $class_name ) {
+		$prefix   = 'CTAHighlights\\';
 		$base_dir = __DIR__ . '/includes/';
 
 		$len = strlen( $prefix );
-		if ( 0 !== strncmp( $prefix, $class, $len ) ) {
+		if ( 0 !== strncmp( $prefix, $class_name, $len ) ) {
 			return;
 		}
 
-		$relative_class = substr( $class, $len );
-		$file = $base_dir . str_replace( '\\', '/', $relative_class ) . '.php';
+		$relative_class = substr( $class_name, $len );
+		$file           = $base_dir . str_replace( '\\', '/', $relative_class ) . '.php';
 
 		if ( file_exists( $file ) ) {
 			require $file;
@@ -57,6 +59,15 @@ cta_highlights_init();
  * BACKWARD COMPATIBILITY FUNCTIONS
  */
 
+/**
+ * Legacy shortcode handler (deprecated).
+ *
+ * @deprecated 2.0.0 Use CTAHighlights\Shortcode\Handler::render_shortcode()
+ *
+ * @param array       $atts    Shortcode attributes.
+ * @param string|null $content Shortcode content.
+ * @return string Rendered shortcode output.
+ */
 function cta_highlights_template_shortcode( $atts, $content = null ) {
 	if ( function_exists( '_deprecated_function' ) ) {
 		_deprecated_function( __FUNCTION__, '2.0.0', 'CTAHighlights\Shortcode\Handler::render_shortcode()' );
@@ -70,9 +81,9 @@ $cta_highlights_templates_used = array();
 
 add_action(
 	'cta_highlights_after_template_include',
-	function() {
+	function () {
 		global $cta_highlights_templates_used;
-		$registry                       = CTAHighlights\Template\Registry::instance();
+		$registry                      = CTAHighlights\Template\Registry::instance();
 		$cta_highlights_templates_used = $registry->get_all();
 	}
 );
@@ -104,19 +115,42 @@ register_deactivation_hook( __FILE__, 'cta_highlights_deactivate' );
  * HELPER FUNCTIONS
  */
 
+/**
+ * Get the plugin instance.
+ *
+ * @return CTAHighlights\Core\Plugin Plugin instance.
+ */
 function cta_highlights() {
 	return CTAHighlights\Core\Plugin::instance();
 }
 
+/**
+ * Get the template loader instance.
+ *
+ * @return CTAHighlights\Template\Loader Template loader instance.
+ */
 function cta_highlights_get_template_loader() {
 	return cta_highlights()->get_template_loader();
 }
 
+/**
+ * Get the asset manager instance.
+ *
+ * @return CTAHighlights\Assets\Manager Asset manager instance.
+ */
 function cta_highlights_get_asset_manager() {
 	return cta_highlights()->get_asset_manager();
 }
 
-function cta_highlights_render_template( $template_name, $args = array(), $echo = true ) {
+/**
+ * Render a CTA template programmatically.
+ *
+ * @param string $template_name Template name to render.
+ * @param array  $args          Template arguments.
+ * @param bool   $should_echo   Whether to echo or return output.
+ * @return string|void Template output if $should_echo is false.
+ */
+function cta_highlights_render_template( $template_name, $args = array(), $should_echo = true ) {
 	$args['template'] = $template_name;
 
 	$shortcode = '[cta_highlights';
@@ -136,13 +170,20 @@ function cta_highlights_render_template( $template_name, $args = array(), $echo 
 
 	$output = do_shortcode( $shortcode );
 
-	if ( $echo ) {
+	if ( $should_echo ) {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is escaped via do_shortcode.
 		echo $output;
 	} else {
 		return $output;
 	}
 }
 
+/**
+ * Check if content contains the CTA highlights shortcode.
+ *
+ * @param string|null $content Content to check. Defaults to current post content.
+ * @return bool True if shortcode is present.
+ */
 function cta_highlights_has_shortcode( $content = null ) {
 	if ( null === $content ) {
 		global $post;
@@ -155,10 +196,20 @@ function cta_highlights_has_shortcode( $content = null ) {
 	return has_shortcode( $content, 'cta_highlights' );
 }
 
+/**
+ * Get all available CTA templates.
+ *
+ * @return array List of available templates.
+ */
 function cta_highlights_get_templates() {
 	return cta_highlights_get_template_loader()->get_all_templates();
 }
 
+/**
+ * Clear the template cache.
+ *
+ * @return void
+ */
 function cta_highlights_clear_cache() {
 	cta_highlights_get_template_loader()->clear_cache();
 }

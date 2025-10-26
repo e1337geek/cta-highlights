@@ -1,11 +1,45 @@
 <?php
+/**
+ * Template Loader class.
+ *
+ * @package CTAHighlights
+ */
+
 namespace CTAHighlights\Template;
 
+/**
+ * Class Loader
+ *
+ * Handles template loading with theme override support and caching.
+ */
 class Loader {
+	/**
+	 * Template cache array.
+	 *
+	 * @var array
+	 */
 	private $template_cache = array();
+
+	/**
+	 * Cache group name.
+	 */
 	private const CACHE_GROUP = 'cta_highlights_templates';
+
+	/**
+	 * Cache expiry time.
+	 */
 	private const CACHE_EXPIRY = HOUR_IN_SECONDS;
+
+	/**
+	 * Plugin directory path.
+	 *
+	 * @var string
+	 */
 	private $plugin_dir;
+
+	/**
+	 * Template subdirectory in theme.
+	 */
 	private const TEMPLATE_SUBDIR = 'cta-highlights-templates/';
 
 	public function __construct( $plugin_dir ) {
