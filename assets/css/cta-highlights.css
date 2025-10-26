@@ -1,0 +1,224 @@
+/* CTA Highlights Plugin - Minimal Functional Styles
+ * Version: 2.0
+ *
+ * This file contains ONLY the essential styles needed for the highlight functionality.
+ * All decorative/theme styles should be added by the theme developer.
+ *
+ * Key Functionality:
+ * - Overlay: Dims the page background during highlight
+ * - CTA Background: Auto-detected from page background (JS sets CSS variable)
+ * - Close Button: Fixed positioned × button in top-right
+ * - Z-index Stacking: Elevates CTA above overlay while keeping it inline
+ */
+
+/* ============================================
+   Cascade Layers for Proper Specificity Control
+   ============================================ */
+@layer cta-highlights-functional, cta-highlights-utilities;
+
+/* ============================================
+   CSS Custom Properties (Configurable)
+   ============================================ */
+@layer cta-highlights-functional {
+    :root {
+        /* Overlay settings - can be customized via inline styles */
+        --cta-highlights-overlay-color: rgba(0, 0, 0, 0.7);
+
+        /* CTA background - defaults to white, auto-detected by JS */
+        --cta-highlights-cta-background: #ffffff;
+
+        /* Close button sizing */
+        --cta-highlights-close-button-size: 40px;
+
+        /* Animation duration */
+        --cta-highlights-transition-duration: 0.3s;
+
+        /* Semantic z-index layers (low values within stacking contexts) */
+        --cta-highlights-z-overlay: 2;
+        --cta-highlights-z-highlight: 3;
+        --cta-highlights-z-controls: 4;
+    }
+}
+
+/* ============================================
+   Container Query Support
+   ============================================ */
+@layer cta-highlights-functional {
+    .cta-highlights-wrapper {
+        container-type: inline-size;
+        container-name: cta-highlight;
+    }
+}
+
+/* ============================================
+   Highlight Functionality Styles
+   ============================================ */
+@layer cta-highlights-functional {
+
+    /* Active highlight state - creates isolated stacking context */
+    .cta-highlights-wrapper.cta-highlights-active {
+        position: relative;
+        z-index: var(--cta-highlights-z-highlight);
+        isolation: isolate;
+        /* Apply opaque background so CTA stands out above overlay */
+        background-color: var(--cta-highlights-cta-background);
+    }
+
+    /* Ensure children participate in stacking context */
+    .cta-highlights-wrapper.cta-highlights-active > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Overlay - dims the page background */
+    .cta-highlights-overlay {
+        position: fixed;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        inset-inline-end: 0;
+        inset-block-end: 0;
+        background-color: var(--cta-highlights-overlay-color);
+        z-index: var(--cta-highlights-z-overlay);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity var(--cta-highlights-transition-duration) ease,
+                    visibility 0s var(--cta-highlights-transition-duration);
+        pointer-events: none;
+        isolation: isolate;
+    }
+
+    .cta-highlights-overlay.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transition: opacity var(--cta-highlights-transition-duration) ease,
+                    visibility 0s 0s;
+    }
+
+    /* Close button - positioned in top-right */
+    .cta-highlights-close {
+        position: fixed;
+        inset-block-start: 20px;
+        inset-inline-end: 20px;
+        inline-size: var(--cta-highlights-close-button-size);
+        block-size: var(--cta-highlights-close-button-size);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        font-size: 24px;
+        line-height: 1;
+        cursor: pointer;
+        z-index: var(--cta-highlights-z-controls);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity var(--cta-highlights-transition-duration) ease,
+                    visibility 0s var(--cta-highlights-transition-duration),
+                    background-color 0.2s ease,
+                    transform 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
+    .cta-highlights-close.active {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity var(--cta-highlights-transition-duration) ease,
+                    visibility 0s 0s,
+                    background-color 0.2s ease,
+                    transform 0.2s ease;
+    }
+
+    .cta-highlights-close:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+        transform: scale(1.1);
+    }
+
+    .cta-highlights-close:active {
+        transform: scale(0.95);
+    }
+
+    /* Keyboard focus indicator */
+    .cta-highlights-close:focus-visible {
+        outline: 3px solid currentColor;
+        outline-offset: 2px;
+    }
+
+    /* Screen reader only text (accessibility) */
+    .cta-highlights-sr-only {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+    }
+}
+
+/* ============================================
+   Responsive Adjustments (Container Queries)
+   ============================================ */
+@layer cta-highlights-functional {
+
+    /* Small containers: reduce close button size */
+    @container cta-highlight (max-width: 480px) {
+        .cta-highlights-close {
+            inset-block-start: 8px;
+            inset-inline-end: 8px;
+            inline-size: 32px;
+            block-size: 32px;
+            font-size: 18px;
+        }
+    }
+
+    /* Fallback for browsers without container query support */
+    @supports not (container-type: inline-size) {
+        @media (max-width: 480px) {
+            .cta-highlights-close {
+                inset-block-start: 8px;
+                inset-inline-end: 8px;
+                inline-size: 32px;
+                block-size: 32px;
+                font-size: 18px;
+            }
+        }
+    }
+}
+
+/* ============================================
+   Utilities Layer - Accessibility Overrides
+   ============================================ */
+@layer cta-highlights-utilities {
+
+    /* Respect reduced motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+        .cta-highlights-overlay,
+        .cta-highlights-close {
+            transition-duration: 0.01ms;
+            animation-duration: 0.01ms;
+        }
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+        .cta-highlights-overlay {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .cta-highlights-close {
+            border: 2px solid currentColor;
+        }
+    }
+
+    /* Windows High Contrast Mode */
+    @media (forced-colors: active) {
+        .cta-highlights-close {
+            border: 2px solid ButtonText;
+        }
+    }
+}
