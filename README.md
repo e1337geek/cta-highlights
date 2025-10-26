@@ -7,6 +7,13 @@ A flexible WordPress plugin for displaying inline call-to-action elements using 
 - [Overview](#overview)
 - [Core Features](#core-features)
 - [Basic Usage](#basic-usage)
+- [Auto-Insertion Feature](#auto-insertion-feature)
+  - [Creating Auto-Inserted CTAs](#creating-auto-inserted-ctas)
+  - [Display Conditions](#display-conditions)
+  - [LocalStorage Conditions](#localstorage-conditions)
+  - [Insertion Settings](#insertion-settings)
+  - [Fallback Chains](#fallback-chains)
+  - [Disabling Auto-Insertion](#disabling-auto-insertion)
 - [Integration for Theme Developers](#integration-for-theme-developers)
   - [Creating Custom Templates](#creating-custom-templates)
   - [Template Variables](#template-variables)
@@ -41,6 +48,9 @@ The plugin includes a smart cooldown system that prevents highlight effects from
 ## Core Features
 
 - **Inline CTAs**: Insert call-to-action elements anywhere using `[cta_highlights]` shortcode
+- **Auto-Insertion**: Automatically insert CTAs between paragraphs with conditional logic
+- **Advanced Conditionals**: Target specific post types, categories, and localStorage/cookie values
+- **Fallback Chains**: Create smart fallback sequences when conditions aren't met
 - **Optional Highlight Effect**: Draw focus with an overlay and elevated z-index while keeping the CTA in position
 - **Customizable Templates**: Override templates in your theme for complete control
 - **Smart Cooldowns**: Configurable global and template-specific cooldown periods using localStorage
@@ -73,6 +83,201 @@ Get weekly updates delivered to your inbox!
 ]
 Save 50% on all premium plans this week only!
 [/cta_highlights]
+```
+
+---
+
+## Auto-Insertion Feature
+
+The auto-insertion feature allows you to automatically insert CTAs between content paragraphs based on sophisticated conditions, without manually adding shortcodes to every post.
+
+### Creating Auto-Inserted CTAs
+
+1. Navigate to **CTA Auto-Insert** in the WordPress admin menu
+2. Click **Add New**
+3. Fill in the CTA details:
+   - **Name**: Internal identifier (not shown to users)
+   - **Content**: Use the rich text editor to create your CTA
+   - **Status**: Active or Inactive
+
+### Display Conditions
+
+Control where and when your CTAs appear using multiple condition types:
+
+#### Post Types
+
+Select which post types should display the CTA. For example:
+- Posts
+- Pages
+- Custom post types (automatically detected)
+
+**Leave empty to show on all post types.**
+
+#### Categories
+
+Choose how categories affect CTA display:
+
+- **Include Mode**: Show CTA only on posts in selected categories
+- **Exclude Mode**: Show CTA on all posts except those in selected categories
+
+**Example Use Case**: Show newsletter signup only on "News" category posts, or exclude CTAs from "Members Only" category.
+
+### LocalStorage Conditions
+
+Create dynamic conditions based on user behavior tracked in browser localStorage or cookies. Perfect for:
+- Respecting cooldown periods
+- Filtering by referrer source
+- Tracking user interactions
+- Personalization based on previous visits
+
+#### Condition Types
+
+Each condition consists of:
+- **Key**: LocalStorage/cookie key name
+- **Operator**: `=`, `!=`, `>`, `<`, `>=`, `<=`
+- **Value**: Comparison value
+- **Data Type**: String, Number, Boolean, Date, or Regex
+
+**All conditions must pass (AND logic).**
+
+#### Example Conditions
+
+**Newsletter Subscriber Check:**
+```
+Key: hasSubscribed
+Operator: =
+Value: true
+Data Type: Boolean
+```
+
+**Donation Cooldown (30 days):**
+```
+Key: lastDonationDate
+Operator: <
+Value: 2025-01-01
+Data Type: Date
+```
+
+**Visit Count Threshold:**
+```
+Key: visitCount
+Operator: >=
+Value: 5
+Data Type: Number
+```
+
+**Referrer Pattern Match:**
+```
+Key: referrer
+Operator: (regex)
+Value: newsletter\.example\.com
+Data Type: Regex
+```
+
+### Insertion Settings
+
+Control exactly where CTAs appear in your content:
+
+#### Direction
+
+- **Forward**: Count from the beginning of content
+- **Reverse**: Count from the end of content
+
+#### Position
+
+Specify the element number for insertion:
+- **Forward example**: Position 3 = after 3rd element
+- **Reverse example**: Position 2 = before last 2 elements
+
+#### Fallback Behavior
+
+When content has fewer elements than specified:
+- **Insert at the end**: Place CTA after the last element
+- **Don't insert (skip)**: Don't show CTA on short content
+
+**Elements** include all HTML tags that are direct children of the post content (paragraphs, headings, lists, blockquotes, etc.).
+
+### Fallback Chains
+
+Create intelligent fallback sequences when primary conditions aren't met. Each CTA can specify another CTA to try if its conditions fail.
+
+#### Example: Gig Harbor Now Use Case
+
+1. **Newsletter Signup CTA**
+   - Position: After 3rd paragraph
+   - Conditions: User has NOT subscribed (`hasSubscribed != true`)
+   - Fallback: Donation CTA
+
+2. **Donation CTA** (Fallback #1)
+   - Position: Before 2nd-to-last paragraph
+   - Conditions: User has NOT donated in last 30 days (`lastDonationDate < 30 days ago`)
+   - Fallback: Ad Placement CTA
+
+3. **Ad Placement CTA** (Fallback #2)
+   - Position: After 3rd paragraph
+   - Conditions: None (always displays)
+   - Fallback: None
+
+**Chain Depth Limit**: 10 CTAs maximum to prevent infinite loops.
+
+### Disabling Auto-Insertion
+
+#### Per-Post Disable
+
+In the post editor sidebar, check:
+- **"Disable auto-inserted CTAs on this post"**
+
+This prevents ALL auto-inserted CTAs on that specific post/page.
+
+#### Programmatic Disable
+
+Use the post meta key directly:
+```php
+update_post_meta( $post_id, '_cta_highlights_disable_auto_insert', '1' );
+```
+
+### Real-World Example
+
+**Scenario**: Local news site wants different CTAs based on user engagement:
+
+```
+Primary CTA: Newsletter Signup
+- Show on: Posts (all categories)
+- Position: After 3rd paragraph
+- Condition: localStorage.subscribedNewsletter != "true"
+- Fallback: Donation CTA
+
+Fallback CTA: Donation Request
+- Show on: Posts (all categories)
+- Position: 2 paragraphs from end (reverse)
+- Condition: localStorage.lastDonation < (30 days ago)
+- Fallback: Standard Ad
+
+Final Fallback: Google Ad Manager Tag
+- Show on: Posts (all categories)
+- Position: After 3rd paragraph
+- Condition: None
+- Fallback: None
+```
+
+### Analytics Integration
+
+Auto-inserted CTAs automatically fire events compatible with:
+
+- **Google Analytics 4 (gtag.js)**
+- **Google Analytics Universal (analytics.js)**
+- **Custom Events**: Listen for `ctaAutoInsertEvent` on `document`
+
+Events tracked:
+- `cta_auto_insert_shown`: CTA passed conditions and was displayed
+- `cta_auto_insert_hidden`: CTA failed conditions and was removed
+
+**Custom Event Listener:**
+```javascript
+document.addEventListener('ctaAutoInsertEvent', function(e) {
+  console.log('CTA Event:', e.detail);
+  // { cta_id: 123, event_category: 'CTA Auto-Insert', event_action: 'cta_auto_insert_shown' }
+});
 ```
 
 ---

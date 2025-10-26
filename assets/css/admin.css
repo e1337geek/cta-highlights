@@ -1,0 +1,75 @@
+/**
+ * Admin styles for CTA Auto-Insert
+ */
+
+.storage-condition-row {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	margin-bottom: 10px;
+	padding: 10px;
+	background: #f9f9f9;
+	border: 1px solid #ddd;
+	border-radius: 3px;
+}
+
+.storage-condition-row input[type="text"] {
+	flex: 1;
+	min-width: 0;
+}
+
+.storage-condition-row select {
+	width: auto;
+	min-width: 100px;
+}
+
+.storage-condition-row .remove-storage-condition {
+	flex-shrink: 0;
+}
+
+#storage-conditions-container {
+	margin-bottom: 15px;
+}
+
+#storage-conditions-container:empty::before {
+	content: "No conditions added yet.";
+	display: block;
+	padding: 10px;
+	color: #666;
+	font-style: italic;
+}
+
+/* Status indicators in list table */
+.status-active {
+	color: #46b450;
+	font-weight: 600;
+}
+
+.status-inactive {
+	color: #dc3232;
+	font-weight: 600;
+}
+
+/* Form layout improvements */
+.cta-auto-insert-form .postbox-header h2 {
+	font-size: 14px;
+}
+
+.cta-auto-insert-form .inside {
+	padding: 12px;
+}
+
+/* Metabox styling */
+.cta-disable-metabox {
+	padding: 10px 12px;
+}
+
+.cta-disable-metabox label {
+	display: block;
+	margin: 8px 0;
+}
+
+.cta-disable-metabox .description {
+	margin-top: 8px;
+	color: #666;
+}

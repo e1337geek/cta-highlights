@@ -4,6 +4,10 @@ use CTAHighlights\Template\Loader;
 use CTAHighlights\Template\Registry;
 use CTAHighlights\Assets\Manager;
 use CTAHighlights\Shortcode\Handler;
+use CTAHighlights\AutoInsertion\Manager as AutoInsertManager;
+use CTAHighlights\AutoInsertion\Database as AutoInsertDatabase;
+use CTAHighlights\Admin\AutoInsertAdmin;
+use CTAHighlights\Admin\PostMetaBox;
 
 final class Plugin {
 	private static $instance = null;
@@ -13,6 +17,9 @@ final class Plugin {
 	private $template_loader;
 	private $asset_manager;
 	private $shortcode_handler;
+	private $auto_insert_manager;
+	private $auto_insert_admin;
+	private $post_meta_box;
 
 	public static function instance() {
 		if ( null === self::$instance ) {
@@ -35,6 +42,7 @@ final class Plugin {
 	private function init_hooks() {
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 		add_action( 'switch_theme', array( $this, 'clear_template_cache' ) );
+		add_action( 'plugins_loaded', array( $this, 'check_database_migration' ) );
 
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			add_action( 'wp_footer', array( $this, 'render_debug_info' ), 999 );
@@ -47,6 +55,16 @@ final class Plugin {
 		$this->asset_manager->init();
 		$this->shortcode_handler = new Handler( $this->template_loader );
 		$this->shortcode_handler->init();
+
+		// Initialize auto-insertion components
+		$this->auto_insert_manager = AutoInsertManager::instance();
+
+		// Initialize admin components (only in admin)
+		if ( is_admin() ) {
+			$auto_insert_db = $this->auto_insert_manager->get_database();
+			$this->auto_insert_admin = new AutoInsertAdmin( $auto_insert_db );
+			$this->post_meta_box = new PostMetaBox();
+		}
 	}
 
 	public function load_textdomain() {
@@ -61,6 +79,12 @@ final class Plugin {
 		$this->template_loader->clear_cache();
 	}
 
+	public function check_database_migration() {
+		if ( AutoInsertDatabase::needs_migration() ) {
+			AutoInsertDatabase::create_table();
+		}
+	}
+
 	public function get_template_loader() {
 		return $this->template_loader;
 	}
@@ -71,6 +95,10 @@ final class Plugin {
 
 	public function get_shortcode_handler() {
 		return $this->shortcode_handler;
+	}
+
+	public function get_auto_insert_manager() {
+		return $this->auto_insert_manager;
 	}
 
 	public function get_version() {
