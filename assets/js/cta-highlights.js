@@ -1,6 +1,6 @@
 /**
  * CTA Highlights - Vanilla JavaScript (No jQuery)
- * Version: 2.0.0
+ * Version: 1.0.0
  * 
  * Handles the optional highlight effect for inline CTA elements.
  * CTAs remain in their inline position - highlight effect adds overlay and elevation.

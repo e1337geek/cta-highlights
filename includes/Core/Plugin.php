@@ -7,7 +7,7 @@ use CTAHighlights\Shortcode\Handler;
 
 final class Plugin {
 	private static $instance = null;
-	private $version = '2.0.0';
+	private $version = '1.0.0';
 	private $plugin_dir;
 	private $plugin_url;
 	private $template_loader;
