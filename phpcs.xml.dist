@@ -31,9 +31,6 @@
 	<rule ref="WordPress-Extra">
 		<!-- Exclude filename rules (WordPress convention is different from PSR-4) -->
 		<exclude name="WordPress.Files.FileName"/>
-
-		<!-- Allow short ternary operator -->
-		<exclude name="WordPress.PHP.DisallowShortTernary"/>
 	</rule>
 
 	<!-- Check for PHP cross-version compatibility -->
