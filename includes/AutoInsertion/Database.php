@@ -21,7 +21,7 @@ class Database {
 	 *
 	 * @var string
 	 */
-	const DB_VERSION = '1.0.0';
+	const DB_VERSION = '1.1.0';
 
 	/**
 	 * Option name for storing database version
@@ -56,6 +56,7 @@ class Database {
 			name varchar(255) NOT NULL,
 			content longtext NOT NULL,
 			status varchar(20) NOT NULL DEFAULT 'active',
+			cta_type varchar(10) NOT NULL DEFAULT 'primary',
 			post_types longtext,
 			category_mode varchar(10) DEFAULT 'include',
 			category_ids longtext,
@@ -68,6 +69,7 @@ class Database {
 			updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 			PRIMARY KEY  (id),
 			KEY status (status),
+			KEY cta_type (cta_type),
 			KEY fallback_cta_id (fallback_cta_id)
 		) $charset_collate;";
 
@@ -110,17 +112,25 @@ class Database {
 		$table_name = self::get_table_name();
 
 		$defaults = array(
-			'status'  => 'active',
-			'orderby' => 'id',
-			'order'   => 'ASC',
+			'status'   => 'active',
+			'cta_type' => null,
+			'orderby'  => 'id',
+			'order'    => 'ASC',
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$where = '';
+		$where_clauses = array();
+
 		if ( ! empty( $args['status'] ) ) {
-			$where = $wpdb->prepare( 'WHERE status = %s', $args['status'] );
+			$where_clauses[] = $wpdb->prepare( 'status = %s', $args['status'] );
 		}
+
+		if ( ! empty( $args['cta_type'] ) ) {
+			$where_clauses[] = $wpdb->prepare( 'cta_type = %s', $args['cta_type'] );
+		}
+
+		$where = ! empty( $where_clauses ) ? 'WHERE ' . implode( ' AND ', $where_clauses ) : '';
 
 		$orderby = sanitize_sql_orderby( "{$args['orderby']} {$args['order']}" );
 
@@ -172,6 +182,7 @@ class Database {
 				'%s', // name
 				'%s', // content
 				'%s', // status
+				'%s', // cta_type
 				'%s', // post_types
 				'%s', // category_mode
 				'%s', // category_ids
@@ -211,6 +222,7 @@ class Database {
 				'%s', // name
 				'%s', // content
 				'%s', // status
+				'%s', // cta_type
 				'%s', // post_types
 				'%s', // category_mode
 				'%s', // category_ids
@@ -276,6 +288,7 @@ class Database {
 			'name'                => '',
 			'content'             => '',
 			'status'              => 'active',
+			'cta_type'            => 'primary',
 			'post_types'          => wp_json_encode( array() ),
 			'category_mode'       => 'include',
 			'category_ids'        => wp_json_encode( array() ),
@@ -299,6 +312,12 @@ class Database {
 			$prepared['status'] = in_array( $data['status'], array( 'active', 'inactive' ), true )
 				? $data['status']
 				: 'active';
+		}
+
+		if ( isset( $data['cta_type'] ) ) {
+			$prepared['cta_type'] = in_array( $data['cta_type'], array( 'primary', 'fallback' ), true )
+				? $data['cta_type']
+				: 'primary';
 		}
 
 		if ( isset( $data['category_mode'] ) ) {

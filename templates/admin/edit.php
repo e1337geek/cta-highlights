@@ -22,6 +22,7 @@ $defaults = array(
 	'name'                => '',
 	'content'             => '',
 	'status'              => 'active',
+	'cta_type'            => 'primary',
 	'post_types'          => array(),
 	'category_mode'       => 'include',
 	'category_ids'        => array(),
@@ -226,6 +227,24 @@ $cta['storage_conditions'] = is_array( $cta['storage_conditions'] ) ? $cta['stor
 											<option value="active" <?php selected( $cta['status'], 'active' ); ?>><?php esc_html_e( 'Active', 'cta-highlights' ); ?></option>
 											<option value="inactive" <?php selected( $cta['status'], 'inactive' ); ?>><?php esc_html_e( 'Inactive', 'cta-highlights' ); ?></option>
 										</select>
+									</label>
+									<br><br>
+									<label>
+										<strong><?php esc_html_e( 'CTA Type:', 'cta-highlights' ); ?></strong><br>
+										<label style="display: block; margin: 5px 0;">
+											<input type="radio" name="cta_type" value="primary" <?php checked( $cta['cta_type'], 'primary' ); ?>>
+											<?php esc_html_e( 'Primary', 'cta-highlights' ); ?>
+											<span style="color: #666; font-size: 12px; display: block; margin-left: 20px;">
+												<?php esc_html_e( 'Can be selected independently', 'cta-highlights' ); ?>
+											</span>
+										</label>
+										<label style="display: block; margin: 5px 0;">
+											<input type="radio" name="cta_type" value="fallback" <?php checked( $cta['cta_type'], 'fallback' ); ?>>
+											<?php esc_html_e( 'Fallback Only', 'cta-highlights' ); ?>
+											<span style="color: #666; font-size: 12px; display: block; margin-left: 20px;">
+												<?php esc_html_e( 'Only used in fallback chains', 'cta-highlights' ); ?>
+											</span>
+										</label>
 									</label>
 								</div>
 								<div id="major-publishing-actions">

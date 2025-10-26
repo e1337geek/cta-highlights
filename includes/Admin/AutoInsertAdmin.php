@@ -146,9 +146,10 @@ class AutoInsertAdmin {
 	private function sanitize_form_data( $post_data ) {
 		$data = array();
 
-		$data['name']    = isset( $post_data['name'] ) ? sanitize_text_field( wp_unslash( $post_data['name'] ) ) : '';
-		$data['content'] = isset( $post_data['content'] ) ? wp_kses_post( wp_unslash( $post_data['content'] ) ) : '';
-		$data['status']  = isset( $post_data['status'] ) ? sanitize_text_field( wp_unslash( $post_data['status'] ) ) : 'active';
+		$data['name']     = isset( $post_data['name'] ) ? sanitize_text_field( wp_unslash( $post_data['name'] ) ) : '';
+		$data['content']  = isset( $post_data['content'] ) ? wp_kses_post( wp_unslash( $post_data['content'] ) ) : '';
+		$data['status']   = isset( $post_data['status'] ) ? sanitize_text_field( wp_unslash( $post_data['status'] ) ) : 'active';
+		$data['cta_type'] = isset( $post_data['cta_type'] ) ? sanitize_text_field( wp_unslash( $post_data['cta_type'] ) ) : 'primary';
 
 		// Post types
 		$data['post_types'] = isset( $post_data['post_types'] ) && is_array( $post_data['post_types'] )

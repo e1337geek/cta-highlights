@@ -144,18 +144,9 @@ class Manager {
 		$prepared = array();
 
 		foreach ( $chain as $cta ) {
-			error_log( '[CTA Prepare] Processing CTA #' . $cta['id'] . ' (' . $cta['name'] . ')' );
-			error_log( '[CTA Prepare] Raw content length: ' . strlen( $cta['content'] ) );
-			error_log( '[CTA Prepare] Has [cta_highlights] shortcode: ' . ( has_shortcode( $cta['content'], 'cta_highlights' ) ? 'YES' : 'NO' ) );
-
 			// Process content (shortcodes, sanitization)
 			$content = wp_kses_post( $cta['content'] );
-			error_log( '[CTA Prepare] After wp_kses_post, has shortcode: ' . ( has_shortcode( $content, 'cta_highlights' ) ? 'YES' : 'NO' ) );
-
 			$content = do_shortcode( $content );
-			error_log( '[CTA Prepare] After do_shortcode, content length: ' . strlen( $content ) );
-			error_log( '[CTA Prepare] After do_shortcode, still has shortcode: ' . ( has_shortcode( $content, 'cta_highlights' ) ? 'YES (not processed!)' : 'NO (processed)' ) );
-			error_log( '[CTA Prepare] After do_shortcode, has trigger class: ' . ( strpos( $content, 'cta-highlights-trigger' ) !== false ? 'YES' : 'NO' ) );
 
 			// Generate storage condition JavaScript
 			$storage_condition_js = $this->matcher->generate_storage_condition_js( $cta['storage_conditions'] );
@@ -231,8 +222,13 @@ class Manager {
 			return null;
 		}
 
-		// Get all active CTAs
-		$ctas = $this->database->get_all( array( 'status' => 'active' ) );
+		// Get all active primary CTAs (excluding fallback-only CTAs)
+		$ctas = $this->database->get_all(
+			array(
+				'status'   => 'active',
+				'cta_type' => 'primary',
+			)
+		);
 
 		foreach ( $ctas as $cta ) {
 			// Skip if we've already visited this CTA (circular reference)
@@ -311,63 +307,45 @@ class Manager {
 	 * This ensures base assets are enqueued for the highlight feature
 	 * Checks the entire fallback chain since client-side JavaScript may select any CTA
 	 *
-	 * TEMPORARY DEBUG VERSION - Will be cleaned up after diagnosis
-	 *
 	 * @param bool $force Current force enqueue value.
 	 * @return bool
 	 */
 	public function check_auto_insert_shortcodes( $force ) {
-		error_log( '[CTA Highlights] check_auto_insert_shortcodes() called, force=' . ( $force ? 'true' : 'false' ) );
-
 		// If already forced, return early
 		if ( $force ) {
-			error_log( '[CTA Highlights] Already forced, returning true' );
 			return $force;
 		}
 
 		// Only check on singular posts
 		if ( ! is_singular() ) {
-			error_log( '[CTA Highlights] Not singular, returning false' );
 			return $force;
 		}
 
 		global $post;
 
 		if ( ! $post instanceof \WP_Post ) {
-			error_log( '[CTA Highlights] Post not valid, returning false' );
 			return $force;
 		}
-
-		error_log( '[CTA Highlights] Checking post #' . $post->ID . ' (' . $post->post_title . ')' );
 
 		// Get matching CTA for this post
 		$cta = $this->find_matching_cta( $post );
 
 		if ( ! $cta ) {
-			error_log( '[CTA Highlights] No matching CTA found for this post' );
 			return $force;
 		}
-
-		error_log( '[CTA Highlights] Found matching CTA #' . $cta['id'] . ' (' . $cta['name'] . ')' );
 
 		// Build the entire fallback chain
 		// This is necessary because client-side JavaScript may select any CTA from the chain
 		// based on storage conditions, so we need to check all of them
 		$chain = $this->build_fallback_chain( $cta, $post );
 
-		error_log( '[CTA Highlights] Fallback chain length: ' . count( $chain ) );
-
 		// Check if ANY CTA in the chain contains the [cta_highlights] shortcode
-		foreach ( $chain as $index => $chain_cta ) {
-			error_log( '[CTA Highlights] Checking chain CTA #' . $chain_cta['id'] . ' (' . $chain_cta['name'] . ') at index ' . $index );
-
+		foreach ( $chain as $chain_cta ) {
 			if ( ! empty( $chain_cta['content'] ) && has_shortcode( $chain_cta['content'], 'cta_highlights' ) ) {
-				error_log( '[CTA Highlights] *** FOUND cta_highlights shortcode in CTA #' . $chain_cta['id'] . ' - FORCING ENQUEUE ***' );
 				return true; // Force enqueue
 			}
 		}
 
-		error_log( '[CTA Highlights] No cta_highlights shortcode found in any CTA in chain' );
 		return $force;
 	}
 

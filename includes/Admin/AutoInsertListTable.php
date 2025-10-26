@@ -54,6 +54,7 @@ class AutoInsertListTable extends \WP_List_Table {
 			'cb'         => '<input type="checkbox" />',
 			'name'       => __( 'Name', 'cta-highlights' ),
 			'status'     => __( 'Status', 'cta-highlights' ),
+			'cta_type'   => __( 'Type', 'cta-highlights' ),
 			'conditions' => __( 'Conditions', 'cta-highlights' ),
 			'insertion'  => __( 'Insertion', 'cta-highlights' ),
 			'fallback'   => __( 'Fallback', 'cta-highlights' ),
@@ -174,6 +175,26 @@ class AutoInsertListTable extends \WP_List_Table {
 		$label  = isset( $status_labels[ $status ] ) ? $status_labels[ $status ] : $status;
 
 		$class = 'active' === $status ? 'status-active' : 'status-inactive';
+
+		return sprintf( '<span class="%s">%s</span>', esc_attr( $class ), esc_html( $label ) );
+	}
+
+	/**
+	 * Column: CTA type
+	 *
+	 * @param array $item Item data.
+	 * @return string
+	 */
+	protected function column_cta_type( $item ) {
+		$type_labels = array(
+			'primary'  => __( 'Primary', 'cta-highlights' ),
+			'fallback' => __( 'Fallback Only', 'cta-highlights' ),
+		);
+
+		$type  = isset( $item['cta_type'] ) ? $item['cta_type'] : 'primary';
+		$label = isset( $type_labels[ $type ] ) ? $type_labels[ $type ] : $type;
+
+		$class = 'primary' === $type ? 'cta-type-primary' : 'cta-type-fallback';
 
 		return sprintf( '<span class="%s">%s</span>', esc_attr( $class ), esc_html( $label ) );
 	}
