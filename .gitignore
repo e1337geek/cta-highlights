@@ -15,6 +15,10 @@ Thumbs.db
 node_modules/
 vendor/
 
+# Lock files - IMPORTANT: These should be committed for reproducible builds
+# package-lock.json - KEEP (needed for npm CI/CD caching)
+# composer.lock - KEEP (needed for PHP dependency reproducibility)
+
 # Build files
 *.min.js
 *.min.css

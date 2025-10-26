@@ -57,7 +57,6 @@
     "@playwright/test": "^1.40.1",
     "@types/jest": "^29.5.11",
     "@types/node": "^20.10.6",
-    "@types/wordpress__jest-console": "^7.0.1",
     "@wordpress/env": "^8.11.0",
     "@wordpress/eslint-plugin": "^17.6.0",
     "@wordpress/jest-console": "^7.21.0",
