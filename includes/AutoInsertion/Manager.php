@@ -81,48 +81,140 @@ class Manager {
 	 * @return void
 	 */
 	private function init_hooks() {
-		// Filter content to insert CTAs
-		add_filter( 'the_content', array( $this, 'filter_content' ), 20 );
+		// Output fallback chain data in footer
+		add_action( 'wp_footer', array( $this, 'output_fallback_data' ), 5 );
 
 		// Enqueue scripts for storage condition evaluation
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		// Check if we need to force enqueue base assets for auto-inserted CTAs with shortcodes
-		add_filter( 'cta_highlights_force_enqueue', array( $this, 'check_auto_insert_shortcodes' ) );
+		// Priority 5 ensures this runs early during wp_enqueue_scripts
+		add_filter( 'cta_highlights_force_enqueue', array( $this, 'check_auto_insert_shortcodes' ), 5 );
 	}
 
 	/**
-	 * Filter content to insert CTA
+	 * Output fallback chain data in footer as inline JSON
+	 * Client-side JavaScript will handle insertion
 	 *
-	 * @param string $content Post content.
-	 * @return string Modified content.
+	 * @return void
 	 */
-	public function filter_content( $content ) {
-		// Only process in main query and singular posts
-		if ( ! is_singular() || ! in_the_loop() || ! is_main_query() ) {
-			return $content;
+	public function output_fallback_data() {
+		// Only on singular posts
+		if ( ! is_singular() ) {
+			return;
 		}
 
 		global $post;
 
 		if ( ! $post instanceof \WP_Post ) {
-			return $content;
+			return;
 		}
 
-		// Get matching CTA
+		// Find matching CTA
 		$cta = $this->find_matching_cta( $post );
 
 		if ( ! $cta ) {
-			return $content;
+			return; // No CTA = no output (conditional loading for performance)
 		}
 
-		// Generate JavaScript for storage conditions
-		$storage_condition_js = $this->matcher->generate_storage_condition_js( $cta['storage_conditions'] );
+		// Build fallback chain
+		$chain = $this->build_fallback_chain( $cta, $post );
 
-		// Insert CTA into content
-		$modified_content = $this->inserter->insert( $content, $cta, $storage_condition_js );
+		// Prepare data structure
+		$data = array(
+			'postId'          => $post->ID,
+			'contentSelector' => apply_filters( 'cta_highlights_content_selector', '.entry-content', $post->ID ),
+			'ctas'            => $this->prepare_ctas_for_output( $chain ),
+		);
 
-		return apply_filters( 'cta_highlights_auto_insert_content', $modified_content, $content, $cta );
+		// Output as JSON script tag in footer
+		echo '<script type="application/json" id="cta-highlights-auto-insert-data">';
+		echo wp_json_encode( $data );
+		echo '</script>' . "\n";
+	}
+
+	/**
+	 * Prepare CTAs for JSON output
+	 * Processes content and generates storage condition JavaScript
+	 *
+	 * @param array $chain Array of CTAs in fallback order.
+	 * @return array Prepared CTAs for output.
+	 */
+	private function prepare_ctas_for_output( $chain ) {
+		$prepared = array();
+
+		foreach ( $chain as $cta ) {
+			error_log( '[CTA Prepare] Processing CTA #' . $cta['id'] . ' (' . $cta['name'] . ')' );
+			error_log( '[CTA Prepare] Raw content length: ' . strlen( $cta['content'] ) );
+			error_log( '[CTA Prepare] Has [cta_highlights] shortcode: ' . ( has_shortcode( $cta['content'], 'cta_highlights' ) ? 'YES' : 'NO' ) );
+
+			// Process content (shortcodes, sanitization)
+			$content = wp_kses_post( $cta['content'] );
+			error_log( '[CTA Prepare] After wp_kses_post, has shortcode: ' . ( has_shortcode( $content, 'cta_highlights' ) ? 'YES' : 'NO' ) );
+
+			$content = do_shortcode( $content );
+			error_log( '[CTA Prepare] After do_shortcode, content length: ' . strlen( $content ) );
+			error_log( '[CTA Prepare] After do_shortcode, still has shortcode: ' . ( has_shortcode( $content, 'cta_highlights' ) ? 'YES (not processed!)' : 'NO (processed)' ) );
+			error_log( '[CTA Prepare] After do_shortcode, has trigger class: ' . ( strpos( $content, 'cta-highlights-trigger' ) !== false ? 'YES' : 'NO' ) );
+
+			// Generate storage condition JavaScript
+			$storage_condition_js = $this->matcher->generate_storage_condition_js( $cta['storage_conditions'] );
+
+			$prepared[] = array(
+				'id'                     => absint( $cta['id'] ),
+				'content'                => $content,
+				'storage_conditions'     => $cta['storage_conditions'],
+				'storage_condition_js'   => $storage_condition_js,
+				'has_storage_conditions' => ! empty( $cta['storage_conditions'] ),
+				'insertion_direction'    => $cta['insertion_direction'],
+				'insertion_position'     => absint( $cta['insertion_position'] ),
+				'fallback_behavior'      => $cta['fallback_behavior'],
+			);
+		}
+
+		return $prepared;
+	}
+
+	/**
+	 * Build fallback chain for a CTA
+	 * Includes the main CTA and all fallbacks that match post type/category
+	 *
+	 * @param array    $cta Primary CTA.
+	 * @param \WP_Post $post Post object.
+	 * @return array Array of CTAs in fallback order.
+	 */
+	private function build_fallback_chain( $cta, $post ) {
+		$chain      = array( $cta );
+		$visited    = array( $cta['id'] );
+		$current    = $cta;
+		$depth      = 0;
+
+		// Follow the fallback chain
+		while ( ! empty( $current['fallback_cta_id'] ) && $depth < self::MAX_FALLBACK_DEPTH ) {
+			// Prevent circular references
+			if ( in_array( $current['fallback_cta_id'], $visited, true ) ) {
+				break;
+			}
+
+			$fallback = $this->database->get( $current['fallback_cta_id'] );
+
+			if ( ! $fallback || 'active' !== $fallback['status'] ) {
+				break;
+			}
+
+			// Check if fallback matches post type/category (not storage conditions)
+			if ( $this->matcher->should_display( $fallback, $post ) ) {
+				$chain[]   = $fallback;
+				$visited[] = $fallback['id'];
+				$current   = $fallback;
+				$depth++;
+			} else {
+				// Fallback doesn't match post type/category, stop chain
+				break;
+			}
+		}
+
+		return $chain;
 	}
 
 	/**
@@ -217,39 +309,65 @@ class Manager {
 	/**
 	 * Check if auto-inserted CTAs contain the [cta_highlights] shortcode
 	 * This ensures base assets are enqueued for the highlight feature
+	 * Checks the entire fallback chain since client-side JavaScript may select any CTA
+	 *
+	 * TEMPORARY DEBUG VERSION - Will be cleaned up after diagnosis
 	 *
 	 * @param bool $force Current force enqueue value.
 	 * @return bool
 	 */
 	public function check_auto_insert_shortcodes( $force ) {
+		error_log( '[CTA Highlights] check_auto_insert_shortcodes() called, force=' . ( $force ? 'true' : 'false' ) );
+
 		// If already forced, return early
 		if ( $force ) {
+			error_log( '[CTA Highlights] Already forced, returning true' );
 			return $force;
 		}
 
 		// Only check on singular posts
 		if ( ! is_singular() ) {
+			error_log( '[CTA Highlights] Not singular, returning false' );
 			return $force;
 		}
 
 		global $post;
 
 		if ( ! $post instanceof \WP_Post ) {
+			error_log( '[CTA Highlights] Post not valid, returning false' );
 			return $force;
 		}
+
+		error_log( '[CTA Highlights] Checking post #' . $post->ID . ' (' . $post->post_title . ')' );
 
 		// Get matching CTA for this post
 		$cta = $this->find_matching_cta( $post );
 
 		if ( ! $cta ) {
+			error_log( '[CTA Highlights] No matching CTA found for this post' );
 			return $force;
 		}
 
-		// Check if CTA content contains the [cta_highlights] shortcode
-		if ( ! empty( $cta['content'] ) && has_shortcode( $cta['content'], 'cta_highlights' ) ) {
-			return true; // Force enqueue
+		error_log( '[CTA Highlights] Found matching CTA #' . $cta['id'] . ' (' . $cta['name'] . ')' );
+
+		// Build the entire fallback chain
+		// This is necessary because client-side JavaScript may select any CTA from the chain
+		// based on storage conditions, so we need to check all of them
+		$chain = $this->build_fallback_chain( $cta, $post );
+
+		error_log( '[CTA Highlights] Fallback chain length: ' . count( $chain ) );
+
+		// Check if ANY CTA in the chain contains the [cta_highlights] shortcode
+		foreach ( $chain as $index => $chain_cta ) {
+			error_log( '[CTA Highlights] Checking chain CTA #' . $chain_cta['id'] . ' (' . $chain_cta['name'] . ') at index ' . $index );
+
+			if ( ! empty( $chain_cta['content'] ) && has_shortcode( $chain_cta['content'], 'cta_highlights' ) ) {
+				error_log( '[CTA Highlights] *** FOUND cta_highlights shortcode in CTA #' . $chain_cta['id'] . ' - FORCING ENQUEUE ***' );
+				return true; // Force enqueue
+			}
 		}
 
+		error_log( '[CTA Highlights] No cta_highlights shortcode found in any CTA in chain' );
 		return $force;
 	}
 
@@ -265,14 +383,17 @@ class Manager {
 
 		// Enqueue auto-insertion JavaScript
 		// Note: This script is independent and doesn't require cta-highlights-base
-		// It only evaluates storage conditions for auto-inserted CTAs
+		// It handles client-side insertion, position calculation, and storage evaluation
 		wp_enqueue_script(
 			'cta-highlights-auto-insert',
 			CTA_HIGHLIGHTS_URL . 'assets/js/auto-insert.js',
 			array(), // No dependencies - standalone script
 			CTA_HIGHLIGHTS_VERSION,
-			true
+			true // In footer
 		);
+
+		// Add defer attribute for performance (non-blocking)
+		wp_script_add_data( 'cta-highlights-auto-insert', 'defer', true );
 	}
 
 	/**

@@ -31,17 +31,24 @@ class Manager {
 		global $post;
 
 		if ( is_singular() && $post instanceof \WP_Post && has_shortcode( $post->post_content, 'cta_highlights' ) ) {
+			error_log( '[CTA Assets] Shortcode detected in post content' );
 			return true;
 		}
 
 		if ( $this->check_widgets_for_shortcode() ) {
+			error_log( '[CTA Assets] Shortcode detected in widgets' );
 			return true;
 		}
 
-		if ( apply_filters( 'cta_highlights_force_enqueue', false ) ) {
+		$force_enqueue = apply_filters( 'cta_highlights_force_enqueue', false );
+		error_log( '[CTA Assets] Force enqueue filter returned: ' . ( $force_enqueue ? 'true' : 'false' ) );
+
+		if ( $force_enqueue ) {
+			error_log( '[CTA Assets] Base assets WILL BE ENQUEUED via filter' );
 			return true;
 		}
 
+		error_log( '[CTA Assets] No shortcode detected, assets will NOT be enqueued' );
 		return false;
 	}
 

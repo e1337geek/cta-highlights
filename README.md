@@ -199,26 +199,50 @@ When content has fewer elements than specified:
 
 ### Fallback Chains
 
-Create intelligent fallback sequences when primary conditions aren't met. Each CTA can specify another CTA to try if its conditions fail.
+Create intelligent fallback sequences when primary conditions aren't met. Each CTA can specify another CTA to try if its storage conditions fail.
+
+#### How Fallback Chains Work
+
+When a CTA with storage conditions and a fallback is configured:
+
+1. **Server-side** builds the entire fallback chain and inserts it as a JSON placeholder
+2. **Client-side JavaScript** evaluates storage conditions for each CTA in order
+3. The **first CTA** whose storage conditions pass (or has no conditions) is inserted
+4. If **no CTAs** match, the last CTA in the chain is inserted as a final fallback
+
+**Important Notes:**
+- Post type and category conditions are evaluated **server-side** (before the chain is built)
+- Storage conditions (localStorage/cookie) are evaluated **client-side** (in the browser)
+- Only CTAs that pass post type/category conditions are included in the fallback chain
+- Chain evaluation happens on page load for optimal performance
 
 #### Example: Gig Harbor Now Use Case
 
 1. **Newsletter Signup CTA**
    - Position: After 3rd paragraph
-   - Conditions: User has NOT subscribed (`hasSubscribed != true`)
+   - Post Types: Post
+   - Storage Conditions: `hasSubscribed != true`
    - Fallback: Donation CTA
 
 2. **Donation CTA** (Fallback #1)
-   - Position: Before 2nd-to-last paragraph
-   - Conditions: User has NOT donated in last 30 days (`lastDonationDate < 30 days ago`)
+   - Position: Uses primary CTA's position (After 3rd paragraph)
+   - Post Types: Post
+   - Storage Conditions: `lastDonationDate < [30 days ago]`
    - Fallback: Ad Placement CTA
 
 3. **Ad Placement CTA** (Fallback #2)
-   - Position: After 3rd paragraph
-   - Conditions: None (always displays)
+   - Position: Uses primary CTA's position (After 3rd paragraph)
+   - Post Types: Post
+   - Storage Conditions: None (always displays)
    - Fallback: None
 
-**Chain Depth Limit**: 10 CTAs maximum to prevent infinite loops.
+**User Experience:**
+- If user has not subscribed → Shows Newsletter Signup CTA
+- If user subscribed but hasn't donated recently → Shows Donation CTA
+- If user subscribed and donated recently → Shows Ad Placement CTA
+- All CTAs appear at the same location (primary CTA's position)
+
+**Chain Depth Limit**: 10 CTAs maximum to prevent infinite loops and circular references.
 
 ### Disabling Auto-Insertion
 

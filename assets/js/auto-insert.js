@@ -1,17 +1,32 @@
 /**
  * CTA Highlights - Auto-Insertion
- * Version: 1.0.0
+ * Version: 2.0.0
  *
- * Handles client-side evaluation of storage conditions for auto-inserted CTAs
- * Extends the base StorageManager to support getting values and evaluating conditions
+ * Fully client-side auto-insertion with fallback chain support
+ * Handles content parsing, position calculation, storage evaluation, and DOM insertion
  */
 
 (function() {
 	'use strict';
 
+	// Content container selectors (try in order)
+	const CONTENT_SELECTORS = [
+		'.entry-content',                    // Standard WordPress
+		'.post-content',                     // Common theme pattern
+		'.wp-block-post-content',            // Gutenberg FSE
+		'article .content',                  // Semantic HTML
+		'.elementor-widget-theme-post-content .elementor-widget-container', // Elementor
+		'.et_pb_post_content',               // Divi
+		'.fl-post-content',                  // Beaver Builder
+		'.brxe-post-content',                // Bricks Builder
+		'.oxygen-builder-body .ct-text-block', // Oxygen
+		'article',                           // Generic article
+		'main'                               // Last resort
+	];
+
 	/**
 	 * Auto-Insert Manager
-	 * Evaluates storage conditions and shows/hides auto-inserted CTAs
+	 * Handles client-side evaluation and insertion of CTAs
 	 */
 	class AutoInsertManager {
 		constructor() {
@@ -20,7 +35,7 @@
 
 		/**
 		 * Create StorageManager instance
-		 * Extends the base StorageManager with additional methods
+		 * Provides localStorage and cookie access
 		 */
 		createStorageManager() {
 			const manager = {
@@ -102,80 +117,308 @@
 		}
 
 		/**
-		 * Initialize auto-insertion evaluation
+		 * Initialize auto-insertion
+		 * Reads JSON data and processes fallback chain
 		 */
 		init() {
-			// Find all auto-inserted CTAs with storage conditions
-			const autoInsertedCTAs = document.querySelectorAll('.cta-highlights-auto-inserted[data-has-storage-condition="true"]');
+			// Read data from inline JSON
+			const dataElement = document.getElementById('cta-highlights-auto-insert-data');
 
-			if (autoInsertedCTAs.length === 0) {
-				this.log('No auto-inserted CTAs with storage conditions found');
-				return;
-			}
-
-			this.log(`Found ${autoInsertedCTAs.length} auto-inserted CTAs with storage conditions`);
-
-			// Evaluate each CTA
-			autoInsertedCTAs.forEach(cta => this.evaluateCTA(cta));
-		}
-
-		/**
-		 * Evaluate storage conditions for a CTA
-		 *
-		 * @param {HTMLElement} cta CTA element
-		 */
-		evaluateCTA(cta) {
-			const conditionJS = cta.dataset.storageCondition;
-
-			if (!conditionJS) {
-				this.log('No storage condition found for CTA', cta);
-				this.showCTA(cta);
+			if (!dataElement) {
+				this.log('No auto-insert data found');
 				return;
 			}
 
 			try {
-				// Evaluate the condition JavaScript
-				// The condition code has access to this.storageManager via closure
-				const conditionPassed = eval(conditionJS);
+				const data = JSON.parse(dataElement.textContent);
 
-				if (conditionPassed) {
-					this.log(`Storage condition passed for CTA #${cta.dataset.ctaId}`);
-					this.showCTA(cta);
-					this.trackEvent('cta_auto_insert_shown', cta);
-				} else {
-					this.log(`Storage condition failed for CTA #${cta.dataset.ctaId}`);
-					this.removeCTA(cta);
-					this.trackEvent('cta_auto_insert_hidden', cta);
+				if (!data.ctas || data.ctas.length === 0) {
+					this.log('No CTAs in fallback chain');
+					return;
 				}
+
+				this.log(`Found fallback chain with ${data.ctas.length} CTA(s)`);
+				this.processFallbackChain(data);
+
 			} catch (error) {
-				this.log(`Error evaluating storage condition for CTA #${cta.dataset.ctaId}:`, error);
-				// On error, default to showing the CTA (fail open)
-				this.showCTA(cta);
+				this.log('Error parsing auto-insert data:', error);
 			}
 		}
 
 		/**
-		 * Show a CTA by removing display:none
+		 * Process fallback chain
+		 * Evaluates conditions and inserts the first matching CTA
 		 *
-		 * @param {HTMLElement} cta CTA element
+		 * @param {Object} chainData Fallback chain data
 		 */
-		showCTA(cta) {
-			cta.style.display = '';
-			cta.setAttribute('aria-hidden', 'false');
+		processFallbackChain(chainData) {
+			// Find content container
+			const container = this.findContentContainer(chainData.contentSelector);
+			if (!container) {
+				this.log('Content container not found');
+				return;
+			}
+
+			// Parse content elements
+			const elements = this.parseContentElements(container);
+			if (elements.length === 0) {
+				this.log('No content elements found');
+				return;
+			}
+
+			this.log(`Found ${elements.length} content elements`);
+
+			// Evaluate storage conditions and select CTA
+			let selectedCTA = null;
+			let selectedIndex = -1;
+
+			for (let i = 0; i < chainData.ctas.length; i++) {
+				const cta = chainData.ctas[i];
+
+				// No storage conditions = always matches
+				if (!cta.has_storage_conditions) {
+					this.log(`CTA #${cta.id} has no storage conditions - selected`);
+					selectedCTA = cta;
+					selectedIndex = i;
+					break;
+				}
+
+				// Evaluate storage conditions
+				try {
+					const conditionPassed = eval(cta.storage_condition_js);
+
+					if (conditionPassed) {
+						this.log(`CTA #${cta.id} storage conditions passed - selected`);
+						selectedCTA = cta;
+						selectedIndex = i;
+						break;
+					} else {
+						this.log(`CTA #${cta.id} storage conditions failed - trying next`);
+					}
+				} catch (error) {
+					this.log(`Error evaluating CTA #${cta.id}:`, error);
+					// On error, try next in chain
+				}
+			}
+
+			// If no CTA matched, use last one as ultimate fallback
+			if (!selectedCTA && chainData.ctas.length > 0) {
+				selectedCTA = chainData.ctas[chainData.ctas.length - 1];
+				selectedIndex = chainData.ctas.length - 1;
+				this.log(`No CTAs matched - using last CTA #${selectedCTA.id} as fallback`);
+			}
+
+			if (!selectedCTA) {
+				this.log('No CTA selected');
+				return;
+			}
+
+			// Calculate position using SELECTED CTA's own settings
+			const positionInfo = this.calculateInsertPosition(elements, selectedCTA);
+
+			if (!positionInfo) {
+				this.log(`Position calculation failed or skipped for CTA #${selectedCTA.id}`);
+				return;
+			}
+
+			// Insert CTA into DOM
+			this.insertCTAIntoContent(
+				container,
+				selectedCTA,
+				positionInfo,
+				selectedIndex,
+				chainData.ctas.length
+			);
 		}
 
 		/**
-		 * Remove a CTA from the DOM
+		 * Find content container using selector list
 		 *
-		 * @param {HTMLElement} cta CTA element
+		 * @param {string} preferredSelector Preferred selector from settings
+		 * @returns {HTMLElement|null} Content container or null
 		 */
-		removeCTA(cta) {
-			cta.remove();
+		findContentContainer(preferredSelector) {
+			// Try preferred selector first
+			let container = document.querySelector(preferredSelector);
+			if (container) {
+				this.log(`Found content container: ${preferredSelector}`);
+				return container;
+			}
+
+			// Try fallback selectors
+			for (const selector of CONTENT_SELECTORS) {
+				container = document.querySelector(selector);
+				if (container) {
+					this.log(`Found content container: ${selector}`);
+					return container;
+				}
+			}
+
+			this.log('No content container found');
+			return null;
+		}
+
+		/**
+		 * Parse content elements (direct children only)
+		 * Filters out script/style tags and empty elements
+		 *
+		 * @param {HTMLElement} container Content container
+		 * @returns {Array} Array of content elements
+		 */
+		parseContentElements(container) {
+			// Get direct children only
+			const children = Array.from(container.children);
+
+			// Filter out script, style, noscript tags and empty elements
+			const elements = children.filter(el => {
+				const tagName = el.tagName.toLowerCase();
+
+				// Filter out script, style, noscript
+				if (['script', 'style', 'noscript'].includes(tagName)) {
+					return false;
+				}
+
+				// Filter out empty elements
+				if (this.isEmptyElement(el)) {
+					return false;
+				}
+
+				return true;
+			});
+
+			return elements;
+		}
+
+		/**
+		 * Check if an element is empty (no meaningful content)
+		 *
+		 * @param {HTMLElement} el Element to check
+		 * @returns {boolean} True if element is empty
+		 */
+		isEmptyElement(el) {
+			// Check if element has text content
+			const textContent = el.textContent.trim();
+			if (textContent.length > 0) {
+				return false;
+			}
+
+			// Check if element has meaningful child elements (img, iframe, video, etc.)
+			// These count as content even without text
+			const meaningfulTags = ['img', 'iframe', 'video', 'audio', 'embed', 'object', 'svg', 'canvas', 'picture'];
+			const hasMeaningfulChildren = Array.from(el.querySelectorAll('*')).some(child => {
+				return meaningfulTags.includes(child.tagName.toLowerCase());
+			});
+
+			if (hasMeaningfulChildren) {
+				return false;
+			}
+
+			// Element is empty
+			return true;
+		}
+
+		/**
+		 * Calculate insertion position
+		 * Replicates PHP position calculation logic
+		 *
+		 * @param {Array} elements Content elements
+		 * @param {Object} cta CTA configuration
+		 * @returns {Object|null} Position info or null to skip
+		 */
+		calculateInsertPosition(elements, cta) {
+			const totalElements = elements.length;
+			const position = parseInt(cta.insertion_position, 10);
+			const direction = cta.insertion_direction;
+			const fallbackBehavior = cta.fallback_behavior;
+
+			if (totalElements === 0) return null;
+
+			let targetIndex;
+
+			if (direction === 'forward') {
+				// Forward: count from beginning
+				targetIndex = position;
+			} else {
+				// Reverse: count from end
+				targetIndex = totalElements - position;
+			}
+
+			// Handle out of bounds
+			if (targetIndex > totalElements) {
+				if (fallbackBehavior === 'end') {
+					targetIndex = totalElements;
+				} else {
+					// Skip insertion
+					this.log(`Position ${position} (${direction}) exceeds content length, skipping`);
+					return null;
+				}
+			}
+
+			if (targetIndex < 0) {
+				targetIndex = 0;
+			}
+
+			return {
+				element: elements[targetIndex] || null,
+				insertBefore: targetIndex < totalElements,
+				index: targetIndex
+			};
+		}
+
+		/**
+		 * Insert CTA into content
+		 *
+		 * @param {HTMLElement} container Content container
+		 * @param {Object} cta CTA configuration
+		 * @param {Object} positionInfo Position information
+		 * @param {number} fallbackIndex Index in fallback chain
+		 * @param {number} chainLength Total chain length
+		 */
+		insertCTAIntoContent(container, cta, positionInfo, fallbackIndex, chainLength) {
+			// Create wrapper element
+			const wrapper = document.createElement('div');
+			wrapper.className = 'cta-highlights-wrapper cta-highlights-auto-inserted';
+			wrapper.setAttribute('data-auto-insert', 'true');
+			wrapper.setAttribute('data-cta-id', cta.id);
+			wrapper.setAttribute('data-fallback-index', fallbackIndex);
+			wrapper.setAttribute('data-fallback-chain-length', chainLength);
+			wrapper.innerHTML = cta.content;
+
+			// Insert into DOM
+			if (positionInfo.element && positionInfo.insertBefore) {
+				// Insert before the target element
+				positionInfo.element.parentNode.insertBefore(wrapper, positionInfo.element);
+			} else if (positionInfo.element) {
+				// Insert after the target element
+				positionInfo.element.parentNode.insertBefore(wrapper, positionInfo.element.nextSibling);
+			} else {
+				// Fallback: append to container
+				container.appendChild(wrapper);
+			}
+
+			// Check if the inserted content has highlight enabled
+			// The CTA content might contain a <section class="cta-highlights-wrapper" data-highlight="true">
+			const highlightElement = wrapper.querySelector('.cta-highlights-wrapper[data-highlight="true"]');
+			if (highlightElement && window.ctaHighlightsManager) {
+				// Initialize the highlight feature for this dynamically inserted CTA
+				this.log(`Initializing highlight feature for CTA #${cta.id}`);
+				window.ctaHighlightsManager.initializeCTA(highlightElement);
+			}
+
+			// Track analytics
+			this.trackEvent('cta_auto_insert_shown', wrapper);
+
+			if (fallbackIndex > 0) {
+				this.trackEvent('cta_fallback_used', wrapper);
+				this.log(`CTA #${cta.id} inserted using fallback (position ${fallbackIndex} of ${chainLength})`);
+			} else {
+				this.log(`CTA #${cta.id} inserted (primary CTA)`);
+			}
 		}
 
 		/**
 		 * Track analytics event
-		 * Supports multiple analytics providers via hooks
+		 * Supports multiple analytics providers
 		 *
 		 * @param {string} eventName Event name
 		 * @param {HTMLElement} cta CTA element
@@ -223,9 +466,12 @@
 	 * Initialize on DOM ready
 	 */
 	function init() {
-		// Create and initialize auto-insert manager
 		const autoInsertManager = new AutoInsertManager();
-		autoInsertManager.init();
+
+		// Wait 50ms after DOMContentLoaded for page builders to render
+		setTimeout(() => {
+			autoInsertManager.init();
+		}, 50);
 
 		// Expose to window for potential external access
 		window.ctaAutoInsertManager = autoInsertManager;

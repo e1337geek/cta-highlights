@@ -13,11 +13,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Inserter class for parsing content and injecting CTAs
+ *
+ * Note: Auto-insertion now happens entirely client-side for better performance
+ * and cleaner separation of concerns. This class is kept for reference and
+ * potential future server-side rendering needs. See assets/js/auto-insert.js
+ * for the active auto-insertion implementation.
  */
 class Inserter {
 
 	/**
-	 * Insert CTA into content
+	 * Note: insert_with_fallbacks() method has been removed.
+	 * Auto-insertion now happens entirely client-side via JavaScript.
+	 * See assets/js/auto-insert.js for the active implementation.
+	 */
+
+	/**
+	 * Insert CTA into content (legacy method, kept for compatibility)
 	 *
 	 * @param string $content Post content.
 	 * @param array  $cta CTA configuration.
@@ -40,7 +51,7 @@ class Inserter {
 		}
 
 		// Build CTA HTML
-		$cta_html = $this->build_cta_html( $cta, $storage_condition_js );
+		$cta_html = $this->build_cta_html( $cta, $storage_condition_js, 0, 1 );
 
 		// Insert CTA at position
 		return $this->inject_at_position( $content, $elements, $position, $cta_html );
@@ -140,6 +151,7 @@ class Inserter {
 			return $target_index;
 		}
 	}
+
 
 	/**
 	 * Build CTA HTML wrapper

@@ -232,6 +232,38 @@
 		}
 
 		/**
+		 * Initialize a specific CTA element
+		 * Used for dynamically inserted CTAs (e.g., auto-insertion)
+		 *
+		 * @param {HTMLElement} ctaElement CTA element to initialize
+		 */
+		initializeCTA(ctaElement) {
+			// Verify element has highlight enabled
+			if (!ctaElement || ctaElement.getAttribute('data-highlight') !== 'true') {
+				this.log('Element does not have highlight enabled');
+				return;
+			}
+
+			// Check global cooldown
+			if (this.storage.isCooldownActive('cta_highlights_global')) {
+				this.log('Global cooldown active, skipping CTA initialization');
+				return;
+			}
+
+			// Ensure overlay and close button exist (lazy initialization)
+			if (!this.overlay) {
+				this.setPageBackground();
+				this.createOverlay();
+				this.createCloseButton();
+				this.setupEventListeners();
+			}
+
+			// Setup observer for this specific CTA
+			this.setupObserver(ctaElement);
+			this.log('Initialized CTA:', ctaElement);
+		}
+
+		/**
 		 * Detect page background color and set CSS custom property
 		 */
 		setPageBackground() {
