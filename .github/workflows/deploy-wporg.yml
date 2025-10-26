@@ -1,0 +1,79 @@
+name: Deploy to WordPress.org
+
+# This workflow deploys the plugin to WordPress.org SVN repository
+# Only run this if you have a WordPress.org plugin listing
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to deploy (e.g., 1.0.0)'
+        required: true
+
+jobs:
+  deploy:
+    name: Deploy to WordPress.org SVN
+    runs-on: ubuntu-latest
+    if: github.repository == 'your-org/cta-highlights'  # Update with your repo
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          tools: composer
+
+      - name: Get version
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            VERSION=${GITHUB_REF#refs/tags/v}
+            echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          fi
+
+      - name: WordPress.org Plugin Deploy
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        with:
+          generate-zip: false
+        env:
+          SVN_USERNAME: ${{ secrets.WP_ORG_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.WP_ORG_PASSWORD }}
+          SLUG: cta-highlights
+
+      - name: Deployment summary
+        run: |
+          echo "## ✅ Deployed to WordPress.org" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version:** ${{ steps.get_version.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Plugin:** cta-highlights" >> $GITHUB_STEP_SUMMARY
+          echo "- **URL:** https://wordpress.org/plugins/cta-highlights/" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The plugin should appear on WordPress.org within a few minutes." >> $GITHUB_STEP_SUMMARY
+
+# SETUP INSTRUCTIONS:
+#
+# 1. Get WordPress.org SVN credentials:
+#    - You need a WordPress.org account
+#    - Your plugin must be approved and listed on WordPress.org
+#    - SVN credentials are your WordPress.org username/password
+#
+# 2. Add GitHub Secrets:
+#    Go to: Settings → Secrets and variables → Actions
+#    Add these secrets:
+#    - WP_ORG_USERNAME: Your WordPress.org username
+#    - WP_ORG_PASSWORD: Your WordPress.org password
+#
+# 3. Update repository check (line 13):
+#    Change 'your-org/cta-highlights' to your actual GitHub repository
+#
+# 4. The .distignore file controls which files are excluded from WordPress.org
+#
+# 5. This workflow runs automatically when you publish a GitHub release
+#    OR you can trigger it manually from the Actions tab

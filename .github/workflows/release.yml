@@ -1,0 +1,206 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v1.0.0)'
+        required: true
+
+jobs:
+  build:
+    name: Build Release Artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          tools: composer
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Get version from tag
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate version matches plugin file
+        run: |
+          PLUGIN_VERSION=$(grep "Version:" cta-highlights.php | head -1 | awk '{print $3}')
+          TAG_VERSION=${{ steps.get_version.outputs.VERSION }}
+          TAG_VERSION=${TAG_VERSION#v}  # Remove 'v' prefix
+
+          echo "Plugin file version: $PLUGIN_VERSION"
+          echo "Git tag version: $TAG_VERSION"
+
+          if [ "$PLUGIN_VERSION" != "$TAG_VERSION" ]; then
+            echo "❌ Version mismatch!"
+            echo "Update the version in cta-highlights.php to match the tag"
+            exit 1
+          fi
+
+          echo "✅ Version matches: $PLUGIN_VERSION"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test:quick
+
+      - name: Build release ZIP
+        run: |
+          PLUGIN_SLUG="cta-highlights"
+          VERSION=${{ steps.get_version.outputs.VERSION }}
+          VERSION=${VERSION#v}  # Remove 'v' prefix
+          BUILD_DIR="build"
+          RELEASE_DIR="$BUILD_DIR/$PLUGIN_SLUG"
+
+          # Create build directory
+          mkdir -p "$RELEASE_DIR"
+
+          # Copy files (excluding dev files)
+          rsync -av --progress \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.gitignore' \
+            --exclude='.gitattributes' \
+            --exclude='.wp-env.json' \
+            --exclude='.eslintrc.js' \
+            --exclude='.editorconfig' \
+            --exclude='CLAUDE.md' \
+            --exclude='phpcs.xml*' \
+            --exclude='phpunit.xml*' \
+            --exclude='jest.config.js' \
+            --exclude='playwright.config.js' \
+            --exclude='node_modules' \
+            --exclude='vendor' \
+            --exclude='composer.json' \
+            --exclude='composer.lock' \
+            --exclude='package.json' \
+            --exclude='package-lock.json' \
+            --exclude='tests' \
+            --exclude='coverage' \
+            --exclude='.phpunit.result.cache' \
+            --exclude='build' \
+            --exclude='bin' \
+            --exclude='dist' \
+            --exclude='.distignore' \
+            --exclude='.vscode' \
+            --exclude='.idea' \
+            --exclude='*.sublime-*' \
+            --exclude='.DS_Store' \
+            --exclude='Thumbs.db' \
+            --exclude='docs' \
+            . "$RELEASE_DIR/"
+
+          # Install production Composer dependencies
+          cd "$RELEASE_DIR"
+          composer install --no-dev --optimize-autoloader --no-interaction
+          rm -f composer.json composer.lock
+          cd -
+
+          # Create ZIP
+          cd "$BUILD_DIR"
+          zip -r "${PLUGIN_SLUG}-${VERSION}.zip" "$PLUGIN_SLUG"
+          cd ..
+
+          # Calculate checksum
+          sha256sum "$BUILD_DIR/${PLUGIN_SLUG}-${VERSION}.zip" > "$BUILD_DIR/${PLUGIN_SLUG}-${VERSION}.zip.sha256"
+
+          echo "✅ Built: $BUILD_DIR/${PLUGIN_SLUG}-${VERSION}.zip"
+          echo "Size: $(du -h "$BUILD_DIR/${PLUGIN_SLUG}-${VERSION}.zip" | cut -f1)"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: plugin-zip
+          path: build/*.zip*
+          retention-days: 30
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version
+        id: get_version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: plugin-zip
+          path: ./artifacts
+
+      - name: Extract changelog for this version
+        id: changelog
+        run: |
+          VERSION=${{ steps.get_version.outputs.VERSION }}
+          VERSION=${VERSION#v}
+
+          if [ -f CHANGELOG.md ]; then
+            # Extract changelog for this version
+            sed -n "/## \[$VERSION\]/,/## \[/p" CHANGELOG.md | sed '$d' > release-notes.md
+          else
+            # Create default release notes
+            echo "## What's Changed" > release-notes.md
+            echo "" >> release-notes.md
+            echo "Release $VERSION" >> release-notes.md
+          fi
+
+          cat release-notes.md
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          name: Release ${{ steps.get_version.outputs.VERSION }}
+          body_path: release-notes.md
+          draft: false
+          prerelease: false
+          files: |
+            artifacts/cta-highlights-*.zip
+            artifacts/cta-highlights-*.zip.sha256
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Post-release summary
+        run: |
+          echo "## 🎉 Release ${{ steps.get_version.outputs.VERSION }} Published!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Release Details" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version:** ${{ steps.get_version.outputs.VERSION }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag:** ${{ github.ref }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "1. Download the ZIP from the [Releases page](https://github.com/${{ github.repository }}/releases)" >> $GITHUB_STEP_SUMMARY
+          echo "2. Test the ZIP by installing in WordPress" >> $GITHUB_STEP_SUMMARY
+          echo "3. (Optional) Deploy to WordPress.org" >> $GITHUB_STEP_SUMMARY

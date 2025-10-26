@@ -1,0 +1,62 @@
+# .gitattributes
+# Defines attributes per path for git archive
+# Files/directories with export-ignore are excluded from GitHub release archives
+
+# Development files
+/.github export-ignore
+/.wp-env.json export-ignore
+/.eslintrc.js export-ignore
+/.editorconfig export-ignore
+/CLAUDE.md export-ignore
+/phpcs.xml export-ignore
+/phpcs.xml.dist export-ignore
+/phpunit.xml export-ignore
+/phpunit.xml.dist export-ignore
+/jest.config.js export-ignore
+/playwright.config.js export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/.distignore export-ignore
+
+# Dependencies (included in build, excluded from source)
+/composer.json export-ignore
+/composer.lock export-ignore
+/package.json export-ignore
+/package-lock.json export-ignore
+
+# Tests
+/tests export-ignore
+/coverage export-ignore
+/.phpunit.result.cache export-ignore
+
+# Build directories
+/build export-ignore
+/bin export-ignore
+
+# Documentation (keep README.md)
+/docs export-ignore
+
+# Line ending normalization
+* text=auto
+
+# Specific file types
+*.php text eol=lf
+*.js text eol=lf
+*.css text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.xml text eol=lf
+*.sh text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary

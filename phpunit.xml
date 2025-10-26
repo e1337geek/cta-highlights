@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd"
+    bootstrap="tests/_support/bootstrap.php"
+    backupGlobals="false"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    processIsolation="false"
+    stopOnFailure="false"
+    verbose="true">
+
+    <testsuites>
+        <testsuite name="unit">
+            <directory>tests/unit</directory>
+        </testsuite>
+        <testsuite name="integration">
+            <directory>tests/integration</directory>
+        </testsuite>
+    </testsuites>
+
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">includes</directory>
+        </include>
+        <exclude>
+            <directory>includes/Admin/views</directory>
+            <directory>templates</directory>
+            <directory>vendor</directory>
+            <directory>tests</directory>
+        </exclude>
+        <report>
+            <html outputDirectory="coverage/php"/>
+            <text outputFile="php://stdout" showUncoveredFiles="true"/>
+            <clover outputFile="coverage/clover.xml"/>
+        </report>
+    </coverage>
+
+    <php>
+        <!-- WordPress Test Suite Configuration -->
+        <const name="WP_TESTS_PHPUNIT_POLYFILLS_PATH" value="./vendor/yoast/phpunit-polyfills" />
+
+        <!-- Test Database Configuration -->
+        <env name="WP_TESTS_DB_NAME" value="wordpress_test" />
+        <env name="WP_TESTS_DB_USER" value="root" />
+        <env name="WP_TESTS_DB_PASSWORD" value="password" />
+        <env name="WP_TESTS_DB_HOST" value="localhost" />
+        <env name="WP_TESTS_TABLE_PREFIX" value="wptests_" />
+
+        <!-- WordPress Configuration -->
+        <env name="WP_TESTS_DOMAIN" value="example.org" />
+        <env name="WP_TESTS_EMAIL" value="admin@example.org" />
+        <env name="WP_TESTS_TITLE" value="Test Site" />
+
+        <!-- Plugin Configuration -->
+        <env name="WP_TESTS_PLUGIN_DIR" value="." />
+        <env name="WP_DEBUG" value="true" />
+        <env name="WP_DEBUG_LOG" value="false" />
+        <env name="WP_DEBUG_DISPLAY" value="true" />
+
+        <!-- Test Mode -->
+        <const name="WP_TESTS_FORCE_KNOWN_BUGS" value="false" />
+    </php>
+
+    <logging>
+        <junit outputFile="tests/_output/junit.xml"/>
+    </logging>
+</phpunit>

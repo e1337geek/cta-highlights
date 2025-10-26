@@ -1,0 +1,53 @@
+# .distignore
+# Files to exclude from WordPress.org SVN deployment
+# Used by wordpress-plugin-deploy action
+
+# Version control
+/.git
+/.github
+/.gitignore
+/.gitattributes
+
+# Development files
+/.wp-env.json
+/.eslintrc.js
+/.editorconfig
+/CLAUDE.md
+/phpcs.xml
+/phpcs.xml.dist
+/phpunit.xml
+/phpunit.xml.dist
+/jest.config.js
+/playwright.config.js
+
+# Dependencies
+/node_modules
+/vendor
+/composer.json
+/composer.lock
+/package.json
+/package-lock.json
+
+# Tests
+/tests
+/coverage
+/.phpunit.result.cache
+
+# Build files
+/build
+/dist
+/.distignore
+
+# IDE
+/.vscode
+/.idea
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# CI/CD
+/.github/workflows
+
+# Documentation (keep README.md)
+/docs

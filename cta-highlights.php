@@ -2,7 +2,7 @@
 /**
  * Plugin Name: CTA Highlights
  * Description: A flexible shortcode plugin for displaying call-to-action highlights with customizable templates that can be overridden in themes.
- * Version: 1.0.0
+ * Version: 0.1.0
  * Author: Standby CXO
  * Author URI: https://standbycxo.com
  * License: GPL v2 or later
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'CTA_HIGHLIGHTS_VERSION', '1.0.0' );
+define( 'CTA_HIGHLIGHTS_VERSION', '0.1.0' );
 define( 'CTA_HIGHLIGHTS_FILE', __FILE__ );
 define( 'CTA_HIGHLIGHTS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CTA_HIGHLIGHTS_URL', plugin_dir_url( __FILE__ ) );
