@@ -1,5 +1,6 @@
 <?php
 namespace CTAHighlights\Assets;
+
 use CTAHighlights\Template\Registry;
 
 class Manager {
@@ -119,7 +120,7 @@ class Manager {
 			return;
 		}
 
-		$registry        = Registry::instance();
+		$registry       = Registry::instance();
 		$templates_used = $registry->get_all();
 
 		if ( empty( $templates_used ) ) {

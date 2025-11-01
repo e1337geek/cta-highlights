@@ -468,6 +468,180 @@ class LoaderTest extends WP_UnitTestCase {
 	}
 
 	// =============================================================
+	// GET_ATT() FUNCTION TESTS
+	// =============================================================
+
+	/**
+	 * @test
+	 * Test that get_att() uses template-provided defaults when attribute is empty
+	 *
+	 * WHY: Theme developers need to override default values per template
+	 * PRIORITY: HIGH (functionality)
+	 */
+	public function it_uses_template_default_when_attribute_is_empty() {
+		$template_content = '<?php echo esc_html( $get_att( "cta_title", "Template Default Title" ) ); ?>';
+		$template_path = $this->createTemplate( 'default-test', $template_content );
+
+		// Pass empty string for cta_title
+		$output = $this->loader->render( $template_path, array(
+			'cta_title' => '',
+		) );
+
+		$this->assertStringContainsString( 'Template Default Title', $output );
+	}
+
+	/**
+	 * @test
+	 * Test that get_att() uses template-provided defaults when attribute is not set
+	 *
+	 * WHY: Theme developers need to override default values per template
+	 * PRIORITY: HIGH (functionality)
+	 */
+	public function it_uses_template_default_when_attribute_is_not_set() {
+		$template_content = '<?php echo esc_html( $get_att( "cta_button_text", "Custom Default Button" ) ); ?>';
+		$template_path = $this->createTemplate( 'default-test-2', $template_content );
+
+		// Don't pass cta_button_text at all
+		$output = $this->loader->render( $template_path, array() );
+
+		$this->assertStringContainsString( 'Custom Default Button', $output );
+	}
+
+	/**
+	 * @test
+	 * Test that get_att() uses shortcode value when provided
+	 *
+	 * WHY: Shortcode attributes must override template defaults
+	 * PRIORITY: HIGH (functionality)
+	 */
+	public function it_uses_shortcode_value_when_provided() {
+		$template_content = '<?php echo esc_html( $get_att( "cta_title", "Default" ) ); ?>';
+		$template_path = $this->createTemplate( 'value-test', $template_content );
+
+		// Pass actual value
+		$output = $this->loader->render( $template_path, array(
+			'cta_title' => 'Shortcode Value',
+		) );
+
+		$this->assertStringContainsString( 'Shortcode Value', $output );
+		$this->assertStringNotContainsString( 'Default', $output );
+	}
+
+	/**
+	 * @test
+	 * Test that different templates can have different defaults for same attribute
+	 *
+	 * WHY: Theme developers need per-template customization
+	 * PRIORITY: HIGH (functionality)
+	 */
+	public function it_allows_different_defaults_per_template() {
+		$template1_content = '<?php echo esc_html( $get_att( "cta_button_text", "Buy Now" ) ); ?>';
+		$template1_path = $this->createTemplate( 'ecommerce-template', $template1_content );
+
+		$template2_content = '<?php echo esc_html( $get_att( "cta_button_text", "Read More" ) ); ?>';
+		$template2_path = $this->createTemplate( 'blog-template', $template2_content );
+
+		// Render both without providing cta_button_text
+		$output1 = $this->loader->render( $template1_path, array() );
+		$output2 = $this->loader->render( $template2_path, array() );
+
+		$this->assertStringContainsString( 'Buy Now', $output1 );
+		$this->assertStringContainsString( 'Read More', $output2 );
+	}
+
+	/**
+	 * @test
+	 * Test that get_att() handles various data types correctly
+	 *
+	 * WHY: Ensure robust handling of different attribute types
+	 * PRIORITY: MEDIUM (robustness)
+	 */
+	public function it_handles_various_data_types_in_get_att() {
+		$template_content = '<?php
+			echo "string:" . esc_html( $get_att( "str", "default_str" ) ) . ";";
+			echo "number:" . absint( $get_att( "num", 42 ) ) . ";";
+			echo "bool:" . ( $get_att( "bool", true ) ? "true" : "false" ) . ";";
+		?>';
+		$template_path = $this->createTemplate( 'types-test', $template_content );
+
+		// Test with no attributes (should use defaults)
+		$output = $this->loader->render( $template_path, array() );
+
+		$this->assertStringContainsString( 'string:default_str;', $output );
+		$this->assertStringContainsString( 'number:42;', $output );
+		$this->assertStringContainsString( 'bool:true;', $output );
+	}
+
+	/**
+	 * @test
+	 * Test that get_att() preserves zero and false values
+	 *
+	 * WHY: Zero and false are valid values that should not be replaced with defaults
+	 * PRIORITY: HIGH (functionality)
+	 */
+	public function it_preserves_zero_and_false_values() {
+		$template_content = '<?php
+			echo "zero:" . absint( $get_att( "num", 999 ) ) . ";";
+			echo "false:" . ( $get_att( "bool", true ) ? "true" : "false" ) . ";";
+		?>';
+		$template_path = $this->createTemplate( 'falsy-test', $template_content );
+
+		$output = $this->loader->render( $template_path, array(
+			'num'  => 0,
+			'bool' => false,
+		) );
+
+		$this->assertStringContainsString( 'zero:0;', $output );
+		$this->assertStringContainsString( 'false:false;', $output );
+	}
+
+	/**
+	 * @test
+	 * Test that get_att() is available as a closure in templates
+	 *
+	 * WHY: Templates need access to get_att() function
+	 * PRIORITY: HIGH (functionality)
+	 */
+	public function it_provides_get_att_as_callable() {
+		$template_content = '<?php
+			if ( is_callable( $get_att ) ) {
+				echo "callable:yes";
+			}
+		?>';
+		$template_path = $this->createTemplate( 'callable-test', $template_content );
+
+		$output = $this->loader->render( $template_path, array() );
+
+		$this->assertStringContainsString( 'callable:yes', $output );
+	}
+
+	/**
+	 * @test
+	 * Test that multiple get_att() calls work independently
+	 *
+	 * WHY: Templates often have multiple attributes with different defaults
+	 * PRIORITY: HIGH (functionality)
+	 */
+	public function it_handles_multiple_get_att_calls_independently() {
+		$template_content = '<?php
+			$title = $get_att( "cta_title", "Default Title" );
+			$button = $get_att( "cta_button_text", "Default Button" );
+			$url = $get_att( "cta_button_url", "#default" );
+			echo esc_html( $title ) . "|" . esc_html( $button ) . "|" . esc_url( $url );
+		?>';
+		$template_path = $this->createTemplate( 'multi-test', $template_content );
+
+		// Provide only one attribute
+		$output = $this->loader->render( $template_path, array(
+			'cta_title' => 'Custom Title',
+		) );
+
+		$this->assertStringContainsString( 'Custom Title', $output );
+		$this->assertStringContainsString( 'Default Button', $output );
+		$this->assertStringContainsString( '#default', $output );
+	}
+
+	// =============================================================
 	// SECURITY EVENT LOGGING TESTS
 	// =============================================================
 

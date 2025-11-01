@@ -42,10 +42,21 @@ class Loader {
 	 */
 	private const TEMPLATE_SUBDIR = 'cta-highlights-templates/';
 
+	/**
+	 * Constructor.
+	 *
+	 * @param string $plugin_dir Plugin directory path.
+	 */
 	public function __construct( $plugin_dir ) {
 		$this->plugin_dir = trailingslashit( $plugin_dir );
 	}
 
+	/**
+	 * Locate a template file with caching.
+	 *
+	 * @param string $template_name Template name without .php extension.
+	 * @return string|null Template file path or null if not found.
+	 */
 	public function locate_template( $template_name ) {
 		$template_name = sanitize_file_name( $template_name );
 
@@ -72,6 +83,12 @@ class Loader {
 		return $template_path;
 	}
 
+	/**
+	 * Find a template file in theme or plugin directories.
+	 *
+	 * @param string $template_name Template name without .php extension.
+	 * @return string|null Template file path or null if not found.
+	 */
 	private function find_template( $template_name ) {
 		$template_file = $template_name . '.php';
 		$theme_path    = self::TEMPLATE_SUBDIR . $template_file;
@@ -93,6 +110,12 @@ class Loader {
 		return null;
 	}
 
+	/**
+	 * Validate that a template file is safe to include.
+	 *
+	 * @param string $path Template file path to validate.
+	 * @return bool True if valid and safe to include.
+	 */
 	private function validate_template_file( $path ) {
 		if ( ! file_exists( $path ) ) {
 			return false;
@@ -133,20 +156,40 @@ class Loader {
 		return true;
 	}
 
+	/**
+	 * Render a template with given arguments.
+	 *
+	 * @param string $template_path Path to template file.
+	 * @param array  $template_args Template arguments/variables.
+	 * @return string Rendered template output.
+	 */
 	public function render( $template_path, array $template_args = array() ) {
 		$view = new ViewData( $template_args );
 
-		$get_att = function ( $key, $default = '' ) use ( $view ) {
-			return $view->get( $key, $default );
+		/**
+		 * Get attribute helper for templates.
+		 *
+		 * This function allows template files to define their own default values
+		 * for attributes. When a shortcode attribute is not provided (empty string),
+		 * the template's default value will be used.
+		 *
+		 * @param string $key           Attribute key to retrieve.
+		 * @param mixed  $default_value Default value if attribute is not set or empty.
+		 * @return mixed The attribute value or default.
+		 */
+		$get_att = function ( $key, $default_value = '' ) use ( $view ) {
+			$value = $view->get( $key );
+			// Use the template's default if the value is empty or not set
+			if ( null === $value || '' === $value ) {
+				return $default_value;
+			}
+			return $value;
 		};
 
-		$template        = $view->get( 'template', 'default' );
-		$cta_title       = $view->get( 'cta_title', '' );
-		$cta_content     = $view->get( 'cta_content', '' );
-		$cta_button_text = $view->get( 'cta_button_text', 'Learn More' );
-		$cta_button_url  = $view->get( 'cta_button_url', '#' );
-		$content         = $view->get( 'content', '' );
-		$custom_class    = $view->get( 'custom_class', '' );
+		// Make core template variables available
+		$template     = $view->get( 'template', 'default' );
+		$content      = $view->get( 'content', '' );
+		$custom_class = $view->get( 'custom_class', '' );
 
 		ob_start();
 
@@ -159,6 +202,11 @@ class Loader {
 		return ob_get_clean();
 	}
 
+	/**
+	 * Clear the template cache.
+	 *
+	 * @return void
+	 */
 	public function clear_cache() {
 		wp_cache_flush_group( self::CACHE_GROUP );
 		$this->template_cache = array();
@@ -166,14 +214,26 @@ class Loader {
 		do_action( 'cta_highlights_template_cache_cleared' );
 	}
 
+	/**
+	 * Log a security event for debugging.
+	 *
+	 * @param string $message Security event message.
+	 * @return void
+	 */
 	private function log_security_event( $message ) {
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Debug logging for security events.
 			error_log( "CTA Highlights Security: {$message}" );
 		}
 
 		do_action( 'cta_highlights_security_event', $message );
 	}
 
+	/**
+	 * Get all available templates from plugin and theme.
+	 *
+	 * @return array List of templates with their metadata.
+	 */
 	public function get_all_templates() {
 		$templates = array();
 
@@ -181,7 +241,7 @@ class Loader {
 		if ( is_dir( $plugin_templates_dir ) ) {
 			$plugin_files = glob( $plugin_templates_dir . '*.php' );
 			foreach ( $plugin_files as $file ) {
-				$template_name              = basename( $file, '.php' );
+				$template_name               = basename( $file, '.php' );
 				$templates[ $template_name ] = array(
 					'name'     => $template_name,
 					'path'     => $file,
@@ -194,7 +254,7 @@ class Loader {
 		if ( is_dir( $theme_templates_dir ) ) {
 			$theme_files = glob( $theme_templates_dir . '*.php' );
 			foreach ( $theme_files as $file ) {
-				$template_name              = basename( $file, '.php' );
+				$template_name               = basename( $file, '.php' );
 				$templates[ $template_name ] = array(
 					'name'     => $template_name,
 					'path'     => $file,

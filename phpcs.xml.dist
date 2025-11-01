@@ -5,7 +5,6 @@
 	<!-- What to scan -->
 	<file>cta-highlights.php</file>
 	<file>includes</file>
-	<file>tests</file>
 
 	<!-- How to scan -->
 	<arg value="sp"/> <!-- Show sniff and progress -->

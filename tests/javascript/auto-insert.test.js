@@ -632,10 +632,10 @@ describe('Auto-Insert - Analytics Tracking', () => {
 		setupWordPressEnv();
 	});
 
-	afterEach() {
+	afterEach(() => {
 		global.localStorage.__reset();
 		resetWordPressEnv();
-	}
+	});
 
 	test('tracks insertion event', () => {
 		document.body.innerHTML = `

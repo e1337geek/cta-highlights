@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(vendor/bin/phpunit:*)",
+      "Bash(npm run test:setup:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

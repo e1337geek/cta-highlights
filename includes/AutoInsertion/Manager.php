@@ -175,10 +175,10 @@ class Manager {
 	 * @return array Array of CTAs in fallback order.
 	 */
 	private function build_fallback_chain( $cta, $post ) {
-		$chain      = array( $cta );
-		$visited    = array( $cta['id'] );
-		$current    = $cta;
-		$depth      = 0;
+		$chain   = array( $cta );
+		$visited = array( $cta['id'] );
+		$current = $cta;
+		$depth   = 0;
 
 		// Follow the fallback chain
 		while ( ! empty( $current['fallback_cta_id'] ) && $depth < self::MAX_FALLBACK_DEPTH ) {
@@ -198,7 +198,7 @@ class Manager {
 				$chain[]   = $fallback;
 				$visited[] = $fallback['id'];
 				$current   = $fallback;
-				$depth++;
+				++$depth;
 			} else {
 				// Fallback doesn't match post type/category, stop chain
 				break;

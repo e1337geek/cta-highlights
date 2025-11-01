@@ -52,7 +52,10 @@ test.describe('Auto-Insertion', () => {
 					<p>Paragraph 4</p>
 					<p>Paragraph 5</p>
 				`;
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -62,18 +65,23 @@ test.describe('Auto-Insertion', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Wait for JavaScript to execute
 			await page.waitForTimeout(1000);
 
 			// Should have auto-inserted CTA
-			const autoInsertCount = await frontendPage.getAutoInsertedCTACount();
+			const autoInsertCount =
+				await frontendPage.getAutoInsertedCTACount();
 			expect(autoInsertCount).toBeGreaterThan(0);
 		});
 
-		test('should insert at correct position (forward)', async ({ page }) => {
+		test('should insert at correct position (forward)', async ({
+			page,
+		}) => {
 			// Create CTA
 			await adminPage.goto();
 			await adminPage.clickAddNew();
@@ -99,7 +107,10 @@ test.describe('Auto-Insertion', () => {
 					<p>Paragraph 4</p>
 					<p>Paragraph 5</p>
 				`;
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -109,7 +120,9 @@ test.describe('Auto-Insertion', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			await page.waitForTimeout(1000);
@@ -121,7 +134,9 @@ test.describe('Auto-Insertion', () => {
 			expect(position).toBe(3);
 		});
 
-		test('should insert at correct position (reverse)', async ({ page }) => {
+		test('should insert at correct position (reverse)', async ({
+			page,
+		}) => {
 			// Create CTA with reverse direction
 			await adminPage.goto();
 			await adminPage.clickAddNew();
@@ -147,7 +162,10 @@ test.describe('Auto-Insertion', () => {
 					<p>Paragraph 4</p>
 					<p>Paragraph 5</p>
 				`;
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -157,7 +175,9 @@ test.describe('Auto-Insertion', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			await page.waitForTimeout(1000);
@@ -194,7 +214,10 @@ test.describe('Auto-Insertion', () => {
 					<p>Paragraph 2</p>
 					<p>Paragraph 3</p>
 				`;
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -204,19 +227,24 @@ test.describe('Auto-Insertion', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			await page.waitForTimeout(1000);
 
 			// Should NOT have auto-inserted CTA
-			const autoInsertCount = await frontendPage.getAutoInsertedCTACount();
+			const autoInsertCount =
+				await frontendPage.getAutoInsertedCTACount();
 			expect(autoInsertCount).toBe(0);
 		});
 	});
 
 	test.describe('Fallback Chain', () => {
-		test('should show primary CTA when conditions met', async ({ page }) => {
+		test('should show primary CTA when conditions met', async ({
+			page,
+		}) => {
 			// Create primary CTA
 			await adminPage.goto();
 			await adminPage.clickAddNew();
@@ -238,7 +266,10 @@ test.describe('Auto-Insertion', () => {
 			await adminPage.fillTitle('Fallback Test Post');
 			await page.evaluate(() => {
 				const content = `<p>P1</p><p>P2</p><p>P3</p>`;
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -248,7 +279,9 @@ test.describe('Auto-Insertion', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			await page.waitForTimeout(1000);
@@ -258,7 +291,9 @@ test.describe('Auto-Insertion', () => {
 			expect(hasAutoCTA).toBe(true);
 		});
 
-		test('should show fallback CTA when primary on cooldown', async ({ page }) => {
+		test('should show fallback CTA when primary on cooldown', async ({
+			page,
+		}) => {
 			// Create primary CTA
 			await adminPage.goto();
 			await adminPage.clickAddNew();
@@ -295,7 +330,10 @@ test.describe('Auto-Insertion', () => {
 			await adminPage.fillTitle('Cooldown Fallback Test');
 			await page.evaluate(() => {
 				const content = `<p>P1</p><p>P2</p><p>P3</p>`;
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -305,7 +343,9 @@ test.describe('Auto-Insertion', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 
 			// First visit - dismiss primary CTA
 			await frontendPage.goto(permalink);
@@ -321,7 +361,8 @@ test.describe('Auto-Insertion', () => {
 			await page.waitForTimeout(1000);
 
 			// Should now show fallback CTA (primary is on cooldown)
-			const hasFallback = await frontendPage.hasAutoInsertedCTA(fallbackId);
+			const hasFallback =
+				await frontendPage.hasAutoInsertedCTA(fallbackId);
 			expect(hasFallback).toBe(true);
 		});
 	});
@@ -348,7 +389,10 @@ test.describe('Auto-Insertion', () => {
 			await adminPage.fillTitle('Storage Test Post');
 			await page.evaluate(() => {
 				const content = `<p>P1</p><p>P2</p><p>P3</p>`;
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -358,7 +402,9 @@ test.describe('Auto-Insertion', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 
 			// First visit
 			await frontendPage.goto(permalink);
@@ -382,7 +428,9 @@ test.describe('Auto-Insertion', () => {
 	});
 
 	test.describe('Meta Box Disable', () => {
-		test('should not auto-insert when disabled via meta box', async ({ page }) => {
+		test('should not auto-insert when disabled via meta box', async ({
+			page,
+		}) => {
 			// Create CTA
 			await adminPage.goto();
 			await adminPage.clickAddNew();
@@ -402,7 +450,10 @@ test.describe('Auto-Insertion', () => {
 			await adminPage.fillTitle('Disabled Auto-Insert Post');
 			await page.evaluate(() => {
 				const content = `<p>P1</p><p>P2</p><p>P3</p>`;
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -410,15 +461,19 @@ test.describe('Auto-Insertion', () => {
 			});
 
 			// Check "Disable auto-insert" meta box if visible
-			const disableCheckbox = page.locator('#cta_highlights_disable_auto_insert');
-			if (await disableCheckbox.count() > 0) {
+			const disableCheckbox = page.locator(
+				'#cta_highlights_disable_auto_insert'
+			);
+			if ((await disableCheckbox.count()) > 0) {
 				await disableCheckbox.check();
 			}
 
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			await page.waitForTimeout(1000);

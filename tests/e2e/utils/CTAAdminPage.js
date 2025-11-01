@@ -37,8 +37,10 @@ class CTAAdminPage {
 
 			// Meta boxes
 			templateSelect: '#cta_highlights_template',
-			ctaTypePrimary: 'input[name="cta_highlights_type"][value="primary"]',
-			ctaTypeFallback: 'input[name="cta_highlights_type"][value="fallback"]',
+			ctaTypePrimary:
+				'input[name="cta_highlights_type"][value="primary"]',
+			ctaTypeFallback:
+				'input[name="cta_highlights_type"][value="fallback"]',
 			fallbackSelect: '#cta_highlights_fallback_id',
 			postTypesCheckbox: 'input[name="cta_highlights_post_types[]"]',
 			categoriesCheckbox: 'input[name="cta_highlights_categories[]"]',
@@ -49,7 +51,7 @@ class CTAAdminPage {
 			// Notices
 			successNotice: '.notice-success',
 			errorNotice: '.notice-error',
-			warningNotice: '.notice-warning'
+			warningNotice: '.notice-warning',
 		};
 	}
 
@@ -65,8 +67,15 @@ class CTAAdminPage {
 	 * Wait for WordPress admin page to load
 	 */
 	async waitForPageLoad() {
-		await this.page.waitForSelector(this.selectors.adminBar, { state: 'visible' });
-		await this.page.waitForSelector('.spinner.is-active', { state: 'hidden', timeout: 5000 }).catch(() => {});
+		await this.page.waitForSelector(this.selectors.adminBar, {
+			state: 'visible',
+		});
+		await this.page
+			.waitForSelector('.spinner.is-active', {
+				state: 'hidden',
+				timeout: 5000,
+			})
+			.catch(() => {});
 	}
 
 	/**
@@ -92,7 +101,8 @@ class CTAAdminPage {
 	 * @param {string} content - CTA content (HTML)
 	 */
 	async fillContent(content) {
-		const isBlockEditor = await this.page.locator(this.selectors.blockEditor).count() > 0;
+		const isBlockEditor =
+			(await this.page.locator(this.selectors.blockEditor).count()) > 0;
 
 		if (isBlockEditor) {
 			// Block Editor
@@ -101,7 +111,10 @@ class CTAAdminPage {
 		} else {
 			// Classic Editor - set via TinyMCE or textarea
 			await this.page.evaluate((htmlContent) => {
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(htmlContent);
 				} else {
 					document.getElementById('content').value = htmlContent;
@@ -116,8 +129,13 @@ class CTAAdminPage {
 	 * @param {string} template - Template name
 	 */
 	async selectTemplate(template) {
-		if (await this.page.locator(this.selectors.templateSelect).count() > 0) {
-			await this.page.selectOption(this.selectors.templateSelect, template);
+		if (
+			(await this.page.locator(this.selectors.templateSelect).count()) > 0
+		) {
+			await this.page.selectOption(
+				this.selectors.templateSelect,
+				template
+			);
 		}
 	}
 
@@ -127,11 +145,12 @@ class CTAAdminPage {
 	 * @param {string} type - 'primary' or 'fallback'
 	 */
 	async setCTAType(type) {
-		const selector = type === 'primary'
-			? this.selectors.ctaTypePrimary
-			: this.selectors.ctaTypeFallback;
+		const selector =
+			type === 'primary'
+				? this.selectors.ctaTypePrimary
+				: this.selectors.ctaTypeFallback;
 
-		if (await this.page.locator(selector).count() > 0) {
+		if ((await this.page.locator(selector).count()) > 0) {
 			await this.page.check(selector);
 		}
 	}
@@ -142,8 +161,13 @@ class CTAAdminPage {
 	 * @param {string} fallbackId - Fallback CTA ID
 	 */
 	async selectFallback(fallbackId) {
-		if (await this.page.locator(this.selectors.fallbackSelect).count() > 0) {
-			await this.page.selectOption(this.selectors.fallbackSelect, fallbackId);
+		if (
+			(await this.page.locator(this.selectors.fallbackSelect).count()) > 0
+		) {
+			await this.page.selectOption(
+				this.selectors.fallbackSelect,
+				fallbackId
+			);
 		}
 	}
 
@@ -163,7 +187,9 @@ class CTAAdminPage {
 
 		// Then check the specified ones
 		for (const postType of postTypes) {
-			await this.page.check(`input[name="cta_highlights_post_types[]"][value="${postType}"]`);
+			await this.page.check(
+				`input[name="cta_highlights_post_types[]"][value="${postType}"]`
+			);
 		}
 	}
 
@@ -173,8 +199,15 @@ class CTAAdminPage {
 	 * @param {string} direction - 'forward' or 'reverse'
 	 */
 	async setInsertionDirection(direction) {
-		if (await this.page.locator(this.selectors.insertionDirection).count() > 0) {
-			await this.page.selectOption(this.selectors.insertionDirection, direction);
+		if (
+			(await this.page
+				.locator(this.selectors.insertionDirection)
+				.count()) > 0
+		) {
+			await this.page.selectOption(
+				this.selectors.insertionDirection,
+				direction
+			);
 		}
 	}
 
@@ -184,8 +217,15 @@ class CTAAdminPage {
 	 * @param {number} position - Position number
 	 */
 	async setInsertionPosition(position) {
-		if (await this.page.locator(this.selectors.insertionPosition).count() > 0) {
-			await this.page.fill(this.selectors.insertionPosition, position.toString());
+		if (
+			(await this.page
+				.locator(this.selectors.insertionPosition)
+				.count()) > 0
+		) {
+			await this.page.fill(
+				this.selectors.insertionPosition,
+				position.toString()
+			);
 		}
 	}
 
@@ -195,8 +235,14 @@ class CTAAdminPage {
 	 * @param {string} condition - Storage condition
 	 */
 	async setStorageCondition(condition) {
-		if (await this.page.locator(this.selectors.storageCondition).count() > 0) {
-			await this.page.selectOption(this.selectors.storageCondition, condition);
+		if (
+			(await this.page.locator(this.selectors.storageCondition).count()) >
+			0
+		) {
+			await this.page.selectOption(
+				this.selectors.storageCondition,
+				condition
+			);
 		}
 	}
 
@@ -238,7 +284,7 @@ class CTAAdminPage {
 	 * Get notice message
 	 *
 	 * @param {string} type - 'success', 'error', or 'warning'
-	 * @returns {Promise<string>} - Notice message text
+	 * @return {Promise<string>} - Notice message text
 	 */
 	async getNoticeMessage(type = 'success') {
 		const selector = this.selectors[`${type}Notice`];
@@ -248,7 +294,7 @@ class CTAAdminPage {
 	/**
 	 * Get current post ID from URL
 	 *
-	 * @returns {Promise<string|null>} - Post ID
+	 * @return {Promise<string|null>} - Post ID
 	 */
 	async getCurrentPostId() {
 		const url = this.page.url();
@@ -294,7 +340,7 @@ class CTAAdminPage {
 	/**
 	 * Get CTA count from list page
 	 *
-	 * @returns {Promise<number>} - Number of CTAs in table
+	 * @return {Promise<number>} - Number of CTAs in table
 	 */
 	async getCTACount() {
 		return await this.page.locator(this.selectors.ctaRow).count();
@@ -304,10 +350,10 @@ class CTAAdminPage {
 	 * Check if CTA exists in list
 	 *
 	 * @param {string} ctaId - CTA ID
-	 * @returns {Promise<boolean>} - True if CTA exists
+	 * @return {Promise<boolean>} - True if CTA exists
 	 */
 	async ctaExists(ctaId) {
-		return await this.page.locator(`#post-${ctaId}`).count() > 0;
+		return (await this.page.locator(`#post-${ctaId}`).count()) > 0;
 	}
 }
 

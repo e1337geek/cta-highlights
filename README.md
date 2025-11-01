@@ -351,32 +351,62 @@ $button_url = $get_att( 'cta_button_url', '#' );
 
 All templates receive these variables:
 
-| Variable | Type | Description | Default |
-|----------|------|-------------|---------|
-| `$view` | `ViewData` | Object with all shortcode attributes | - |
-| `$get_att` | `callable` | Helper function: `$get_att('key', 'default')` | - |
-| `$template` | `string` | Template name being used | `'default'` |
-| `$cta_title` | `string` | CTA title from shortcode | `''` |
-| `$cta_content` | `string` | Processed CTA content | `''` |
-| `$cta_button_text` | `string` | Button text | `'Learn More'` |
-| `$cta_button_url` | `string` | Button URL | `'#'` |
-| `$content` | `string` | Shortcode content (same as `$cta_content`) | `''` |
-| `$custom_class` | `string` | Custom CSS classes | `''` |
+| Variable | Type | Description |
+|----------|------|-------------|
+| `$view` | `ViewData` | Object with all shortcode attributes |
+| `$get_att` | `callable` | Helper function: `$get_att('key', 'default')` |
+| `$template` | `string` | Template name being used |
+| `$content` | `string` | Shortcode content (processed) |
+| `$custom_class` | `string` | Custom CSS classes |
 
-**Additional attributes** passed via the shortcode are also available through `$get_att()`.
+**Note:** As of version 0.1.0, core template variables like `$cta_title`, `$cta_button_text`, etc. are no longer pre-extracted. Use the `$get_att()` helper function to access all attributes with template-specific defaults.
 
-#### Three Ways to Access Variables
+#### The `get_att()` Helper Function
+
+The `$get_att()` function is the recommended way to access attributes in your templates. It allows you to define **template-specific default values** that will be used when an attribute is not provided in the shortcode.
+
+**Function Signature:**
+```php
+$get_att( string $key, mixed $default_value = '' ): mixed
+```
+
+**How it Works:**
+- If the shortcode provides a value for `$key`, that value is returned
+- If the shortcode attribute is empty or not provided, `$default_value` is returned
+- This allows each template to define its own defaults independent of the core plugin
+
+**Example:**
+```php
+// In template: ecommerce-cta.php
+$button_text = $get_att( 'cta_button_text', 'Buy Now' );
+
+// In template: blog-cta.php
+$button_text = $get_att( 'cta_button_text', 'Read More' );
+```
+
+Both templates access the same attribute (`cta_button_text`), but each defines its own default value that fits its purpose.
+
+#### Accessing Attributes in Templates
 
 ```php
-// Method 1: Direct variable (extracted for convenience)
-<?php echo esc_html( $cta_title ); ?>
+// Recommended: Use $get_att() with template-specific defaults
+$title = $get_att( 'cta_title', 'Default Title for This Template' );
+$button = $get_att( 'cta_button_text', 'Click Here' );
+$url = $get_att( 'cta_button_url', '#' );
 
-// Method 2: ViewData object
-<?php echo esc_html( $view->cta_title ); ?>
+// Alternative: Direct ViewData access (no default, returns empty string if not set)
+$title = $view->get( 'cta_title' );
 
-// Method 3: Helper function with default (recommended for custom attributes)
-<?php echo esc_html( $get_att('custom_field', 'fallback value') ); ?>
+// Custom attributes work the same way
+$custom_field = $get_att( 'my_custom_attribute', 'custom default' );
 ```
+
+#### Best Practices
+
+1. **Always use `$get_att()`** for attribute access to leverage template-specific defaults
+2. **Define sensible defaults** that match your template's purpose
+3. **Different templates can have different defaults** for the same attribute
+4. **Shortcode values always win** - defaults are only used when no value is provided
 
 ### Template Locations
 
@@ -1033,6 +1063,16 @@ $assets = cta_highlights_get_asset_manager();
 - IntersectionObserver API (graceful degradation)
 - localStorage API (cooldowns skip gracefully if unavailable)
 - CSS Container Queries (fallback to media queries)
+
+### Development Requirements
+
+For plugin development, you'll also need:
+
+- **PHP 7.4+** with Composer
+- **Node.js 16+** with npm 8+
+- **Docker Desktop** (optional, for E2E tests)
+
+**See [DEVELOPMENT-SETUP.md](DEVELOPMENT-SETUP.md) for complete installation instructions.**
 
 ---
 

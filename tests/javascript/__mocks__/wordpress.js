@@ -7,6 +7,7 @@
 
 /**
  * Create default ctaHighlightsConfig
+ * @param overrides
  */
 function createCtaHighlightsConfig(overrides = {}) {
 	return {
@@ -14,7 +15,7 @@ function createCtaHighlightsConfig(overrides = {}) {
 		templateCooldown: 86400, // 24 hours
 		overlayColor: 'rgba(0, 0, 0, 0.7)',
 		debug: false,
-		...overrides
+		...overrides,
 	};
 }
 
@@ -40,6 +41,7 @@ function gaMock() {
 
 /**
  * Setup WordPress environment for tests
+ * @param config
  */
 function setupWordPressEnv(config = {}) {
 	// Setup config
@@ -76,7 +78,7 @@ function resetWordPressEnv() {
 function getAnalyticsCalls() {
 	return {
 		gtag: global.__gtagCalls || [],
-		ga: global.__gaCalls || []
+		ga: global.__gaCalls || [],
 	};
 }
 
@@ -86,5 +88,5 @@ module.exports = {
 	resetWordPressEnv,
 	getAnalyticsCalls,
 	gtagMock,
-	gaMock
+	gaMock,
 };

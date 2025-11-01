@@ -9,12 +9,16 @@
  * - Cooldown logic
  * - Intersection observer integration
  *
- * @package CTAHighlights\Tests\JavaScript
+ * @package
  */
 
 const LocalStorageMock = require('./__mocks__/localStorage');
 const IntersectionObserverMock = require('./__mocks__/intersectionObserver');
-const { setupWordPressEnv, resetWordPressEnv, getAnalyticsCalls } = require('./__mocks__/wordpress');
+const {
+	setupWordPressEnv,
+	resetWordPressEnv,
+	getAnalyticsCalls,
+} = require('./__mocks__/wordpress');
 const fs = require('fs');
 const path = require('path');
 
@@ -34,7 +38,7 @@ describe('CTA Highlights - Storage Manager', () => {
 
 		// Setup document.cookie
 		global.document = {
-			cookie: ''
+			cookie: '',
 		};
 
 		setupWordPressEnv();
@@ -103,9 +107,13 @@ describe('CTA Highlights - Storage Manager', () => {
 
 			manager.set('cta_highlights_global', 3600);
 
-			expect(localStorage.getItem('cta_highlights_global')).not.toBeNull();
+			expect(
+				localStorage.getItem('cta_highlights_global')
+			).not.toBeNull();
 
-			const data = JSON.parse(localStorage.getItem('cta_highlights_global'));
+			const data = JSON.parse(
+				localStorage.getItem('cta_highlights_global')
+			);
 			expect(data).toHaveProperty('timestamp');
 			expect(data).toHaveProperty('expiryTime');
 		});
@@ -130,7 +138,7 @@ describe('CTA Highlights - Storage Manager', () => {
 			const futureTime = Date.now() + 10000;
 			const data = JSON.stringify({
 				timestamp: Date.now(),
-				expiryTime: futureTime
+				expiryTime: futureTime,
 			});
 			localStorage.setItem('test_cooldown', data);
 
@@ -145,7 +153,7 @@ describe('CTA Highlights - Storage Manager', () => {
 			const pastTime = Date.now() - 10000;
 			const data = JSON.stringify({
 				timestamp: Date.now() - 20000,
-				expiryTime: pastTime
+				expiryTime: pastTime,
 			});
 			localStorage.setItem('test_cooldown', data);
 
@@ -160,7 +168,7 @@ describe('CTA Highlights - Storage Manager', () => {
 			const pastTime = Date.now() - 10000;
 			const data = JSON.stringify({
 				timestamp: Date.now() - 20000,
-				expiryTime: pastTime
+				expiryTime: pastTime,
 			});
 			localStorage.setItem('test_cooldown', data);
 
@@ -217,7 +225,7 @@ describe('CTA Highlights - Storage Manager', () => {
 			// Only set in cookie
 			const data = JSON.stringify({
 				timestamp: Date.now(),
-				expiryTime: Date.now() + 10000
+				expiryTime: Date.now() + 10000,
 			});
 			document.cookie = `test_cooldown=${data};path=/`;
 
@@ -258,35 +266,46 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 
 	describe('Initialization', () => {
 		test('initializes when highlight CTAs exist', () => {
-			document.body.innerHTML = '<div class="cta-highlights-wrapper" data-highlight="true"></div>';
+			document.body.innerHTML =
+				'<div class="cta-highlights-wrapper" data-highlight="true"></div>';
 
 			eval(ctaHighlightsJs);
 
-			expect(document.querySelector('.cta-highlights-overlay')).not.toBeNull();
-			expect(document.querySelector('.cta-highlights-close')).not.toBeNull();
+			expect(
+				document.querySelector('.cta-highlights-overlay')
+			).not.toBeNull();
+			expect(
+				document.querySelector('.cta-highlights-close')
+			).not.toBeNull();
 		});
 
 		test('does not initialize when no highlight CTAs', () => {
-			document.body.innerHTML = '<div class="cta-highlights-wrapper" data-highlight="false"></div>';
+			document.body.innerHTML =
+				'<div class="cta-highlights-wrapper" data-highlight="false"></div>';
 
 			eval(ctaHighlightsJs);
 
-			expect(document.querySelector('.cta-highlights-overlay')).toBeNull();
+			expect(
+				document.querySelector('.cta-highlights-overlay')
+			).toBeNull();
 		});
 
 		test('does not initialize when global cooldown active', () => {
 			const futureTime = Date.now() + 10000;
 			const data = JSON.stringify({
 				timestamp: Date.now(),
-				expiryTime: futureTime
+				expiryTime: futureTime,
 			});
 			localStorage.setItem('cta_highlights_global', data);
 
-			document.body.innerHTML = '<div class="cta-highlights-wrapper" data-highlight="true"></div>';
+			document.body.innerHTML =
+				'<div class="cta-highlights-wrapper" data-highlight="true"></div>';
 
 			eval(ctaHighlightsJs);
 
-			expect(document.querySelector('.cta-highlights-overlay')).toBeNull();
+			expect(
+				document.querySelector('.cta-highlights-overlay')
+			).toBeNull();
 		});
 	});
 
@@ -296,7 +315,8 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 
 	describe('Overlay and Close Button Creation', () => {
 		test('creates overlay with correct attributes', () => {
-			document.body.innerHTML = '<div class="cta-highlights-wrapper" data-highlight="true"></div>';
+			document.body.innerHTML =
+				'<div class="cta-highlights-wrapper" data-highlight="true"></div>';
 
 			eval(ctaHighlightsJs);
 
@@ -309,7 +329,8 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 		test('applies custom overlay color from config', () => {
 			setupWordPressEnv({ overlayColor: 'rgba(255, 0, 0, 0.5)' });
 
-			document.body.innerHTML = '<div class="cta-highlights-wrapper" data-highlight="true"></div>';
+			document.body.innerHTML =
+				'<div class="cta-highlights-wrapper" data-highlight="true"></div>';
 
 			eval(ctaHighlightsJs);
 
@@ -318,7 +339,8 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 		});
 
 		test('creates close button with correct attributes', () => {
-			document.body.innerHTML = '<div class="cta-highlights-wrapper" data-highlight="true"></div>';
+			document.body.innerHTML =
+				'<div class="cta-highlights-wrapper" data-highlight="true"></div>';
 
 			eval(ctaHighlightsJs);
 
@@ -336,22 +358,26 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 
 	describe('Intersection Observer', () => {
 		test('creates intersection observer for CTA', () => {
-			document.body.innerHTML = '<div class="cta-highlights-wrapper" data-highlight="true" data-template="default"></div>';
+			document.body.innerHTML =
+				'<div class="cta-highlights-wrapper" data-highlight="true" data-template="default"></div>';
 
 			eval(ctaHighlightsJs);
 
-			expect(global.__intersectionObserverInstances.length).toBeGreaterThan(0);
+			expect(
+				global.__intersectionObserverInstances.length
+			).toBeGreaterThan(0);
 		});
 
 		test('does not observe CTA when template cooldown active', () => {
 			const futureTime = Date.now() + 10000;
 			const data = JSON.stringify({
 				timestamp: Date.now(),
-				expiryTime: futureTime
+				expiryTime: futureTime,
 			});
 			localStorage.setItem('cta_highlights_template_default', data);
 
-			document.body.innerHTML = '<div class="cta-highlights-wrapper" data-highlight="true" data-template="default"></div>';
+			document.body.innerHTML =
+				'<div class="cta-highlights-wrapper" data-highlight="true" data-template="default"></div>';
 
 			eval(ctaHighlightsJs);
 
@@ -387,12 +413,14 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 				left: 0,
 				right: 100,
 				width: 100,
-				height: 100
+				height: 100,
 			}));
 
 			observer.__trigger(true, cta);
 
-			expect(localStorage.getItem('cta_highlights_global')).not.toBeNull();
+			expect(
+				localStorage.getItem('cta_highlights_global')
+			).not.toBeNull();
 		});
 
 		test('sets template cooldown on activation', () => {
@@ -412,12 +440,14 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 			cta.getBoundingClientRect = jest.fn(() => ({
 				top: 0,
 				bottom: 100,
-				height: 100
+				height: 100,
 			}));
 
 			observer.__trigger(true, cta);
 
-			expect(localStorage.getItem('cta_highlights_template_banner')).not.toBeNull();
+			expect(
+				localStorage.getItem('cta_highlights_template_banner')
+			).not.toBeNull();
 		});
 	});
 
@@ -442,7 +472,7 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 			cta.getBoundingClientRect = jest.fn(() => ({
 				top: 0,
 				bottom: 100,
-				height: 100
+				height: 100,
 			}));
 
 			observer.__trigger(true, cta);
@@ -472,7 +502,7 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 			cta.getBoundingClientRect = jest.fn(() => ({
 				top: 0,
 				bottom: 100,
-				height: 100
+				height: 100,
 			}));
 
 			observer.__trigger(true, cta);
@@ -495,13 +525,15 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 			cta.getBoundingClientRect = jest.fn(() => ({
 				top: 0,
 				bottom: 100,
-				height: 100
+				height: 100,
 			}));
 
 			observer.__trigger(true, cta);
 
 			// Check for screen reader announcement element
-			const announcement = document.querySelector('.cta-highlights-sr-only');
+			const announcement = document.querySelector(
+				'.cta-highlights-sr-only'
+			);
 			expect(announcement).not.toBeNull();
 			expect(announcement.getAttribute('aria-live')).toBe('polite');
 		});
@@ -541,7 +573,7 @@ describe('CTA Highlights - Integration', () => {
 		cta.getBoundingClientRect = jest.fn(() => ({
 			top: 0,
 			bottom: 100,
-			height: 100
+			height: 100,
 		}));
 
 		// Activate

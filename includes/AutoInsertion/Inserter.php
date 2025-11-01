@@ -175,7 +175,7 @@ class Inserter {
 			'data-has-storage-condition' => $has_storage_conditions ? 'true' : 'false',
 		);
 
-		$classes_str   = implode( ' ', array_map( 'esc_attr', $classes ) );
+		$classes_str    = implode( ' ', array_map( 'esc_attr', $classes ) );
 		$data_attrs_str = '';
 		foreach ( $data_attrs as $key => $value ) {
 			$data_attrs_str .= sprintf( ' %s="%s"', esc_attr( $key ), $value );

@@ -1,12 +1,12 @@
 /**
  * CTA Highlights - Vanilla JavaScript (No jQuery)
  * Version: 1.0.0
- * 
+ *
  * Handles the optional highlight effect for inline CTA elements.
  * CTAs remain in their inline position - highlight effect adds overlay and elevation.
  */
 
-(function() {
+(function () {
 	'use strict';
 
 	/**
@@ -17,13 +17,13 @@
 		/**
 		 * Set a cookie
 		 *
-		 * @param {string} name Cookie name
-		 * @param {string} value Cookie value
+		 * @param {string} name          Cookie name
+		 * @param {string} value         Cookie value
 		 * @param {number} expirySeconds Expiry time in seconds
 		 */
 		setCookie(name, value, expirySeconds) {
 			const expiryDate = new Date();
-			expiryDate.setTime(expiryDate.getTime() + (expirySeconds * 1000));
+			expiryDate.setTime(expiryDate.getTime() + expirySeconds * 1000);
 			const expires = `expires=${expiryDate.toUTCString()}`;
 
 			// Use path=/ to make cookie available across the entire site
@@ -34,7 +34,7 @@
 		 * Get a cookie value
 		 *
 		 * @param {string} name Cookie name
-		 * @returns {string|null} Cookie value or null if not found
+		 * @return {string|null} Cookie value or null if not found
 		 */
 		getCookie(name) {
 			const nameEQ = `${name}=`;
@@ -65,14 +65,14 @@
 		 * Set a value with expiry time
 		 * Uses localStorage first, falls back to cookies if unavailable
 		 *
-		 * @param {string} key Storage key
+		 * @param {string} key           Storage key
 		 * @param {number} expirySeconds Expiry time in seconds
 		 */
 		set(key, expirySeconds) {
-			const expiryTime = Date.now() + (expirySeconds * 1000);
+			const expiryTime = Date.now() + expirySeconds * 1000;
 			const data = JSON.stringify({
 				timestamp: Date.now(),
-				expiryTime: expiryTime
+				expiryTime,
 			});
 
 			// Try localStorage first
@@ -81,7 +81,10 @@
 				this.log(`Set cooldown in localStorage: ${key}`);
 				return;
 			} catch (e) {
-				this.log('localStorage not available or quota exceeded, falling back to cookies', e);
+				this.log(
+					'localStorage not available or quota exceeded, falling back to cookies',
+					e
+				);
 			}
 
 			// Fallback to cookies
@@ -98,7 +101,7 @@
 		 * Checks localStorage first, then cookies
 		 *
 		 * @param {string} key Storage key
-		 * @returns {boolean} True if cooldown is active
+		 * @return {boolean} True if cooldown is active
 		 */
 		isCooldownActive(key) {
 			let item = null;
@@ -173,9 +176,14 @@
 
 		/**
 		 * Log message if debug enabled
+		 * @param message
+		 * @param error
 		 */
 		log(message, error = null) {
-			if (window.ctaHighlightsConfig && window.ctaHighlightsConfig.debug) {
+			if (
+				window.ctaHighlightsConfig &&
+				window.ctaHighlightsConfig.debug
+			) {
 				console.log(`[CTA Highlights] ${message}`, error || '');
 			}
 		}
@@ -204,8 +212,10 @@
 		 */
 		init() {
 			// Check if any CTAs have highlight enabled
-			const highlightCTAs = document.querySelectorAll('.cta-highlights-wrapper[data-highlight="true"]');
-			
+			const highlightCTAs = document.querySelectorAll(
+				'.cta-highlights-wrapper[data-highlight="true"]'
+			);
+
 			if (highlightCTAs.length === 0) {
 				this.log('No highlight-enabled CTAs found');
 				return;
@@ -228,7 +238,7 @@
 			this.setupEventListeners();
 
 			// Setup intersection observers for each CTA
-			highlightCTAs.forEach(cta => this.setupObserver(cta));
+			highlightCTAs.forEach((cta) => this.setupObserver(cta));
 		}
 
 		/**
@@ -239,7 +249,10 @@
 		 */
 		initializeCTA(ctaElement) {
 			// Verify element has highlight enabled
-			if (!ctaElement || ctaElement.getAttribute('data-highlight') !== 'true') {
+			if (
+				!ctaElement ||
+				ctaElement.getAttribute('data-highlight') !== 'true'
+			) {
 				this.log('Element does not have highlight enabled');
 				return;
 			}
@@ -270,18 +283,33 @@
 			let bgColor = '#ffffff';
 
 			// Try to detect actual page background
-			const bodyBg = window.getComputedStyle(document.body).backgroundColor;
-			if (bodyBg && bodyBg !== 'rgba(0, 0, 0, 0)' && bodyBg !== 'transparent') {
+			const bodyBg = window.getComputedStyle(
+				document.body
+			).backgroundColor;
+			if (
+				bodyBg &&
+				bodyBg !== 'rgba(0, 0, 0, 0)' &&
+				bodyBg !== 'transparent'
+			) {
 				bgColor = bodyBg;
 			} else {
-				const htmlBg = window.getComputedStyle(document.documentElement).backgroundColor;
-				if (htmlBg && htmlBg !== 'rgba(0, 0, 0, 0)' && htmlBg !== 'transparent') {
+				const htmlBg = window.getComputedStyle(
+					document.documentElement
+				).backgroundColor;
+				if (
+					htmlBg &&
+					htmlBg !== 'rgba(0, 0, 0, 0)' &&
+					htmlBg !== 'transparent'
+				) {
 					bgColor = htmlBg;
 				}
 			}
 
 			// Set CSS custom property for CTA background
-			document.documentElement.style.setProperty('--cta-highlights-cta-background', bgColor);
+			document.documentElement.style.setProperty(
+				'--cta-highlights-cta-background',
+				bgColor
+			);
 		}
 
 		/**
@@ -292,7 +320,7 @@
 			this.overlay.className = 'cta-highlights-overlay';
 			this.overlay.setAttribute('aria-hidden', 'true');
 			this.overlay.setAttribute('role', 'presentation');
-			
+
 			// Apply custom color from config
 			if (this.config.overlayColor) {
 				this.overlay.style.backgroundColor = this.config.overlayColor;
@@ -339,36 +367,48 @@
 
 			// Scroll dismissal (debounced)
 			let scrollTimeout;
-			window.addEventListener('scroll', () => {
-				if (!this.isActive) return;
+			window.addEventListener(
+				'scroll',
+				() => {
+					if (!this.isActive) return;
 
-				clearTimeout(scrollTimeout);
-				scrollTimeout = setTimeout(() => {
-					this.checkScrollDismissal();
-				}, 100);
-			}, { passive: true });
+					clearTimeout(scrollTimeout);
+					scrollTimeout = setTimeout(() => {
+						this.checkScrollDismissal();
+					}, 100);
+				},
+				{ passive: true }
+			);
 
 			// Anchor click dismissal within active CTA
 			document.addEventListener('click', (e) => {
 				if (!this.isActive) return;
 
 				const anchor = e.target.closest('a');
-				if (anchor && this.activeCTA && this.activeCTA.contains(anchor)) {
+				if (
+					anchor &&
+					this.activeCTA &&
+					this.activeCTA.contains(anchor)
+				) {
 					this.dismiss('anchor-click');
 				}
 			});
 
 			// Handle window resize
-			window.addEventListener('resize', () => {
-				if (this.isActive && this.activeCTA) {
-					this.updateCTAPosition();
-				}
-			}, { passive: true });
+			window.addEventListener(
+				'resize',
+				() => {
+					if (this.isActive && this.activeCTA) {
+						this.updateCTAPosition();
+					}
+				},
+				{ passive: true }
+			);
 		}
 
 		/**
 		 * Setup intersection observer for a CTA
-		 * 
+		 *
 		 * @param {HTMLElement} cta CTA element to observe
 		 */
 		setupObserver(cta) {
@@ -387,11 +427,11 @@
 			const observerOptions = {
 				root: null,
 				rootMargin: '0px',
-				threshold: threshold
+				threshold,
 			};
 
 			const observer = new IntersectionObserver((entries) => {
-				entries.forEach(entry => {
+				entries.forEach((entry) => {
 					if (entry.isIntersecting && !this.isActive) {
 						// Additional check: is CTA fully visible or at top of viewport?
 						if (this.isFullyVisibleOrAtTop(entry.target)) {
@@ -407,9 +447,9 @@
 
 		/**
 		 * Calculate appropriate threshold for IntersectionObserver
-		 * 
+		 *
 		 * @param {HTMLElement} element Element to calculate threshold for
-		 * @returns {number} Threshold value (0-1)
+		 * @return {number} Threshold value (0-1)
 		 */
 		calculateThreshold(element) {
 			const ctaHeight = element.offsetHeight;
@@ -426,9 +466,9 @@
 
 		/**
 		 * Check if CTA is fully visible or positioned at top of viewport
-		 * 
+		 *
 		 * @param {HTMLElement} element Element to check
-		 * @returns {boolean} True if element is fully visible or at top
+		 * @return {boolean} True if element is fully visible or at top
 		 */
 		isFullyVisibleOrAtTop(element) {
 			const rect = element.getBoundingClientRect();
@@ -447,7 +487,7 @@
 		/**
 		 * Activate the highlight effect
 		 * CTA stays inline - we just add overlay and elevate z-index
-		 * 
+		 *
 		 * @param {HTMLElement} cta CTA element to highlight
 		 */
 		activate(cta) {
@@ -485,18 +525,27 @@
 			}, duration * 1000);
 
 			// Set cooldowns
-			this.storage.set('cta_highlights_global', this.config.globalCooldown);
-			this.storage.set(`cta_highlights_template_${templateName}`, this.config.templateCooldown);
+			this.storage.set(
+				'cta_highlights_global',
+				this.config.globalCooldown
+			);
+			this.storage.set(
+				`cta_highlights_template_${templateName}`,
+				this.config.templateCooldown
+			);
 
 			// Announce to screen readers
-			this.announceToScreenReader('Call to action highlighted. Press Escape to dismiss.', 'polite');
+			this.announceToScreenReader(
+				'Call to action highlighted. Press Escape to dismiss.',
+				'polite'
+			);
 
 			this.log(`Activated highlight for template: ${templateName}`);
 		}
 
 		/**
 		 * Dismiss the highlight effect
-		 * 
+		 *
 		 * @param {string} reason Reason for dismissal (for logging)
 		 */
 		dismiss(reason) {
@@ -524,7 +573,10 @@
 			this.removeFocusTrap();
 
 			// Restore focus
-			if (this.previousFocus && typeof this.previousFocus.focus === 'function') {
+			if (
+				this.previousFocus &&
+				typeof this.previousFocus.focus === 'function'
+			) {
 				try {
 					this.previousFocus.focus();
 				} catch (e) {
@@ -565,7 +617,7 @@
 		/**
 		 * Setup focus trap within CTA
 		 * Keeps keyboard navigation within the highlighted CTA
-		 * 
+		 *
 		 * @param {HTMLElement} cta CTA element
 		 */
 		setupFocusTrap(cta) {
@@ -577,7 +629,8 @@
 			if (focusableElements.length === 0) return;
 
 			const firstFocusable = focusableElements[0];
-			const lastFocusable = focusableElements[focusableElements.length - 1];
+			const lastFocusable =
+				focusableElements[focusableElements.length - 1];
 
 			// Focus first element
 			firstFocusable.focus();
@@ -616,8 +669,8 @@
 
 		/**
 		 * Announce message to screen readers
-		 * 
-		 * @param {string} message Message to announce
+		 *
+		 * @param {string} message  Message to announce
 		 * @param {string} priority Priority level ('polite' or 'assertive')
 		 */
 		announceToScreenReader(message, priority = 'polite') {
@@ -625,7 +678,10 @@
 			announcement.className = 'cta-highlights-sr-only';
 			announcement.setAttribute('aria-live', priority);
 			announcement.setAttribute('aria-atomic', 'true');
-			announcement.setAttribute('role', priority === 'assertive' ? 'alert' : 'status');
+			announcement.setAttribute(
+				'role',
+				priority === 'assertive' ? 'alert' : 'status'
+			);
 			announcement.textContent = message;
 
 			document.body.appendChild(announcement);
@@ -638,6 +694,7 @@
 
 		/**
 		 * Log message if debug enabled
+		 * @param message
 		 */
 		log(message) {
 			if (this.config.debug) {
@@ -671,5 +728,4 @@
 		// DOM already loaded
 		init();
 	}
-
 })();

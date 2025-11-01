@@ -3,7 +3,7 @@ namespace CTAHighlights\Template;
 
 class Registry {
 	private static $instance = null;
-	private $templates_used = array();
+	private $templates_used  = array();
 
 	public static function instance() {
 		if ( null === self::$instance ) {

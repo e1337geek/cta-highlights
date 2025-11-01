@@ -38,7 +38,10 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 					[cta_highlights title="Tab Test"]<a href="#cta-link">CTA Link</a>[/cta_highlights]
 					<a href="#after">Link After</a>
 				`;
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -48,7 +51,9 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Tab through elements
@@ -68,8 +73,12 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 
 			await adminPage.fillTitle('Escape Key Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Escape Test"]Press Escape to close[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Escape Test"]Press Escape to close[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -79,7 +88,9 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Activate highlight
@@ -95,15 +106,21 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			expect(isHighlighted).toBe(false);
 		});
 
-		test('should close CTA with Enter/Space on close button', async ({ page }) => {
+		test('should close CTA with Enter/Space on close button', async ({
+			page,
+		}) => {
 			// Create post with shortcode
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
 
 			await adminPage.fillTitle('Close Button Keyboard Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Close Test"]Close with keyboard[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Close Test"]Close with keyboard[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -113,7 +130,9 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Activate highlight
@@ -133,7 +152,9 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			expect(isHighlighted).toBe(false);
 		});
 
-		test('should be able to Tab backwards with Shift+Tab', async ({ page }) => {
+		test('should be able to Tab backwards with Shift+Tab', async ({
+			page,
+		}) => {
 			// Create post with shortcode
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
@@ -145,7 +166,10 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 					[cta_highlights title="Shift Tab"]<a href="#cta">CTA Link</a>[/cta_highlights]
 					<a href="#link2">Link 2</a>
 				`;
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -155,7 +179,9 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Tab forward several times
@@ -185,7 +211,10 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 					[cta_highlights title="Focus Trap"]<a href="#inside">Inside Link</a>[/cta_highlights]
 					<a href="#after">Link After</a>
 				`;
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -195,7 +224,9 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Activate highlight
@@ -225,7 +256,10 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 					<a href="#trigger" id="trigger-link">Trigger Link</a>
 					[cta_highlights title="Focus Restore"]Test content[/cta_highlights]
 				`;
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -235,12 +269,14 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Focus trigger link
 			const triggerLink = page.locator('#trigger-link');
-			if (await triggerLink.count() > 0) {
+			if ((await triggerLink.count()) > 0) {
 				await triggerLink.focus();
 			}
 
@@ -260,15 +296,21 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			expect(focusedEl).not.toBe('body');
 		});
 
-		test('should focus close button when CTA highlighted', async ({ page }) => {
+		test('should focus close button when CTA highlighted', async ({
+			page,
+		}) => {
 			// Create post with shortcode
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
 
 			await adminPage.fillTitle('Auto-Focus Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Auto Focus"]Test content[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Auto Focus"]Test content[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -278,7 +320,9 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Activate highlight
@@ -302,8 +346,12 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 
 			await adminPage.fillTitle('ARIA Role Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="ARIA Test"]Test content[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="ARIA Test"]Test content[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -313,7 +361,9 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Get ARIA attributes
@@ -330,8 +380,12 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 
 			await adminPage.fillTitle('ARIA Label Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="ARIA Label"]Test content[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="ARIA Label"]Test content[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -341,7 +395,9 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Get ARIA attributes
@@ -359,8 +415,12 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 
 			await adminPage.fillTitle('ARIA Modal Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Modal Test"]Test content[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Modal Test"]Test content[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -370,7 +430,9 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Activate highlight
@@ -384,15 +446,21 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			expect(aria.ariaModal).toBe('true');
 		});
 
-		test('should have aria-live region for screen readers', async ({ page }) => {
+		test('should have aria-live region for screen readers', async ({
+			page,
+		}) => {
 			// Create post with shortcode
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
 
 			await adminPage.fillTitle('ARIA Live Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Live Region"]Test content[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Live Region"]Test content[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -402,7 +470,9 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Check for aria-live region
@@ -412,15 +482,21 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 	});
 
 	test.describe('Screen Reader Support', () => {
-		test('should announce CTA activation to screen readers', async ({ page }) => {
+		test('should announce CTA activation to screen readers', async ({
+			page,
+		}) => {
 			// Create post with shortcode
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
 
 			await adminPage.fillTitle('Screen Reader Announce Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Announce Test"]Test content[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Announce Test"]Test content[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -430,7 +506,9 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Activate highlight
@@ -438,7 +516,9 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			await frontendPage.waitForHighlight();
 
 			// Check for aria-live announcement
-			const liveRegion = page.locator('[aria-live="polite"], [aria-live="assertive"]');
+			const liveRegion = page.locator(
+				'[aria-live="polite"], [aria-live="assertive"]'
+			);
 			const announcement = await liveRegion.textContent();
 
 			// Should have some announcement text
@@ -452,8 +532,12 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 
 			await adminPage.fillTitle('Close Button Label Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Close Label"]Test content[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Close Label"]Test content[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -463,7 +547,9 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Activate highlight
@@ -481,15 +567,21 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 	});
 
 	test.describe('Color Contrast & Visual', () => {
-		test('should have sufficient color contrast for text', async ({ page }) => {
+		test('should have sufficient color contrast for text', async ({
+			page,
+		}) => {
 			// Create post with shortcode
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
 
 			await adminPage.fillTitle('Contrast Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Contrast Test"]Test content with text[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Contrast Test"]Test content with text[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -499,7 +591,9 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Get text and background colors
@@ -509,7 +603,7 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 				return {
 					color: computed.color,
 					backgroundColor: computed.backgroundColor,
-					fontSize: computed.fontSize
+					fontSize: computed.fontSize,
 				};
 			});
 
@@ -528,8 +622,12 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 
 			await adminPage.fillTitle('Zoom Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Zoom Test"]Test content[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Zoom Test"]Test content[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -539,7 +637,9 @@ test.describe('Keyboard Navigation & Accessibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Test at 200% zoom

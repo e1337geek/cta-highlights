@@ -1,5 +1,6 @@
 <?php
 namespace CTAHighlights\Shortcode;
+
 use CTAHighlights\Template\Loader;
 use CTAHighlights\Template\Registry;
 

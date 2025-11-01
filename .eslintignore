@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build files
+*.min.js
+*.min.css
+build/
+dist/
+
+# WordPress test environment
+wordpress/
+tmp/
+
+# Coverage
+coverage/
+
+# Test outputs
+test-results/
+playwright-report/
+
+# Other
+*.log

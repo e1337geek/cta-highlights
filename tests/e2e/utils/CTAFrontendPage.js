@@ -27,7 +27,8 @@ class CTAFrontendPage {
 			highlightedCTA: '.cta-highlights-wrapper.highlighted',
 
 			// Auto-inserted CTAs
-			autoInsertedCTA: '.cta-highlights-wrapper[data-auto-inserted="true"]',
+			autoInsertedCTA:
+				'.cta-highlights-wrapper[data-auto-inserted="true"]',
 
 			// ARIA and accessibility
 			ariaLive: '[aria-live]',
@@ -59,7 +60,7 @@ class CTAFrontendPage {
 	/**
 	 * Get all CTA elements on page
 	 *
-	 * @returns {Promise<Array>} - Array of CTA locators
+	 * @return {Promise<Array>} - Array of CTA locators
 	 */
 	async getCTAs() {
 		return await this.page.locator(this.selectors.ctaWrapper).all();
@@ -68,7 +69,7 @@ class CTAFrontendPage {
 	/**
 	 * Get CTA count on page
 	 *
-	 * @returns {Promise<number>} - Number of CTAs
+	 * @return {Promise<number>} - Number of CTAs
 	 */
 	async getCTACount() {
 		return await this.page.locator(this.selectors.ctaWrapper).count();
@@ -78,7 +79,7 @@ class CTAFrontendPage {
 	 * Check if CTA is visible
 	 *
 	 * @param {number} index - CTA index (0-based)
-	 * @returns {Promise<boolean>} - True if visible
+	 * @return {Promise<boolean>} - True if visible
 	 */
 	async isCTAVisible(index = 0) {
 		const cta = this.page.locator(this.selectors.ctaWrapper).nth(index);
@@ -89,10 +90,13 @@ class CTAFrontendPage {
 	 * Get CTA title text
 	 *
 	 * @param {number} index - CTA index (0-based)
-	 * @returns {Promise<string>} - Title text
+	 * @return {Promise<string>} - Title text
 	 */
 	async getCTATitle(index = 0) {
-		const title = this.page.locator(this.selectors.ctaWrapper).nth(index).locator(this.selectors.ctaTitle);
+		const title = this.page
+			.locator(this.selectors.ctaWrapper)
+			.nth(index)
+			.locator(this.selectors.ctaTitle);
 		return await title.textContent();
 	}
 
@@ -100,10 +104,13 @@ class CTAFrontendPage {
 	 * Get CTA content text
 	 *
 	 * @param {number} index - CTA index (0-based)
-	 * @returns {Promise<string>} - Content text
+	 * @return {Promise<string>} - Content text
 	 */
 	async getCTAContent(index = 0) {
-		const content = this.page.locator(this.selectors.ctaWrapper).nth(index).locator(this.selectors.ctaContent);
+		const content = this.page
+			.locator(this.selectors.ctaWrapper)
+			.nth(index)
+			.locator(this.selectors.ctaContent);
 		return await content.textContent();
 	}
 
@@ -127,7 +134,7 @@ class CTAFrontendPage {
 	async waitForHighlight(timeout = 5000) {
 		await this.page.waitForSelector(this.selectors.highlightedCTA, {
 			state: 'visible',
-			timeout
+			timeout,
 		});
 	}
 
@@ -135,7 +142,7 @@ class CTAFrontendPage {
 	 * Check if CTA is highlighted
 	 *
 	 * @param {number} index - CTA index (0-based)
-	 * @returns {Promise<boolean>} - True if highlighted
+	 * @return {Promise<boolean>} - True if highlighted
 	 */
 	async isCTAHighlighted(index = 0) {
 		const cta = this.page.locator(this.selectors.ctaWrapper).nth(index);
@@ -146,7 +153,7 @@ class CTAFrontendPage {
 	/**
 	 * Check if overlay is visible
 	 *
-	 * @returns {Promise<boolean>} - True if overlay visible
+	 * @return {Promise<boolean>} - True if overlay visible
 	 */
 	async isOverlayVisible() {
 		const overlay = this.page.locator(this.selectors.overlay);
@@ -159,7 +166,10 @@ class CTAFrontendPage {
 	 * @param {number} index - CTA index (0-based)
 	 */
 	async clickClose(index = 0) {
-		const closeBtn = this.page.locator(this.selectors.ctaWrapper).nth(index).locator(this.selectors.closeButton);
+		const closeBtn = this.page
+			.locator(this.selectors.ctaWrapper)
+			.nth(index)
+			.locator(this.selectors.closeButton);
 		await closeBtn.click();
 	}
 
@@ -177,7 +187,7 @@ class CTAFrontendPage {
 	 * Check localStorage for cooldown
 	 *
 	 * @param {string} key - Storage key
-	 * @returns {Promise<any>} - Stored value
+	 * @return {Promise<any>} - Stored value
 	 */
 	async getStoredCooldown(key) {
 		return await this.page.evaluate((storageKey) => {
@@ -197,14 +207,14 @@ class CTAFrontendPage {
 					keys.push(key);
 				}
 			}
-			keys.forEach(key => window.localStorage.removeItem(key));
+			keys.forEach((key) => window.localStorage.removeItem(key));
 		});
 	}
 
 	/**
 	 * Get auto-inserted CTA count
 	 *
-	 * @returns {Promise<number>} - Number of auto-inserted CTAs
+	 * @return {Promise<number>} - Number of auto-inserted CTAs
 	 */
 	async getAutoInsertedCTACount() {
 		return await this.page.locator(this.selectors.autoInsertedCTA).count();
@@ -214,23 +224,27 @@ class CTAFrontendPage {
 	 * Check if auto-inserted CTA exists
 	 *
 	 * @param {string} ctaId - CTA ID
-	 * @returns {Promise<boolean>} - True if exists
+	 * @return {Promise<boolean>} - True if exists
 	 */
 	async hasAutoInsertedCTA(ctaId) {
 		const selector = `.cta-highlights-wrapper[data-cta-id="${ctaId}"][data-auto-inserted="true"]`;
-		return await this.page.locator(selector).count() > 0;
+		return (await this.page.locator(selector).count()) > 0;
 	}
 
 	/**
 	 * Get position of CTA in content
 	 *
 	 * @param {number} index - CTA index (0-based)
-	 * @returns {Promise<number>} - Position index
+	 * @return {Promise<number>} - Position index
 	 */
 	async getCTAPosition(index = 0) {
 		return await this.page.evaluate((idx) => {
-			const content = document.querySelector('.entry-content, .post-content, article');
-			const cta = document.querySelectorAll('.cta-highlights-wrapper')[idx];
+			const content = document.querySelector(
+				'.entry-content, .post-content, article'
+			);
+			const cta = document.querySelectorAll('.cta-highlights-wrapper')[
+				idx
+			];
 
 			if (!content || !cta) return -1;
 
@@ -243,7 +257,7 @@ class CTAFrontendPage {
 	 * Check ARIA attributes
 	 *
 	 * @param {number} index - CTA index (0-based)
-	 * @returns {Promise<Object>} - ARIA attributes
+	 * @return {Promise<Object>} - ARIA attributes
 	 */
 	async getARIAAttributes(index = 0) {
 		const cta = this.page.locator(this.selectors.ctaWrapper).nth(index);
@@ -261,7 +275,7 @@ class CTAFrontendPage {
 	/**
 	 * Get focused element
 	 *
-	 * @returns {Promise<string>} - Focused element selector
+	 * @return {Promise<string>} - Focused element selector
 	 */
 	async getFocusedElement() {
 		return await this.page.evaluate(() => {
@@ -271,7 +285,10 @@ class CTAFrontendPage {
 			let selector = el.tagName.toLowerCase();
 			if (el.id) selector += `#${el.id}`;
 			if (el.className) {
-				const classes = el.className.split(' ').filter(c => c).join('.');
+				const classes = el.className
+					.split(' ')
+					.filter((c) => c)
+					.join('.');
 				if (classes) selector += `.${classes}`;
 			}
 
@@ -304,7 +321,7 @@ class CTAFrontendPage {
 	 * Check if element is focusable
 	 *
 	 * @param {string} selector - Element selector
-	 * @returns {Promise<boolean>} - True if focusable
+	 * @return {Promise<boolean>} - True if focusable
 	 */
 	async isFocusable(selector) {
 		return await this.page.evaluate((sel) => {
@@ -320,10 +337,10 @@ class CTAFrontendPage {
 				'input:not([disabled])',
 				'select:not([disabled])',
 				'textarea:not([disabled])',
-				'[tabindex]:not([tabindex="-1"])'
+				'[tabindex]:not([tabindex="-1"])',
 			];
 
-			return focusableSelectors.some(focusSel => el.matches(focusSel));
+			return focusableSelectors.some((focusSel) => el.matches(focusSel));
 		}, selector);
 	}
 
@@ -331,7 +348,7 @@ class CTAFrontendPage {
 	 * Get all focusable elements within CTA
 	 *
 	 * @param {number} index - CTA index (0-based)
-	 * @returns {Promise<number>} - Count of focusable elements
+	 * @return {Promise<number>} - Count of focusable elements
 	 */
 	async getFocusableElementsCount(index = 0) {
 		const cta = this.page.locator(this.selectors.ctaWrapper).nth(index);
@@ -343,10 +360,11 @@ class CTAFrontendPage {
 				'input:not([disabled])',
 				'select:not([disabled])',
 				'textarea:not([disabled])',
-				'[tabindex]:not([tabindex="-1"])'
+				'[tabindex]:not([tabindex="-1"])',
 			];
 
-			return element.querySelectorAll(focusableSelectors.join(', ')).length;
+			return element.querySelectorAll(focusableSelectors.join(', '))
+				.length;
 		});
 	}
 
@@ -366,7 +384,7 @@ class CTAFrontendPage {
 		const timestamp = new Date().toISOString().replace(/:/g, '-');
 		await this.page.screenshot({
 			path: `tests/e2e/screenshots/${name}-${timestamp}.png`,
-			fullPage: true
+			fullPage: true,
 		});
 	}
 }

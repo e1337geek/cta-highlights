@@ -14,9 +14,14 @@ async function waitForAdminPage(page) {
 	await page.waitForSelector('#wpadminbar', { state: 'visible' });
 
 	// Wait for any loading spinners to disappear
-	await page.waitForSelector('.spinner.is-active', { state: 'hidden', timeout: 5000 }).catch(() => {
-		// Spinner might not exist, that's okay
-	});
+	await page
+		.waitForSelector('.spinner.is-active', {
+			state: 'hidden',
+			timeout: 5000,
+		})
+		.catch(() => {
+			// Spinner might not exist, that's okay
+		});
 }
 
 /**
@@ -32,14 +37,14 @@ async function navigateToCTAAdmin(page) {
 /**
  * Create a new CTA via admin interface
  *
- * @param {import('@playwright/test').Page} page - Playwright page
- * @param {Object} data - CTA data
- * @param {string} data.title - CTA title
- * @param {string} data.content - CTA content
- * @param {string} [data.template] - Template name
- * @param {string} [data.ctaType] - CTA type (primary or fallback)
- * @param {string} [data.status] - Post status (publish or draft)
- * @returns {Promise<string>} - CTA ID
+ * @param {import('@playwright/test').Page} page            - Playwright page
+ * @param {Object}                          data            - CTA data
+ * @param {string}                          data.title      - CTA title
+ * @param {string}                          data.content    - CTA content
+ * @param {string}                          [data.template] - Template name
+ * @param {string}                          [data.ctaType]  - CTA type (primary or fallback)
+ * @param {string}                          [data.status]   - Post status (publish or draft)
+ * @return {Promise<string>} - CTA ID
  */
 async function createCTA(page, data) {
 	const {
@@ -47,7 +52,7 @@ async function createCTA(page, data) {
 		content = '<p>Test content</p>',
 		template = 'default',
 		ctaType = 'primary',
-		status = 'publish'
+		status = 'publish',
 	} = data;
 
 	// Navigate to new CTA page
@@ -58,7 +63,7 @@ async function createCTA(page, data) {
 	await page.fill('#title', title);
 
 	// Fill in content (handle both Classic Editor and Block Editor)
-	const isBlockEditor = await page.locator('.block-editor').count() > 0;
+	const isBlockEditor = (await page.locator('.block-editor').count()) > 0;
 	if (isBlockEditor) {
 		// Block Editor
 		await page.click('.block-editor-writing-flow');
@@ -76,13 +81,15 @@ async function createCTA(page, data) {
 
 	// Set template (if meta box is visible)
 	const templateSelect = page.locator('#cta_highlights_template');
-	if (await templateSelect.count() > 0) {
+	if ((await templateSelect.count()) > 0) {
 		await templateSelect.selectOption(template);
 	}
 
 	// Set CTA type (if meta box is visible)
-	const ctaTypeRadio = page.locator(`input[name="cta_highlights_type"][value="${ctaType}"]`);
-	if (await ctaTypeRadio.count() > 0) {
+	const ctaTypeRadio = page.locator(
+		`input[name="cta_highlights_type"][value="${ctaType}"]`
+	);
+	if ((await ctaTypeRadio.count()) > 0) {
 		await ctaTypeRadio.check();
 	}
 
@@ -105,8 +112,8 @@ async function createCTA(page, data) {
 /**
  * Delete a CTA via admin interface
  *
- * @param {import('@playwright/test').Page} page - Playwright page
- * @param {string} ctaId - CTA ID
+ * @param {import('@playwright/test').Page} page  - Playwright page
+ * @param {string}                          ctaId - CTA ID
  */
 async function deleteCTA(page, ctaId) {
 	// Navigate to edit page
@@ -123,18 +130,18 @@ async function deleteCTA(page, ctaId) {
 /**
  * Create a test post with CTA shortcode
  *
- * @param {import('@playwright/test').Page} page - Playwright page
- * @param {Object} data - Post data
- * @param {string} data.title - Post title
- * @param {string} data.content - Post content with shortcode
- * @param {string} [data.status] - Post status
- * @returns {Promise<Object>} - Post data {id, url}
+ * @param {import('@playwright/test').Page} page          - Playwright page
+ * @param {Object}                          data          - Post data
+ * @param {string}                          data.title    - Post title
+ * @param {string}                          data.content  - Post content with shortcode
+ * @param {string}                          [data.status] - Post status
+ * @return {Promise<Object>} - Post data {id, url}
  */
 async function createPostWithShortcode(page, data) {
 	const {
 		title = 'Test Post',
 		content = '[cta_highlights template="default" title="Subscribe"]Sign up now![/cta_highlights]',
-		status = 'publish'
+		status = 'publish',
 	} = data;
 
 	// Navigate to new post
@@ -145,7 +152,7 @@ async function createPostWithShortcode(page, data) {
 	await page.fill('#title', title);
 
 	// Fill in content with shortcode
-	const isBlockEditor = await page.locator('.block-editor').count() > 0;
+	const isBlockEditor = (await page.locator('.block-editor').count()) > 0;
 	if (isBlockEditor) {
 		// Block Editor - add Shortcode block
 		await page.click('.block-editor-writing-flow');
@@ -180,7 +187,7 @@ async function createPostWithShortcode(page, data) {
 
 	return {
 		id: postId,
-		url: permalink
+		url: permalink,
 	};
 }
 
@@ -208,8 +215,8 @@ async function clearCookies(page) {
  * Get localStorage data
  *
  * @param {import('@playwright/test').Page} page - Playwright page
- * @param {string} key - Storage key
- * @returns {Promise<any>} - Stored data
+ * @param {string}                          key  - Storage key
+ * @return {Promise<any>} - Stored data
  */
 async function getLocalStorageItem(page, key) {
 	return await page.evaluate((storageKey) => {
@@ -220,22 +227,25 @@ async function getLocalStorageItem(page, key) {
 /**
  * Set localStorage data
  *
- * @param {import('@playwright/test').Page} page - Playwright page
- * @param {string} key - Storage key
- * @param {any} value - Value to store
+ * @param {import('@playwright/test').Page} page  - Playwright page
+ * @param {string}                          key   - Storage key
+ * @param {any}                             value - Value to store
  */
 async function setLocalStorageItem(page, key, value) {
-	await page.evaluate(({ storageKey, storageValue }) => {
-		window.localStorage.setItem(storageKey, storageValue);
-	}, { storageKey: key, storageValue: value });
+	await page.evaluate(
+		({ storageKey, storageValue }) => {
+			window.localStorage.setItem(storageKey, storageValue);
+		},
+		{ storageKey: key, storageValue: value }
+	);
 }
 
 /**
  * Wait for element to be visible and stable
  *
- * @param {import('@playwright/test').Page} page - Playwright page
- * @param {string} selector - Element selector
- * @param {Object} options - Wait options
+ * @param {import('@playwright/test').Page} page     - Playwright page
+ * @param {string}                          selector - Element selector
+ * @param {Object}                          options  - Wait options
  */
 async function waitForStableElement(page, selector, options = {}) {
 	const element = page.locator(selector);
@@ -248,9 +258,9 @@ async function waitForStableElement(page, selector, options = {}) {
 /**
  * Check if element has accessibility issues
  *
- * @param {import('@playwright/test').Page} page - Playwright page
- * @param {string} selector - Element selector
- * @returns {Promise<Array>} - Array of accessibility violations
+ * @param {import('@playwright/test').Page} page     - Playwright page
+ * @param {string}                          selector - Element selector
+ * @return {Promise<Array>} - Array of accessibility violations
  */
 async function checkAccessibility(page, selector = null) {
 	// This would integrate with axe-core or similar
@@ -266,7 +276,9 @@ async function checkAccessibility(page, selector = null) {
 	}
 
 	// Check for form inputs without labels
-	const unlabeledInputs = await element.locator('input:not([aria-label]):not([aria-labelledby])').count();
+	const unlabeledInputs = await element
+		.locator('input:not([aria-label]):not([aria-labelledby])')
+		.count();
 	if (unlabeledInputs > 0) {
 		issues.push({ type: 'unlabeled-input', count: unlabeledInputs });
 	}
@@ -277,9 +289,9 @@ async function checkAccessibility(page, selector = null) {
 /**
  * Simulate keyboard navigation
  *
- * @param {import('@playwright/test').Page} page - Playwright page
- * @param {string} key - Key to press (Tab, Enter, Escape, etc.)
- * @param {number} times - Number of times to press
+ * @param {import('@playwright/test').Page} page  - Playwright page
+ * @param {string}                          key   - Key to press (Tab, Enter, Escape, etc.)
+ * @param {number}                          times - Number of times to press
  */
 async function pressKey(page, key, times = 1) {
 	for (let i = 0; i < times; i++) {
@@ -292,7 +304,7 @@ async function pressKey(page, key, times = 1) {
  * Get currently focused element
  *
  * @param {import('@playwright/test').Page} page - Playwright page
- * @returns {Promise<string>} - Selector of focused element
+ * @return {Promise<string>} - Selector of focused element
  */
 async function getFocusedElement(page) {
 	return await page.evaluate(() => {
@@ -303,7 +315,10 @@ async function getFocusedElement(page) {
 		let selector = el.tagName.toLowerCase();
 		if (el.id) selector += `#${el.id}`;
 		if (el.className) {
-			const classes = el.className.split(' ').filter(c => c).join('.');
+			const classes = el.className
+				.split(' ')
+				.filter((c) => c)
+				.join('.');
 			if (classes) selector += `.${classes}`;
 		}
 
@@ -315,13 +330,13 @@ async function getFocusedElement(page) {
  * Take screenshot with timestamp
  *
  * @param {import('@playwright/test').Page} page - Playwright page
- * @param {string} name - Screenshot name
+ * @param {string}                          name - Screenshot name
  */
 async function takeScreenshot(page, name) {
 	const timestamp = new Date().toISOString().replace(/:/g, '-');
 	await page.screenshot({
 		path: `tests/e2e/screenshots/${name}-${timestamp}.png`,
-		fullPage: true
+		fullPage: true,
 	});
 }
 
@@ -339,5 +354,5 @@ module.exports = {
 	checkAccessibility,
 	pressKey,
 	getFocusedElement,
-	takeScreenshot
+	takeScreenshot,
 };

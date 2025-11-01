@@ -179,18 +179,18 @@ class Database {
 			$table_name,
 			$data,
 			array(
-				'%s', // name
-				'%s', // content
-				'%s', // status
-				'%s', // cta_type
-				'%s', // post_types
-				'%s', // category_mode
-				'%s', // category_ids
-				'%s', // storage_conditions
-				'%s', // insertion_direction
-				'%d', // insertion_position
-				'%s', // fallback_behavior
-				'%d', // fallback_cta_id
+				'%s', // Name.
+				'%s', // Content.
+				'%s', // Status.
+				'%s', // CTA type.
+				'%s', // Post types.
+				'%s', // Category mode.
+				'%s', // Category IDs.
+				'%s', // Storage conditions.
+				'%s', // Insertion direction.
+				'%d', // Insertion position.
+				'%s', // Fallback behavior.
+				'%d', // Fallback CTA ID.
 			)
 		);
 
@@ -219,18 +219,18 @@ class Database {
 			$data,
 			array( 'id' => $id ),
 			array(
-				'%s', // name
-				'%s', // content
-				'%s', // status
-				'%s', // cta_type
-				'%s', // post_types
-				'%s', // category_mode
-				'%s', // category_ids
-				'%s', // storage_conditions
-				'%s', // insertion_direction
-				'%d', // insertion_position
-				'%s', // fallback_behavior
-				'%d', // fallback_cta_id
+				'%s', // Name.
+				'%s', // Content.
+				'%s', // Status.
+				'%s', // CTA type.
+				'%s', // Post types.
+				'%s', // Category mode.
+				'%s', // Category IDs.
+				'%s', // Storage conditions.
+				'%s', // Insertion direction.
+				'%d', // Insertion position.
+				'%s', // Fallback behavior.
+				'%d', // Fallback CTA ID.
 			),
 			array( '%d' )
 		);
@@ -283,7 +283,7 @@ class Database {
 	 * @return array Prepared data.
 	 */
 	private function prepare_data( $data ) {
-		// Always initialize all fields with defaults to match DB column order
+		// Always initialize all fields with defaults to match DB column order.
 		$prepared = array(
 			'name'                => '',
 			'content'             => '',
@@ -299,7 +299,7 @@ class Database {
 			'fallback_cta_id'     => null,
 		);
 
-		// String fields
+		// String fields.
 		if ( isset( $data['name'] ) ) {
 			$prepared['name'] = sanitize_text_field( $data['name'] );
 		}
@@ -338,7 +338,7 @@ class Database {
 				: 'end';
 		}
 
-		// Integer fields
+		// Integer fields.
 		if ( isset( $data['insertion_position'] ) ) {
 			$prepared['insertion_position'] = absint( $data['insertion_position'] );
 		}
@@ -347,7 +347,7 @@ class Database {
 			$prepared['fallback_cta_id'] = ! empty( $data['fallback_cta_id'] ) ? absint( $data['fallback_cta_id'] ) : null;
 		}
 
-		// JSON fields - always encode arrays
+		// JSON fields - always encode arrays.
 		if ( isset( $data['post_types'] ) ) {
 			$prepared['post_types'] = wp_json_encode( (array) $data['post_types'] );
 		}
@@ -384,7 +384,7 @@ class Database {
 
 		foreach ( $json_fields as $field ) {
 			if ( isset( $row[ $field ] ) ) {
-				$decoded = json_decode( $row[ $field ], true );
+				$decoded       = json_decode( $row[ $field ], true );
 				$row[ $field ] = is_array( $decoded ) ? $decoded : array();
 			}
 		}

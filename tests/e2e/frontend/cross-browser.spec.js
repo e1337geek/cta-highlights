@@ -33,8 +33,12 @@ test.describe('Cross-Browser Compatibility', () => {
 
 			await adminPage.fillTitle(`Cross-Browser Test ${browserName}`);
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Browser Test"]Test content for all browsers[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Browser Test"]Test content for all browsers[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -44,7 +48,9 @@ test.describe('Cross-Browser Compatibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Verify rendering
@@ -55,15 +61,22 @@ test.describe('Cross-Browser Compatibility', () => {
 			expect(isVisible).toBe(true);
 		});
 
-		test('should activate highlight effect', async ({ page, browserName }) => {
+		test('should activate highlight effect', async ({
+			page,
+			browserName,
+		}) => {
 			// Create post
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
 
 			await adminPage.fillTitle(`Highlight Test ${browserName}`);
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Highlight"]Highlight in all browsers[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Highlight"]Highlight in all browsers[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -73,7 +86,9 @@ test.describe('Cross-Browser Compatibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Scroll into view
@@ -101,8 +116,12 @@ test.describe('Cross-Browser Compatibility', () => {
 
 			await adminPage.fillTitle(`Storage Test ${browserName}`);
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Storage"]Storage test[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Storage"]Storage test[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -112,7 +131,9 @@ test.describe('Cross-Browser Compatibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Test localStorage access
@@ -138,8 +159,12 @@ test.describe('Cross-Browser Compatibility', () => {
 
 			await adminPage.fillTitle(`Dismiss Test ${browserName}`);
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Dismiss"]Dismiss in all browsers[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Dismiss"]Dismiss in all browsers[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -149,7 +174,9 @@ test.describe('Cross-Browser Compatibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Activate
@@ -182,8 +209,12 @@ test.describe('Cross-Browser Compatibility', () => {
 
 			await adminPage.fillTitle('Mobile Viewport Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Mobile"]Mobile content[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Mobile"]Mobile content[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -193,7 +224,9 @@ test.describe('Cross-Browser Compatibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// CTA should be visible on mobile
@@ -220,8 +253,12 @@ test.describe('Cross-Browser Compatibility', () => {
 
 			await adminPage.fillTitle('Touch Event Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Touch"]Touch test[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Touch"]Touch test[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -231,7 +268,9 @@ test.describe('Cross-Browser Compatibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Activate highlight
@@ -253,15 +292,22 @@ test.describe('Cross-Browser Compatibility', () => {
 	});
 
 	test.describe('Browser-Specific Features', () => {
-		test('should work with browser back button', async ({ page, browserName }) => {
+		test('should work with browser back button', async ({
+			page,
+			browserName,
+		}) => {
 			// Create post
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
 
 			await adminPage.fillTitle(`Back Button Test ${browserName}`);
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Back Test"]Back button test[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Back Test"]Back button test[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -271,7 +317,9 @@ test.describe('Cross-Browser Compatibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Dismiss CTA
@@ -300,8 +348,12 @@ test.describe('Cross-Browser Compatibility', () => {
 
 			await adminPage.fillTitle(`Refresh Test ${browserName}`);
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Refresh"]Refresh test[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Refresh"]Refresh test[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -311,7 +363,9 @@ test.describe('Cross-Browser Compatibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Dismiss CTA
@@ -330,7 +384,10 @@ test.describe('Cross-Browser Compatibility', () => {
 			expect(isHighlighted).toBe(false);
 		});
 
-		test('should work in private/incognito mode', async ({ page, browserName }) => {
+		test('should work in private/incognito mode', async ({
+			page,
+			browserName,
+		}) => {
 			// Note: This test runs in regular context, but we can test
 			// graceful fallback when storage is restricted
 
@@ -340,8 +397,12 @@ test.describe('Cross-Browser Compatibility', () => {
 
 			await adminPage.fillTitle(`Private Mode Test ${browserName}`);
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Private"]Private mode test[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Private"]Private mode test[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -351,7 +412,9 @@ test.describe('Cross-Browser Compatibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// CTA should still render even if storage is unavailable
@@ -368,8 +431,12 @@ test.describe('Cross-Browser Compatibility', () => {
 
 			await adminPage.fillTitle(`Style Test ${browserName}`);
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Style"]Style test[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Style"]Style test[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -379,7 +446,9 @@ test.describe('Cross-Browser Compatibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Check computed styles
@@ -389,7 +458,7 @@ test.describe('Cross-Browser Compatibility', () => {
 				return {
 					display: computed.display,
 					position: computed.position,
-					zIndex: computed.zIndex
+					zIndex: computed.zIndex,
 				};
 			});
 
@@ -410,7 +479,10 @@ test.describe('Cross-Browser Compatibility', () => {
 					[cta_highlights title="Layout"]Layout test[/cta_highlights]
 					<p>Paragraph 2</p>
 				`;
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -420,12 +492,17 @@ test.describe('Cross-Browser Compatibility', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Check page doesn't have horizontal scroll
 			const hasHorizontalScroll = await page.evaluate(() => {
-				return document.documentElement.scrollWidth > document.documentElement.clientWidth;
+				return (
+					document.documentElement.scrollWidth >
+					document.documentElement.clientWidth
+				);
 			});
 
 			// Should not cause unwanted horizontal scroll

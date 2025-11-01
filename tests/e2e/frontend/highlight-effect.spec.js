@@ -26,7 +26,9 @@ test.describe('CTA Highlight Effect', () => {
 	});
 
 	test.describe('Highlight Activation', () => {
-		test('should activate highlight when CTA scrolls into view', async ({ page }) => {
+		test('should activate highlight when CTA scrolls into view', async ({
+			page,
+		}) => {
 			// Create post with shortcode
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
@@ -42,7 +44,10 @@ test.describe('CTA Highlight Effect', () => {
 					[cta_highlights title="Scroll Test"]This should highlight when scrolled into view[/cta_highlights]
 					<p>Paragraph 6</p>
 				`;
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -52,7 +57,9 @@ test.describe('CTA Highlight Effect', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// CTA should not be highlighted initially (not in view)
@@ -81,8 +88,12 @@ test.describe('CTA Highlight Effect', () => {
 
 			await adminPage.fillTitle('Close Button Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Close Test"]Test content[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Close Test"]Test content[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -92,7 +103,9 @@ test.describe('CTA Highlight Effect', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Scroll into view and wait for highlight
@@ -104,15 +117,21 @@ test.describe('CTA Highlight Effect', () => {
 			await expect(closeButton).toBeVisible();
 		});
 
-		test('should dismiss highlight when close button clicked', async ({ page }) => {
+		test('should dismiss highlight when close button clicked', async ({
+			page,
+		}) => {
 			// Create post with shortcode
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
 
 			await adminPage.fillTitle('Dismiss Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Dismiss Test"]Click close to dismiss[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Dismiss Test"]Click close to dismiss[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -122,7 +141,9 @@ test.describe('CTA Highlight Effect', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Activate highlight
@@ -142,15 +163,21 @@ test.describe('CTA Highlight Effect', () => {
 			expect(overlayVisible).toBe(false);
 		});
 
-		test('should dismiss highlight when overlay clicked', async ({ page }) => {
+		test('should dismiss highlight when overlay clicked', async ({
+			page,
+		}) => {
 			// Create post with shortcode
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
 
 			await adminPage.fillTitle('Overlay Click Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Overlay Test"]Click overlay to dismiss[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Overlay Test"]Click overlay to dismiss[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -160,7 +187,9 @@ test.describe('CTA Highlight Effect', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Activate highlight
@@ -179,15 +208,21 @@ test.describe('CTA Highlight Effect', () => {
 	});
 
 	test.describe('Cooldown Functionality', () => {
-		test('should store cooldown in localStorage after dismissal', async ({ page }) => {
+		test('should store cooldown in localStorage after dismissal', async ({
+			page,
+		}) => {
 			// Create post with shortcode
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
 
 			await adminPage.fillTitle('Cooldown Storage Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Cooldown Test" template="default"]Test content[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Cooldown Test" template="default"]Test content[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -197,7 +232,9 @@ test.describe('CTA Highlight Effect', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Activate and dismiss
@@ -206,22 +243,32 @@ test.describe('CTA Highlight Effect', () => {
 			await frontendPage.clickClose(0);
 
 			// Check localStorage
-			const globalCooldown = await frontendPage.getStoredCooldown('cta_highlights_global_cooldown');
+			const globalCooldown = await frontendPage.getStoredCooldown(
+				'cta_highlights_global_cooldown'
+			);
 			expect(globalCooldown).not.toBeNull();
 
-			const templateCooldown = await frontendPage.getStoredCooldown('cta_highlights_template_default');
+			const templateCooldown = await frontendPage.getStoredCooldown(
+				'cta_highlights_template_default'
+			);
 			expect(templateCooldown).not.toBeNull();
 		});
 
-		test('should not highlight again during cooldown period', async ({ page }) => {
+		test('should not highlight again during cooldown period', async ({
+			page,
+		}) => {
 			// Create post with shortcode
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
 
 			await adminPage.fillTitle('Cooldown Respect Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Cooldown Respect"]Test content[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Cooldown Respect"]Test content[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -231,7 +278,9 @@ test.describe('CTA Highlight Effect', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 
 			// First visit - activate and dismiss
 			await frontendPage.goto(permalink);
@@ -251,15 +300,22 @@ test.describe('CTA Highlight Effect', () => {
 			expect(isHighlighted).toBe(false);
 		});
 
-		test('should fallback to cookie when localStorage unavailable', async ({ page, context }) => {
+		test('should fallback to cookie when localStorage unavailable', async ({
+			page,
+			context,
+		}) => {
 			// Create post with shortcode
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
 
 			await adminPage.fillTitle('Cookie Fallback Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Cookie Test"]Test content[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Cookie Test"]Test content[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -269,14 +325,16 @@ test.describe('CTA Highlight Effect', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Disable localStorage
 			await page.evaluate(() => {
 				Object.defineProperty(window, 'localStorage', {
 					value: null,
-					writable: false
+					writable: false,
 				});
 			});
 
@@ -287,7 +345,9 @@ test.describe('CTA Highlight Effect', () => {
 
 			// Check cookies were set
 			const cookies = await context.cookies();
-			const ctaCookies = cookies.filter(c => c.name.startsWith('cta_highlights_'));
+			const ctaCookies = cookies.filter((c) =>
+				c.name.startsWith('cta_highlights_')
+			);
 			expect(ctaCookies.length).toBeGreaterThan(0);
 		});
 	});
@@ -305,7 +365,10 @@ test.describe('CTA Highlight Effect', () => {
 					<p>Separator</p>
 					[cta_highlights title="Second CTA"]Second content[/cta_highlights]
 				`;
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -315,7 +378,9 @@ test.describe('CTA Highlight Effect', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Scroll first CTA into view

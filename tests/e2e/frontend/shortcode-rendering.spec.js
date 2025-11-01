@@ -21,15 +21,21 @@ test.describe('Shortcode Rendering', () => {
 	});
 
 	test.describe('Basic Shortcode Display', () => {
-		test('should render shortcode with default template', async ({ page }) => {
+		test('should render shortcode with default template', async ({
+			page,
+		}) => {
 			// Create post with shortcode
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
 
 			await adminPage.fillTitle('Shortcode Test Post');
 			await page.evaluate(() => {
-				const content = '[cta_highlights template="default" title="Subscribe"]Join our newsletter![/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights template="default" title="Subscribe"]Join our newsletter![/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -41,7 +47,9 @@ test.describe('Shortcode Rendering', () => {
 			await page.waitForSelector('.notice-success');
 
 			// Get permalink
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 
 			// Visit frontend
 			await frontendPage.goto(permalink);
@@ -58,7 +66,9 @@ test.describe('Shortcode Rendering', () => {
 			expect(content).toContain('Join our newsletter!');
 		});
 
-		test('should render multiple shortcodes on same page', async ({ page }) => {
+		test('should render multiple shortcodes on same page', async ({
+			page,
+		}) => {
 			// Create post with multiple shortcodes
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
@@ -72,7 +82,10 @@ test.describe('Shortcode Rendering', () => {
 					[cta_highlights title="Second CTA"]Second CTA content[/cta_highlights]
 					<p>Third paragraph</p>
 				`;
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -82,7 +95,9 @@ test.describe('Shortcode Rendering', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Should have 2 CTAs
@@ -105,8 +120,12 @@ test.describe('Shortcode Rendering', () => {
 			await adminPage.fillTitle('Escaped Shortcode Test');
 			await page.evaluate(() => {
 				// Escaped shortcode (in code block or similar)
-				const content = '<code>[cta_highlights title="Test"]Content[/cta_highlights]</code>';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'<code>[cta_highlights title="Test"]Content[/cta_highlights]</code>';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -116,7 +135,9 @@ test.describe('Shortcode Rendering', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Shortcode should be visible as text, not rendered
@@ -135,8 +156,12 @@ test.describe('Shortcode Rendering', () => {
 
 			await adminPage.fillTitle('Empty Shortcode Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Empty CTA"][/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Empty CTA"][/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -146,7 +171,9 @@ test.describe('Shortcode Rendering', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// CTA should still render (even if empty)
@@ -163,8 +190,12 @@ test.describe('Shortcode Rendering', () => {
 
 			await adminPage.fillTitle('Custom Template Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights template="custom" title="Custom"]Custom template content[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights template="custom" title="Custom"]Custom template content[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -174,7 +205,9 @@ test.describe('Shortcode Rendering', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Verify CTA rendered
@@ -195,8 +228,12 @@ test.describe('Shortcode Rendering', () => {
 
 			await adminPage.fillTitle('No Highlight Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights highlight="false" title="No Highlight"]No highlight effect[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights highlight="false" title="No Highlight"]No highlight effect[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -206,7 +243,9 @@ test.describe('Shortcode Rendering', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Scroll CTA into view
@@ -229,8 +268,12 @@ test.describe('Shortcode Rendering', () => {
 
 			await adminPage.fillTitle('XSS Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="<script>alert(\'XSS\')</script>Test"]Content[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="<script>alert(\'XSS\')</script>Test"]Content[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -240,7 +283,9 @@ test.describe('Shortcode Rendering', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Title should be escaped, no script executed
@@ -254,15 +299,21 @@ test.describe('Shortcode Rendering', () => {
 	});
 
 	test.describe('Shortcode Assets', () => {
-		test('should enqueue CTA CSS when shortcode present', async ({ page }) => {
+		test('should enqueue CTA CSS when shortcode present', async ({
+			page,
+		}) => {
 			// Create post with shortcode
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
 
 			await adminPage.fillTitle('Asset Enqueue Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Test"]Test content[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Test"]Test content[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -272,7 +323,9 @@ test.describe('Shortcode Rendering', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Check for CSS file in head
@@ -284,18 +337,24 @@ test.describe('Shortcode Rendering', () => {
 				})
 			);
 
-			expect(ctaCSSLoaded.some(loaded => loaded)).toBe(true);
+			expect(ctaCSSLoaded.some((loaded) => loaded)).toBe(true);
 		});
 
-		test('should enqueue CTA JS when shortcode present', async ({ page }) => {
+		test('should enqueue CTA JS when shortcode present', async ({
+			page,
+		}) => {
 			// Create post with shortcode
 			await page.goto('/wp-admin/post-new.php');
 			await adminPage.waitForPageLoad();
 
 			await adminPage.fillTitle('JS Enqueue Test');
 			await page.evaluate(() => {
-				const content = '[cta_highlights title="Test"]Test content[/cta_highlights]';
-				if (typeof window.tinyMCE !== 'undefined' && window.tinyMCE.activeEditor) {
+				const content =
+					'[cta_highlights title="Test"]Test content[/cta_highlights]';
+				if (
+					typeof window.tinyMCE !== 'undefined' &&
+					window.tinyMCE.activeEditor
+				) {
 					window.tinyMCE.activeEditor.setContent(content);
 				} else {
 					document.getElementById('content').value = content;
@@ -305,7 +364,9 @@ test.describe('Shortcode Rendering', () => {
 			await page.click('#publish');
 			await page.waitForSelector('.notice-success');
 
-			const permalink = await page.locator('#sample-permalink a').getAttribute('href');
+			const permalink = await page
+				.locator('#sample-permalink a')
+				.getAttribute('href');
 			await frontendPage.goto(permalink);
 
 			// Check for JS file
@@ -317,7 +378,7 @@ test.describe('Shortcode Rendering', () => {
 				})
 			);
 
-			expect(ctaJSLoaded.some(loaded => loaded)).toBe(true);
+			expect(ctaJSLoaded.some((loaded) => loaded)).toBe(true);
 		});
 	});
 });

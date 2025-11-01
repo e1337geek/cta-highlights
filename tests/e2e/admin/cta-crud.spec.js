@@ -44,7 +44,9 @@ test.describe('CTA Admin CRUD Operations', () => {
 			expect(parseInt(postId)).toBeGreaterThan(0);
 		});
 
-		test('should create primary CTA with post type targeting', async ({ page }) => {
+		test('should create primary CTA with post type targeting', async ({
+			page,
+		}) => {
 			await adminPage.clickAddNew();
 
 			// Basic info
@@ -69,7 +71,9 @@ test.describe('CTA Admin CRUD Operations', () => {
 			expect(notice).toContain('published');
 		});
 
-		test('should create fallback CTA with parent reference', async ({ page }) => {
+		test('should create fallback CTA with parent reference', async ({
+			page,
+		}) => {
 			// First create a primary CTA
 			await adminPage.clickAddNew();
 			await adminPage.fillTitle('Primary CTA');
@@ -191,7 +195,9 @@ test.describe('CTA Admin CRUD Operations', () => {
 			expect(notice).toMatch(/updated|published/i);
 		});
 
-		test('should change CTA type from primary to fallback', async ({ page }) => {
+		test('should change CTA type from primary to fallback', async ({
+			page,
+		}) => {
 			// Create as primary
 			await adminPage.clickAddNew();
 			await adminPage.fillTitle('Type Change Test');
@@ -274,11 +280,13 @@ test.describe('CTA Admin CRUD Operations', () => {
 			await adminPage.moveToTrash();
 
 			// Navigate to trash
-			await page.goto('/wp-admin/edit.php?post_status=trash&post_type=cta_highlight');
+			await page.goto(
+				'/wp-admin/edit.php?post_status=trash&post_type=cta_highlight'
+			);
 
 			// Find the trashed post and permanently delete
 			const deleteLink = page.locator(`#post-${ctaId} .delete a`);
-			if (await deleteLink.count() > 0) {
+			if ((await deleteLink.count()) > 0) {
 				await deleteLink.click();
 			}
 

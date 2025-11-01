@@ -114,7 +114,7 @@ class AutoInsertListTable extends \WP_List_Table {
 	 * @return string
 	 */
 	protected function column_name( $item ) {
-		$edit_url   = add_query_arg(
+		$edit_url      = add_query_arg(
 			array(
 				'page'   => 'cta-auto-insert',
 				'action' => 'edit',
@@ -122,7 +122,7 @@ class AutoInsertListTable extends \WP_List_Table {
 			),
 			admin_url( 'admin.php' )
 		);
-		$delete_url = wp_nonce_url(
+		$delete_url    = wp_nonce_url(
 			add_query_arg(
 				array(
 					'page'   => 'cta-auto-insert',
@@ -212,7 +212,7 @@ class AutoInsertListTable extends \WP_List_Table {
 		if ( ! empty( $item['post_types'] ) ) {
 			$post_type_names = array();
 			foreach ( $item['post_types'] as $post_type ) {
-				$post_type_obj = get_post_type_object( $post_type );
+				$post_type_obj     = get_post_type_object( $post_type );
 				$post_type_names[] = $post_type_obj ? $post_type_obj->labels->name : $post_type;
 			}
 			$conditions[] = sprintf( __( 'Post Types: %s', 'cta-highlights' ), implode( ', ', $post_type_names ) );
@@ -228,15 +228,15 @@ class AutoInsertListTable extends \WP_List_Table {
 				}
 			}
 			if ( ! empty( $category_names ) ) {
-				$mode = isset( $item['category_mode'] ) ? $item['category_mode'] : 'include';
-				$mode_label = 'include' === $mode ? __( 'Include', 'cta-highlights' ) : __( 'Exclude', 'cta-highlights' );
-				$conditions[] = sprintf( __( 'Categories (%s): %s', 'cta-highlights' ), $mode_label, implode( ', ', $category_names ) );
+				$mode         = isset( $item['category_mode'] ) ? $item['category_mode'] : 'include';
+				$mode_label   = 'include' === $mode ? __( 'Include', 'cta-highlights' ) : __( 'Exclude', 'cta-highlights' );
+				$conditions[] = sprintf( __( 'Categories (%1$s): %2$s', 'cta-highlights' ), $mode_label, implode( ', ', $category_names ) );
 			}
 		}
 
 		// Storage conditions
 		if ( ! empty( $item['storage_conditions'] ) ) {
-			$count = count( $item['storage_conditions'] );
+			$count        = count( $item['storage_conditions'] );
 			$conditions[] = sprintf( _n( '%d localStorage condition', '%d localStorage conditions', $count, 'cta-highlights' ), $count );
 		}
 

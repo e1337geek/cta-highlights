@@ -1,5 +1,6 @@
 <?php
 namespace CTAHighlights\Core;
+
 use CTAHighlights\Template\Loader;
 use CTAHighlights\Template\Registry;
 use CTAHighlights\Assets\Manager;
@@ -11,7 +12,7 @@ use CTAHighlights\Admin\PostMetaBox;
 
 final class Plugin {
 	private static $instance = null;
-	private $version = '1.0.0';
+	private $version         = '1.0.0';
 	private $plugin_dir;
 	private $plugin_url;
 	private $template_loader;
@@ -35,8 +36,8 @@ final class Plugin {
 	}
 
 	private function define_constants() {
-		$this->plugin_dir = plugin_dir_path( dirname( dirname( __FILE__ ) ) );
-		$this->plugin_url = plugin_dir_url( dirname( dirname( __FILE__ ) ) );
+		$this->plugin_dir = plugin_dir_path( dirname( __DIR__ ) );
+		$this->plugin_url = plugin_dir_url( dirname( __DIR__ ) );
 	}
 
 	private function init_hooks() {
@@ -51,7 +52,7 @@ final class Plugin {
 
 	private function init_components() {
 		$this->template_loader = new Loader( $this->plugin_dir );
-		$this->asset_manager = new Manager( $this->plugin_dir, $this->plugin_url, $this->version );
+		$this->asset_manager   = new Manager( $this->plugin_dir, $this->plugin_url, $this->version );
 		$this->asset_manager->init();
 		$this->shortcode_handler = new Handler( $this->template_loader );
 		$this->shortcode_handler->init();
@@ -61,9 +62,9 @@ final class Plugin {
 
 		// Initialize admin components (only in admin)
 		if ( is_admin() ) {
-			$auto_insert_db = $this->auto_insert_manager->get_database();
+			$auto_insert_db          = $this->auto_insert_manager->get_database();
 			$this->auto_insert_admin = new AutoInsertAdmin( $auto_insert_db );
-			$this->post_meta_box = new PostMetaBox();
+			$this->post_meta_box     = new PostMetaBox();
 		}
 	}
 
@@ -114,7 +115,7 @@ final class Plugin {
 	}
 
 	public function render_debug_info() {
-		$registry        = Registry::instance();
+		$registry       = Registry::instance();
 		$templates_used = $registry->get_all();
 
 		if ( empty( $templates_used ) ) {

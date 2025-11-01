@@ -33,16 +33,20 @@ class IntersectionObserverMock {
 
 	// Test helper: manually trigger intersection
 	__trigger(isIntersecting, element = null) {
-		const elementsToTrigger = element ? [element] : Array.from(this.observedElements);
+		const elementsToTrigger = element
+			? [element]
+			: Array.from(this.observedElements);
 
-		const entries = elementsToTrigger.map(el => ({
+		const entries = elementsToTrigger.map((el) => ({
 			target: el,
-			isIntersecting: isIntersecting,
+			isIntersecting,
 			intersectionRatio: isIntersecting ? 1.0 : 0,
 			boundingClientRect: el.getBoundingClientRect(),
-			intersectionRect: isIntersecting ? el.getBoundingClientRect() : { top: 0, bottom: 0, left: 0, right: 0, width: 0, height: 0 },
+			intersectionRect: isIntersecting
+				? el.getBoundingClientRect()
+				: { top: 0, bottom: 0, left: 0, right: 0, width: 0, height: 0 },
 			rootBounds: null,
-			time: Date.now()
+			time: Date.now(),
 		}));
 
 		this.callback(entries, this);
