@@ -37,13 +37,11 @@ class ViewData implements ArrayAccess {
 	/**
 	 * Get a value with optional default
 	 *
-	 * phpcs:ignore Universal.NamingConventions.NoReservedKeywordParameterNames.defaultFound
-	 *
 	 * @param string $key     Data key.
 	 * @param mixed  $default Default value if key doesn't exist.
 	 * @return mixed
 	 */
-	public function get( $key, $default = '' ) {
+	public function get( $key, $default = '' ) { // phpcs:ignore Universal.NamingConventions.NoReservedKeywordParameterNames.defaultFound -- Common WordPress pattern
 		return $this->data[ $key ] ?? $default;
 	}
 
