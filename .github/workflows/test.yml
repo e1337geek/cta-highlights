@@ -34,7 +34,12 @@ jobs:
             composer install --no-dev --optimize-autoloader
 
       - name: Run PHP CodeSniffer (Docker)
-        run: npm run lint:php:docker
+        run: |
+          docker run --rm \
+            -v "$(pwd):/app" \
+            -w /app \
+            php:8.2-cli-alpine \
+            vendor/bin/phpcs
 
       - name: Run ESLint
         run: npm run lint:js
