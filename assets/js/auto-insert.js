@@ -551,4 +551,12 @@
 		// DOM already loaded
 		init();
 	}
+
+	// Export for testing (CommonJS and global)
+	if (typeof module !== 'undefined' && module.exports) {
+		module.exports = { AutoInsertManager, CONTENT_SELECTORS };
+	} else if (typeof window !== 'undefined' && window.__TEST__) {
+		window.AutoInsertManager = AutoInsertManager;
+		window.CONTENT_SELECTORS = CONTENT_SELECTORS;
+	}
 })();

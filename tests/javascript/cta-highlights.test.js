@@ -19,14 +19,32 @@ const {
 	resetWordPressEnv,
 	getAnalyticsCalls,
 } = require('./__mocks__/wordpress');
-const fs = require('fs');
-const path = require('path');
 
-// Load the actual JavaScript file
-const ctaHighlightsJs = fs.readFileSync(
-	path.join(__dirname, '../../assets/js/cta-highlights.js'),
-	'utf8'
-);
+// Import the classes from the JavaScript file
+const { StorageManager, CTAHighlight } = require('../../assets/js/cta-highlights.js');
+
+/**
+ * Helper to initialize CTAHighlight with config
+ */
+function initCTAHighlight(config = {}) {
+	const defaultConfig = {
+		globalCooldown: 3600,
+		templateCooldown: 86400,
+		overlayColor: 'rgba(0, 0, 0, 0.7)',
+		debug: false,
+		...config,
+	};
+
+	// Set up global config
+	global.ctaHighlightsConfig = defaultConfig;
+	window.ctaHighlightsConfig = defaultConfig;
+
+	// Create and initialize
+	const manager = new CTAHighlight(defaultConfig);
+	manager.init();
+
+	return manager;
+}
 
 describe('CTA Highlights - Storage Manager', () => {
 	let localStorage;
@@ -45,7 +63,7 @@ describe('CTA Highlights - Storage Manager', () => {
 	});
 
 	afterEach(() => {
-		localStorage.__reset();
+		localStorage.clear();
 		resetWordPressEnv();
 	});
 
@@ -56,9 +74,9 @@ describe('CTA Highlights - Storage Manager', () => {
 	describe('Cookie Operations', () => {
 		test('sets a cookie with expiry', () => {
 			// Execute the script to get StorageManager
-			eval(ctaHighlightsJs);
+			
 
-			const manager = new (eval('StorageManager'))();
+			const manager = new StorageManager();
 			manager.setCookie('test_key', 'test_value', 3600);
 
 			expect(document.cookie).toContain('test_key=test_value');
@@ -67,8 +85,8 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('gets a cookie value', () => {
-			eval(ctaHighlightsJs);
-			const manager = new (eval('StorageManager'))();
+			
+			const manager = new StorageManager();
 
 			// Set cookie manually
 			document.cookie = 'test_key=test_value;path=/';
@@ -78,16 +96,16 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('returns null for non-existent cookie', () => {
-			eval(ctaHighlightsJs);
-			const manager = new (eval('StorageManager'))();
+			
+			const manager = new StorageManager();
 
 			const value = manager.getCookie('nonexistent');
 			expect(value).toBeNull();
 		});
 
 		test('removes a cookie', () => {
-			eval(ctaHighlightsJs);
-			const manager = new (eval('StorageManager'))();
+			
+			const manager = new StorageManager();
 
 			document.cookie = 'test_key=test_value;path=/';
 			manager.removeCookie('test_key');
@@ -102,8 +120,8 @@ describe('CTA Highlights - Storage Manager', () => {
 
 	describe('localStorage Operations', () => {
 		test('sets cooldown in localStorage', () => {
-			eval(ctaHighlightsJs);
-			const manager = new (eval('StorageManager'))();
+			
+			const manager = new StorageManager();
 
 			manager.set('cta_highlights_global', 3600);
 
@@ -121,8 +139,8 @@ describe('CTA Highlights - Storage Manager', () => {
 		test('falls back to cookies when localStorage fails', () => {
 			localStorage.__setDisabled(true);
 
-			eval(ctaHighlightsJs);
-			const manager = new (eval('StorageManager'))();
+			
+			const manager = new StorageManager();
 
 			manager.set('cta_highlights_global', 3600);
 
@@ -131,8 +149,8 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('checks if cooldown is active', () => {
-			eval(ctaHighlightsJs);
-			const manager = new (eval('StorageManager'))();
+			
+			const manager = new StorageManager();
 
 			// Set a cooldown that expires in the future
 			const futureTime = Date.now() + 10000;
@@ -146,8 +164,8 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('returns false for expired cooldown', () => {
-			eval(ctaHighlightsJs);
-			const manager = new (eval('StorageManager'))();
+			
+			const manager = new StorageManager();
 
 			// Set a cooldown that already expired
 			const pastTime = Date.now() - 10000;
@@ -161,8 +179,8 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('cleans up expired cooldowns', () => {
-			eval(ctaHighlightsJs);
-			const manager = new (eval('StorageManager'))();
+			
+			const manager = new StorageManager();
 
 			// Set expired cooldown
 			const pastTime = Date.now() - 10000;
@@ -179,8 +197,8 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('handles corrupted cooldown data', () => {
-			eval(ctaHighlightsJs);
-			const manager = new (eval('StorageManager'))();
+			
+			const manager = new StorageManager();
 
 			localStorage.setItem('test_cooldown', 'invalid json');
 
@@ -189,8 +207,8 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('removes from both storages', () => {
-			eval(ctaHighlightsJs);
-			const manager = new (eval('StorageManager'))();
+			
+			const manager = new StorageManager();
 
 			localStorage.setItem('test_key', 'value');
 			document.cookie = 'test_key=value;path=/';
@@ -209,8 +227,8 @@ describe('CTA Highlights - Storage Manager', () => {
 		test('falls back to cookies when localStorage quota exceeded', () => {
 			localStorage.__setQuotaExceeded(true);
 
-			eval(ctaHighlightsJs);
-			const manager = new (eval('StorageManager'))();
+			
+			const manager = new StorageManager();
 
 			manager.set('cta_highlights_global', 3600);
 
@@ -219,8 +237,8 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('reads from cookies when not in localStorage', () => {
-			eval(ctaHighlightsJs);
-			const manager = new (eval('StorageManager'))();
+			
+			const manager = new StorageManager();
 
 			// Only set in cookie
 			const data = JSON.stringify({
@@ -254,7 +272,7 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 	});
 
 	afterEach(() => {
-		localStorage.__reset();
+		localStorage.clear();
 		IntersectionObserverMock.__reset();
 		resetWordPressEnv();
 		document.body.innerHTML = '';
@@ -269,7 +287,7 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 			document.body.innerHTML =
 				'<div class="cta-highlights-wrapper" data-highlight="true"></div>';
 
-			eval(ctaHighlightsJs);
+			initCTAHighlight();
 
 			expect(
 				document.querySelector('.cta-highlights-overlay')
@@ -283,7 +301,7 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 			document.body.innerHTML =
 				'<div class="cta-highlights-wrapper" data-highlight="false"></div>';
 
-			eval(ctaHighlightsJs);
+			initCTAHighlight();
 
 			expect(
 				document.querySelector('.cta-highlights-overlay')
@@ -301,7 +319,7 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 			document.body.innerHTML =
 				'<div class="cta-highlights-wrapper" data-highlight="true"></div>';
 
-			eval(ctaHighlightsJs);
+			initCTAHighlight();
 
 			expect(
 				document.querySelector('.cta-highlights-overlay')
@@ -318,7 +336,7 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 			document.body.innerHTML =
 				'<div class="cta-highlights-wrapper" data-highlight="true"></div>';
 
-			eval(ctaHighlightsJs);
+			initCTAHighlight();
 
 			const overlay = document.querySelector('.cta-highlights-overlay');
 			expect(overlay).not.toBeNull();
@@ -332,7 +350,7 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 			document.body.innerHTML =
 				'<div class="cta-highlights-wrapper" data-highlight="true"></div>';
 
-			eval(ctaHighlightsJs);
+			initCTAHighlight({ overlayColor: 'rgba(255, 0, 0, 0.5)' });
 
 			const overlay = document.querySelector('.cta-highlights-overlay');
 			expect(overlay.style.backgroundColor).toBe('rgba(255, 0, 0, 0.5)');
@@ -342,7 +360,7 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 			document.body.innerHTML =
 				'<div class="cta-highlights-wrapper" data-highlight="true"></div>';
 
-			eval(ctaHighlightsJs);
+			initCTAHighlight();
 
 			const closeBtn = document.querySelector('.cta-highlights-close');
 			expect(closeBtn).not.toBeNull();
@@ -361,7 +379,7 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 			document.body.innerHTML =
 				'<div class="cta-highlights-wrapper" data-highlight="true" data-template="default"></div>';
 
-			eval(ctaHighlightsJs);
+			initCTAHighlight();
 
 			expect(
 				global.__intersectionObserverInstances.length
@@ -379,7 +397,7 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 			document.body.innerHTML =
 				'<div class="cta-highlights-wrapper" data-highlight="true" data-template="default"></div>';
 
-			eval(ctaHighlightsJs);
+			initCTAHighlight();
 
 			// Should not create observer
 			expect(global.__intersectionObserverInstances.length).toBe(0);
@@ -400,7 +418,7 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 				</div>
 			`;
 
-			eval(ctaHighlightsJs);
+			initCTAHighlight({ globalCooldown: 7200 });
 
 			// Trigger intersection
 			const observer = global.__intersectionObserverInstances[0];
@@ -432,7 +450,7 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 				</div>
 			`;
 
-			eval(ctaHighlightsJs);
+			initCTAHighlight();
 
 			const observer = global.__intersectionObserverInstances[0];
 			const cta = document.querySelector('.cta-highlights-wrapper');
@@ -464,7 +482,7 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 				</div>
 			`;
 
-			eval(ctaHighlightsJs);
+			initCTAHighlight();
 
 			const observer = global.__intersectionObserverInstances[0];
 			const cta = document.querySelector('.cta-highlights-wrapper');
@@ -494,7 +512,7 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 				</div>
 			`;
 
-			eval(ctaHighlightsJs);
+			initCTAHighlight();
 
 			const observer = global.__intersectionObserverInstances[0];
 			const cta = document.querySelector('.cta-highlights-wrapper');
@@ -517,7 +535,7 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 				</div>
 			`;
 
-			eval(ctaHighlightsJs);
+			initCTAHighlight();
 
 			const observer = global.__intersectionObserverInstances[0];
 			const cta = document.querySelector('.cta-highlights-wrapper');
@@ -551,7 +569,7 @@ describe('CTA Highlights - Integration', () => {
 	});
 
 	afterEach(() => {
-		global.localStorage.__reset();
+		global.localStorage.clear();
 		IntersectionObserverMock.__reset();
 		resetWordPressEnv();
 	});
@@ -564,7 +582,7 @@ describe('CTA Highlights - Integration', () => {
 			</div>
 		`;
 
-		eval(ctaHighlightsJs);
+		initCTAHighlight();
 
 		const overlay = document.querySelector('.cta-highlights-overlay');
 		const closeBtn = document.querySelector('.cta-highlights-close');

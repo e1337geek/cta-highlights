@@ -728,4 +728,12 @@
 		// DOM already loaded
 		init();
 	}
+
+	// Export for testing (CommonJS and global)
+	if (typeof module !== 'undefined' && module.exports) {
+		module.exports = { StorageManager, CTAHighlight };
+	} else if (typeof window !== 'undefined' && window.__TEST__) {
+		window.StorageManager = StorageManager;
+		window.CTAHighlight = CTAHighlight;
+	}
 })();

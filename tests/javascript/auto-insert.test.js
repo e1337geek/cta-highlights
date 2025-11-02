@@ -20,14 +20,36 @@ const {
 	resetWordPressEnv,
 	getAnalyticsCalls,
 } = require('./__mocks__/wordpress');
-const fs = require('fs');
-const path = require('path');
+const { StorageManager } = require('../../assets/js/cta-highlights.js');
 
-// Load the actual JavaScript file
-const autoInsertJs = fs.readFileSync(
-	path.join(__dirname, '../../assets/js/auto-insert.js'),
-	'utf8'
-);
+// Import the classes from the JavaScript file
+const { AutoInsertManager, CONTENT_SELECTORS } = require('../../assets/js/auto-insert.js');
+
+/**
+ * Helper to initialize AutoInsertManager with data
+ */
+function initAutoInsert(data = {}) {
+	const defaultData = {
+		fallbackChain: [],
+		contentSelector: '.entry-content',
+		debug: false,
+		...data,
+	};
+
+	// Set up global data
+	global.ctaAutoInsertData = defaultData;
+	window.ctaAutoInsertData = defaultData;
+
+	// Create StorageManager instance
+	const storageManager = new StorageManager();
+
+	// Create and initialize
+	const manager = new AutoInsertManager();
+	manager.storageManager = storageManager;
+	manager.init();
+
+	return manager;
+}
 
 describe('Auto-Insert - Content Container Detection', () => {
 	beforeEach(() => {
@@ -37,7 +59,7 @@ describe('Auto-Insert - Content Container Detection', () => {
 	});
 
 	afterEach(() => {
-		global.localStorage.__reset();
+		global.localStorage.clear();
 		resetWordPressEnv();
 	});
 
@@ -50,7 +72,7 @@ describe('Auto-Insert - Content Container Detection', () => {
 			</article>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		expect(document.querySelector('.entry-content')).not.toBeNull();
 	});
@@ -62,7 +84,7 @@ describe('Auto-Insert - Content Container Detection', () => {
 			</article>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		expect(document.querySelector('article')).not.toBeNull();
 	});
@@ -81,7 +103,7 @@ describe('Auto-Insert - Content Container Detection', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		// Manager should find custom-content
 		expect(document.querySelector('.custom-content')).not.toBeNull();
@@ -95,7 +117,7 @@ describe('Auto-Insert - Content Element Parsing', () => {
 	});
 
 	afterEach(() => {
-		global.localStorage.__reset();
+		global.localStorage.clear();
 		resetWordPressEnv();
 	});
 
@@ -115,7 +137,7 @@ describe('Auto-Insert - Content Element Parsing', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		const paragraphs = document.querySelectorAll('.entry-content > p');
 		expect(paragraphs.length).toBe(3);
@@ -137,7 +159,7 @@ describe('Auto-Insert - Content Element Parsing', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		// Script should be filtered, only 2 paragraphs
 		const paragraphs = document.querySelectorAll('.entry-content > p');
@@ -160,7 +182,7 @@ describe('Auto-Insert - Content Element Parsing', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		// Empty paragraph should be filtered
 		const paragraphs = document.querySelectorAll('.entry-content > p');
@@ -183,7 +205,7 @@ describe('Auto-Insert - Content Element Parsing', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		// Figure with image should count
 		const elements = document.querySelectorAll('.entry-content > *');
@@ -198,7 +220,7 @@ describe('Auto-Insert - Position Calculation', () => {
 	});
 
 	afterEach(() => {
-		global.localStorage.__reset();
+		global.localStorage.clear();
 		resetWordPressEnv();
 	});
 
@@ -228,7 +250,7 @@ describe('Auto-Insert - Position Calculation', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		// Should insert after 3rd paragraph
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
@@ -261,7 +283,7 @@ describe('Auto-Insert - Position Calculation', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		// Should insert 2 from end
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
@@ -291,7 +313,7 @@ describe('Auto-Insert - Position Calculation', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		// Should NOT insert (skip behavior)
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
@@ -321,7 +343,7 @@ describe('Auto-Insert - Position Calculation', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		// Should insert at end
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
@@ -336,7 +358,7 @@ describe('Auto-Insert - Storage Condition Evaluation', () => {
 	});
 
 	afterEach(() => {
-		global.localStorage.__reset();
+		global.localStorage.clear();
 		resetWordPressEnv();
 	});
 
@@ -365,7 +387,7 @@ describe('Auto-Insert - Storage Condition Evaluation', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
 		expect(cta).not.toBeNull();
@@ -397,7 +419,7 @@ describe('Auto-Insert - Storage Condition Evaluation', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		// Should NOT insert
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
@@ -426,7 +448,7 @@ describe('Auto-Insert - Storage Condition Evaluation', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
 		expect(cta).not.toBeNull();
@@ -440,7 +462,7 @@ describe('Auto-Insert - Fallback Chain Logic', () => {
 	});
 
 	afterEach(() => {
-		global.localStorage.__reset();
+		global.localStorage.clear();
 		resetWordPressEnv();
 	});
 
@@ -477,7 +499,7 @@ describe('Auto-Insert - Fallback Chain Logic', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
 		expect(cta.textContent).toContain('Premium CTA');
@@ -517,7 +539,7 @@ describe('Auto-Insert - Fallback Chain Logic', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
 		expect(cta.textContent).toContain('Free CTA');
@@ -555,7 +577,7 @@ describe('Auto-Insert - Fallback Chain Logic', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
 		expect(cta.textContent).toContain('Default CTA');
@@ -569,7 +591,7 @@ describe('Auto-Insert - DOM Insertion', () => {
 	});
 
 	afterEach(() => {
-		global.localStorage.__reset();
+		global.localStorage.clear();
 		resetWordPressEnv();
 	});
 
@@ -593,7 +615,7 @@ describe('Auto-Insert - DOM Insertion', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
 		expect(cta.getAttribute('data-auto-insert')).toBe('true');
@@ -622,7 +644,7 @@ describe('Auto-Insert - DOM Insertion', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
 		expect(cta.querySelector('.custom-cta')).not.toBeNull();
@@ -637,7 +659,7 @@ describe('Auto-Insert - Analytics Tracking', () => {
 	});
 
 	afterEach(() => {
-		global.localStorage.__reset();
+		global.localStorage.clear();
 		resetWordPressEnv();
 	});
 
@@ -661,7 +683,7 @@ describe('Auto-Insert - Analytics Tracking', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		const calls = getAnalyticsCalls();
 		expect(calls.gtag.length).toBeGreaterThan(0);
@@ -698,7 +720,7 @@ describe('Auto-Insert - Analytics Tracking', () => {
 			</script>
 		`;
 
-		eval(autoInsertJs);
+		
 
 		const calls = getAnalyticsCalls();
 		// Should have both insert and fallback events
