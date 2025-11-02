@@ -31,7 +31,7 @@ jobs:
             -v "$(pwd):/app" \
             -w /app \
             composer:latest \
-            composer install --no-dev --optimize-autoloader
+            composer install --optimize-autoloader
 
       - name: Run PHP CodeSniffer (Docker)
         run: |
@@ -39,7 +39,7 @@ jobs:
             -v "$(pwd):/app" \
             -w /app \
             composer:latest \
-            sh -c "composer install --no-dev --optimize-autoloader && vendor/bin/phpcs"
+            vendor/bin/phpcs
 
       - name: Run ESLint
         run: npm run lint:js
@@ -86,7 +86,7 @@ jobs:
             -v "$(pwd):/app" \
             -w /app \
             composer:latest \
-            composer install --no-dev --optimize-autoloader
+            composer install --optimize-autoloader
 
       - name: Run PHPUnit tests in Docker (PHP ${{ matrix.php }})
         run: |
