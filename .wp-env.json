@@ -1,6 +1,6 @@
 {
 	"core": "WordPress/WordPress#6.4.2",
-	"phpVersion": "8.0",
+	"phpVersion": "8.2",
 	"plugins": [
 		"."
 	],

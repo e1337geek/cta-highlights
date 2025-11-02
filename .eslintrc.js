@@ -45,6 +45,7 @@ module.exports = {
 				'no-eval': 'off', // Allow eval in tests for testing eval scenarios
 				'no-unused-vars': 'off', // Test setup variables may appear unused
 				'@wordpress/no-unused-vars-before-return': 'off',
+				'@wordpress/no-global-active-element': 'off', // Allow in tests for focus testing
 			},
 		},
 		// E2E test files (Playwright)

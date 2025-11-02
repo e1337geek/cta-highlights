@@ -46,26 +46,20 @@ The CTA Highlights plugin has a comprehensive testing infrastructure covering:
 
 ## Quick Start
 
-### Prerequisites
+### One-Command Setup
 
 ```bash
-# Install Node dependencies
-npm install
-
-# Install PHP dependencies
-composer install
-
-# Start WordPress environment
-npm run env:start
-
-# Setup test database
-npm run test:setup
+# This single command sets up your entire development environment!
+# Includes: npm install, wp-env start, composer install, test library setup
+npm run setup:dev
 ```
+
+That's it! You're ready to run tests.
 
 ### Run All Tests
 
 ```bash
-# All PHP tests (unit + integration)
+# All PHP tests (unit + integration) - runs in wp-env
 npm run test:php
 
 # All JavaScript tests
@@ -77,6 +71,20 @@ npm run test:e2e
 # All tests (complete suite)
 npm run test:all
 ```
+
+### Test Environment Details
+
+**How it works:**
+- All PHP tests run inside **wp-env containers** via `wp-env run tests-cli`
+- No local PHP installation required!
+- Uses official WordPress `@wordpress/env` tool
+- Connects to wp-env's test database (`tests-mysql`)
+- Includes PHPUnit, WordPress test library, and all dependencies
+
+**Prerequisites:**
+- Docker Desktop (running)
+- Node.js 16+
+- That's it! Everything else is containerized.
 
 ### Expected Output
 
@@ -308,18 +316,51 @@ du -h assets/dist/*
 
 ## Running Tests
 
+### Multi-Version PHP Testing
+
+Test against specific PHP versions to match CI or debug version-specific issues:
+
+```bash
+# Test with PHP 7.4 (minimum supported version)
+npm run test:php:7.4
+
+# Test with PHP 8.1
+npm run test:php:8.1
+
+# Test with PHP 8.2 (latest supported version)
+npm run test:php:8.2
+
+# Default (runs in wp-env with PHP 8.0)
+npm run test:php
+```
+
+**How it works:**
+- Spins up a Docker container with the specified PHP version
+- Connects to wp-env's MySQL database
+- Installs WordPress test library in the container
+- Runs the complete test suite
+- Perfect for debugging "works locally but fails in CI" issues!
+
+**Note:** wp-env must be running (`npm run env:start`) for multi-version tests to work.
+
+**Use cases:**
+- Debugging CI failures on specific PHP versions
+- Verifying compatibility across PHP 7.4-8.2
+- Testing before pushing code to ensure all versions pass
+- Investigating version-specific bugs
+
 ### Local Development
 
 **Before pushing code:**
 ```bash
-# Run quick tests
-npm run test:quick  # PHP unit + JS tests (~1 min)
+# Run quick tests (PHP unit + JS only)
+npm run test:quick  # ~1 min
 
-# Run comprehensive tests
-npm run test:all    # All tests except E2E (~2 min)
+# Run comprehensive tests (PHP + JS + E2E)
+npm run test:all    # ~3 min
 
-# Run full suite (before PR)
-npm run test:full   # Everything including E2E (~5 min)
+# Test specific PHP version (debug CI failures)
+npm run test:php:7.4  # Test with PHP 7.4
 ```
 
 ### In CI/CD Pipeline

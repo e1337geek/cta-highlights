@@ -99,8 +99,9 @@ class AutoInsertAdmin {
 			}
 
 			$this->database->delete( $id );
-			wp_safe_redirect( admin_url( 'admin.php?page=cta-auto-insert&deleted=1' ) );
-			exit;
+			if ( wp_safe_redirect( admin_url( 'admin.php?page=cta-auto-insert&deleted=1' ) ) ) {
+				exit;
+			}
 		}
 
 		// Handle duplicate.
@@ -111,17 +112,17 @@ class AutoInsertAdmin {
 			}
 
 			$new_id = $this->database->duplicate( $id );
-			if ( $new_id ) {
-				wp_safe_redirect( admin_url( 'admin.php?page=cta-auto-insert&action=edit&id=' . $new_id . '&duplicated=1' ) );
-			} else {
-				wp_safe_redirect( admin_url( 'admin.php?page=cta-auto-insert&error=duplicate_failed' ) );
+			if ( $new_id && wp_safe_redirect( admin_url( 'admin.php?page=cta-auto-insert&action=edit&id=' . $new_id . '&duplicated=1' ) ) ) {
+				exit;
+			} elseif ( ! $new_id && wp_safe_redirect( admin_url( 'admin.php?page=cta-auto-insert&error=duplicate_failed' ) ) ) {
+				exit;
 			}
-			exit;
 		}
 
 		// Handle save.
 		if ( isset( $_POST['cta_auto_insert_save'] ) ) {
-			if ( ! check_admin_referer( 'cta_auto_insert_save' ) ) {
+			$nonce = isset( $_POST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ) : '';
+			if ( ! wp_verify_nonce( $nonce, 'cta_auto_insert_save' ) ) {
 				wp_die( esc_html__( 'Security check failed', 'cta-highlights' ) );
 			}
 
@@ -130,12 +131,15 @@ class AutoInsertAdmin {
 
 			if ( $id ) {
 				$this->database->update( $id, $data );
-				wp_safe_redirect( admin_url( 'admin.php?page=cta-auto-insert&action=edit&id=' . $id . '&updated=1' ) );
+				if ( wp_safe_redirect( admin_url( 'admin.php?page=cta-auto-insert&action=edit&id=' . $id . '&updated=1' ) ) ) {
+					exit;
+				}
 			} else {
 				$new_id = $this->database->insert( $data );
-				wp_safe_redirect( admin_url( 'admin.php?page=cta-auto-insert&action=edit&id=' . $new_id . '&created=1' ) );
+				if ( wp_safe_redirect( admin_url( 'admin.php?page=cta-auto-insert&action=edit&id=' . $new_id . '&created=1' ) ) ) {
+					exit;
+				}
 			}
-			exit;
 		}
 	}
 

@@ -21,10 +21,14 @@ const {
 } = require('./__mocks__/wordpress');
 
 // Import the classes from the JavaScript file
-const { StorageManager, CTAHighlight } = require('../../assets/js/cta-highlights.js');
+const {
+	StorageManager,
+	CTAHighlight,
+} = require('../../assets/js/cta-highlights.js');
 
 /**
  * Helper to initialize CTAHighlight with config
+ * @param config
  */
 function initCTAHighlight(config = {}) {
 	const defaultConfig = {
@@ -65,7 +69,6 @@ describe('CTA Highlights - Storage Manager', () => {
 	describe('Cookie Operations', () => {
 		test('sets a cookie with expiry', () => {
 			// Execute the script to get StorageManager
-			
 
 			const manager = new StorageManager();
 			manager.setCookie('test_key', 'test_value', 3600);
@@ -76,7 +79,6 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('gets a cookie value', () => {
-			
 			const manager = new StorageManager();
 
 			// Set cookie manually
@@ -87,7 +89,6 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('returns null for non-existent cookie', () => {
-			
 			const manager = new StorageManager();
 
 			const value = manager.getCookie('nonexistent');
@@ -95,7 +96,6 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('removes a cookie', () => {
-			
 			const manager = new StorageManager();
 
 			document.cookie = 'test_key=test_value;path=/';
@@ -111,7 +111,6 @@ describe('CTA Highlights - Storage Manager', () => {
 
 	describe('localStorage Operations', () => {
 		test('sets cooldown in localStorage', () => {
-			
 			const manager = new StorageManager();
 
 			manager.set('cta_highlights_global', 3600);
@@ -130,7 +129,6 @@ describe('CTA Highlights - Storage Manager', () => {
 		test('falls back to cookies when localStorage fails', () => {
 			global.__testLocalStorage.__setDisabled(true);
 
-
 			const manager = new StorageManager();
 
 			manager.set('cta_highlights_global', 3600);
@@ -140,7 +138,6 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('checks if cooldown is active', () => {
-			
 			const manager = new StorageManager();
 
 			// Set a cooldown that expires in the future
@@ -155,7 +152,6 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('returns false for expired cooldown', () => {
-			
 			const manager = new StorageManager();
 
 			// Set a cooldown that already expired
@@ -170,7 +166,6 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('cleans up expired cooldowns', () => {
-			
 			const manager = new StorageManager();
 
 			// Set expired cooldown
@@ -188,7 +183,6 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('handles corrupted cooldown data', () => {
-			
 			const manager = new StorageManager();
 
 			localStorage.setItem('test_cooldown', 'invalid json');
@@ -198,7 +192,6 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('removes from both storages', () => {
-			
 			const manager = new StorageManager();
 
 			localStorage.setItem('test_key', 'value');
@@ -218,7 +211,6 @@ describe('CTA Highlights - Storage Manager', () => {
 		test('falls back to cookies when localStorage quota exceeded', () => {
 			global.__testLocalStorage.__setQuotaExceeded(true);
 
-
 			const manager = new StorageManager();
 
 			manager.set('cta_highlights_global', 3600);
@@ -228,7 +220,6 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('reads from cookies when not in localStorage', () => {
-			
 			const manager = new StorageManager();
 
 			// Only set in cookie

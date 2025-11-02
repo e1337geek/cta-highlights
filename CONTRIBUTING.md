@@ -47,32 +47,29 @@ git clone https://github.com/your-org/cta-highlights.git
 cd cta-highlights
 ```
 
-### 2. Install Dependencies
+### 2. ONE-COMMAND SETUP ⭐
 
 ```bash
-# One-command setup (installs npm + Composer dependencies in Docker)
-npm run setup
+# This single command does everything you need!
+npm run setup:dev
 ```
 
-**Or install separately:**
-```bash
-npm install                      # Install Node.js dependencies
-npm run composer:install         # Install PHP dependencies in Docker (no local Composer needed)
-```
+**What it does:**
+- ✅ Checks prerequisites (Docker, Node.js)
+- ✅ Installs npm dependencies
+- ✅ Starts wp-env (WordPress environment)
+- ✅ Installs Composer dependencies (in container)
+- ✅ Sets up WordPress test library
+- ✅ Verifies everything works
 
-### 3. Start Development Environment
-
-```bash
-npm run env:start
-```
-
-This starts a WordPress environment with the plugin activated at:
+**Access WordPress:**
 - **Development site:** http://localhost:8888
 - **Test site:** http://localhost:8889
+- **Admin:** http://localhost:8888/wp-admin
 - **Username:** admin
 - **Password:** password
 
-### 4. Run Tests
+### 3. Run Tests
 
 ```bash
 # Quick tests (PHP unit + JS)
@@ -80,9 +77,12 @@ npm run test:quick
 
 # All tests
 npm run test:all
+
+# Test specific PHP version (debug CI failures)
+npm run test:php:7.4
 ```
 
-### 5. Build Plugin ZIP
+### 4. Build Plugin ZIP
 
 ```bash
 # Docker-based build (recommended - works everywhere)
@@ -94,32 +94,47 @@ npm run build:zip:local
 
 You're ready to start contributing!
 
-## Quick Reference: Docker Commands
+## Quick Reference: Common Commands
 
-All PHP operations can run in Docker containers (no local PHP/Composer needed):
+All PHP operations run in **wp-env containers** - no local PHP/Composer needed!
 
 ### Setup & Dependencies
 ```bash
-npm run setup                    # One-command setup (npm + Composer in Docker)
-npm run composer:install         # Install PHP dependencies in Docker
-npm run composer:update          # Update PHP dependencies in Docker
+npm run setup:dev                # Complete one-command setup (recommended!)
+npm run composer:install         # Install PHP dependencies (runs in wp-env)
+npm run composer:update          # Update PHP dependencies (runs in wp-env)
 ```
 
-### Testing (Docker-based - no local PHP needed)
+### Testing
 ```bash
-npm run test:php:docker          # All PHP tests in Docker
-npm run test:php:unit:docker     # PHP unit tests only
-npm run test:php:integration:docker  # PHP integration tests only
-npm run test:js                  # JavaScript tests (local Node.js)
-npm run test:e2e                 # E2E tests with Playwright
+# PHP Tests (all run via wp-env)
+npm run test:php                 # All PHP tests (unit + integration)
+npm run test:php:unit            # PHP unit tests only
+npm run test:php:integration     # PHP integration tests only
+
+# Multi-Version PHP Testing (debug CI failures)
+npm run test:php:7.4             # Test with PHP 7.4
+npm run test:php:8.1             # Test with PHP 8.1
+npm run test:php:8.2             # Test with PHP 8.2
+
+# Other Tests
+npm run test:js                  # JavaScript tests (Jest)
+npm run test:e2e                 # E2E tests (Playwright)
+
+# Quick & Comprehensive
+npm run test:quick               # PHP unit + JS (~1 min)
+npm run test:all                 # All tests (~3 min)
 ```
 
-### Linting (Docker-based - no local PHP needed)
+### Linting
 ```bash
-npm run lint:docker              # All linting (PHP + JS) in Docker
-npm run lint:php:docker          # PHP linting only in Docker
-npm run lint:fix:docker          # Auto-fix (PHP + JS) in Docker
-npm run lint:js                  # JavaScript linting (local Node.js)
+npm run lint                     # All linting (PHP + JS)
+npm run lint:php                 # PHP linting (PHPCS via wp-env)
+npm run lint:phpstan             # Static analysis (PHPStan via wp-env)
+npm run lint:js                  # JavaScript linting (ESLint)
+npm run lint:fix                 # Auto-fix all issues
+npm run lint:fix:php             # Auto-fix PHP issues (PHPCBF via wp-env)
+npm run lint:fix:js              # Auto-fix JS issues (ESLint)
 ```
 
 ### Building
@@ -136,7 +151,7 @@ npm run env:stop                 # Stop wp-env
 npm run env:clean                # Clean wp-env data
 ```
 
-**Note:** Commands with `:docker` suffix run in containers and don't require local PHP/Composer installation.
+**Note:** All PHP commands run in wp-env containers via `wp-env run cli` or `wp-env run tests-cli`.
 
 ## Development Workflow
 

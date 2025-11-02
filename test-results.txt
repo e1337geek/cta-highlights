@@ -1,0 +1,25 @@
+
+> cta-highlights@0.1.0 test:php
+> wp-env run tests-cli --env-cwd=wp-content/plugins/cta-highlights vendor/bin/phpunit tests/Unit/Admin/AutoInsertAdminTest.php --testdox
+
+ℹ Starting 'vendor/bin/phpunit tests/Unit/Admin/AutoInsertAdminTest.php --testdox' on the tests-cli container. 
+
+time="2025-11-01T22:50:30-07:00" level=warning msg="C:\\Users\\Brady\\.wp-env\\1b4a00e74074780d29b8205bbb0ae162\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+Installing...
+Running as single site... To run multisite, use -c tests/phpunit/multisite.xml
+Not running ajax tests. To execute these, use --group ajax.
+Not running ms-files tests. To execute these, use --group ms-files.
+Not running external-http tests. To execute these, use --group external-http.
+PHPUnit 9.6.29 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.2.29
+Configuration: /var/www/html/wp-content/plugins/cta-highlights/phpunit.xml
+Warning:       No code coverage driver available
+
+Auto Insert Admin (CTAHighlights\Tests\Unit\Admin\AutoInsertAdmin)
+ ✔ It requires manage options capability [199.51 ms]
+ ✔ It allows admin access [58.91 ms]
+ ✔ It requires nonce for delete [85.63 ms]
+ ✔ It requires nonce for duplicate [53.18 ms]
+ ✔ It requires nonce for save [52.50 ms]
+✔ Ran `vendor/bin/phpunit tests/Unit/Admin/AutoInsertAdminTest.php --testdox` in 'tests-cli'. (in 12s 25ms)

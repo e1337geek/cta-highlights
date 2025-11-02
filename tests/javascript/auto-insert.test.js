@@ -22,7 +22,10 @@ const {
 const { StorageManager } = require('../../assets/js/cta-highlights.js');
 
 // Import the classes from the JavaScript file
-const { AutoInsertManager, CONTENT_SELECTORS } = require('../../assets/js/auto-insert.js');
+const {
+	AutoInsertManager,
+	CONTENT_SELECTORS,
+} = require('../../assets/js/auto-insert.js');
 
 /**
  * Helper to initialize AutoInsertManager
@@ -56,8 +59,6 @@ describe('Auto-Insert - Content Container Detection', () => {
 			</article>
 		`;
 
-		
-
 		expect(document.querySelector('.entry-content')).not.toBeNull();
 	});
 
@@ -67,8 +68,6 @@ describe('Auto-Insert - Content Container Detection', () => {
 				<p>Content</p>
 			</article>
 		`;
-
-		
 
 		expect(document.querySelector('article')).not.toBeNull();
 	});
@@ -87,7 +86,6 @@ describe('Auto-Insert - Content Container Detection', () => {
 			</script>
 		`;
 
-		
 		initAutoInsert();
 
 		// Manager should find custom-content
@@ -121,7 +119,6 @@ describe('Auto-Insert - Content Element Parsing', () => {
 			</script>
 		`;
 
-		
 		initAutoInsert();
 
 		const paragraphs = document.querySelectorAll('.entry-content > p');
@@ -144,7 +141,6 @@ describe('Auto-Insert - Content Element Parsing', () => {
 			</script>
 		`;
 
-		
 		initAutoInsert();
 
 		// Script should be filtered, only 2 paragraphs
@@ -175,7 +171,6 @@ describe('Auto-Insert - Content Element Parsing', () => {
 			}
 			</script>
 		`;
-
 
 		initAutoInsert();
 
@@ -214,7 +209,6 @@ describe('Auto-Insert - Content Element Parsing', () => {
 			</script>
 		`;
 
-		
 		initAutoInsert();
 
 		// Figure with image should count
@@ -259,7 +253,6 @@ describe('Auto-Insert - Position Calculation', () => {
 			</script>
 		`;
 
-		
 		initAutoInsert();
 
 		// Should insert after 3rd paragraph
@@ -293,7 +286,6 @@ describe('Auto-Insert - Position Calculation', () => {
 			</script>
 		`;
 
-		
 		initAutoInsert();
 
 		// Should insert 2 from end
@@ -324,7 +316,6 @@ describe('Auto-Insert - Position Calculation', () => {
 			</script>
 		`;
 
-		
 		initAutoInsert();
 
 		// Should NOT insert (skip behavior)
@@ -355,7 +346,6 @@ describe('Auto-Insert - Position Calculation', () => {
 			</script>
 		`;
 
-		
 		initAutoInsert();
 
 		// Should insert at end
@@ -399,7 +389,6 @@ describe('Auto-Insert - Storage Condition Evaluation', () => {
 			</script>
 		`;
 
-		
 		initAutoInsert();
 
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
@@ -432,7 +421,6 @@ describe('Auto-Insert - Storage Condition Evaluation', () => {
 			</script>
 		`;
 
-
 		initAutoInsert();
 
 		// Should insert as ultimate fallback (always show something)
@@ -463,7 +451,6 @@ describe('Auto-Insert - Storage Condition Evaluation', () => {
 			</script>
 		`;
 
-		
 		initAutoInsert();
 
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
@@ -484,9 +471,18 @@ describe('Auto-Insert - Fallback Chain Logic', () => {
 
 	test('selects first CTA when condition passes', () => {
 		localStorage.setItem('user_type', 'premium');
-		console.log('After setItem, localStorage.getItem:', localStorage.getItem('user_type'));
-		console.log('localStorage === global.localStorage:', localStorage === global.localStorage);
-		console.log('localStorage === window.localStorage:', localStorage === window.localStorage);
+		console.log(
+			'After setItem, localStorage.getItem:',
+			localStorage.getItem('user_type')
+		);
+		console.log(
+			'localStorage === global.localStorage:',
+			localStorage === global.localStorage
+		);
+		console.log(
+			'localStorage === window.localStorage:',
+			localStorage === window.localStorage
+		);
 		console.log('localStorage.store:', localStorage.store);
 
 		document.body.innerHTML = `
@@ -519,13 +515,18 @@ describe('Auto-Insert - Fallback Chain Logic', () => {
 			</script>
 		`;
 
-		
 		initAutoInsert();
 
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
 		console.log('CTA text:', cta ? cta.textContent : 'null');
-		console.log('CTA fallback index:', cta ? cta.getAttribute('data-fallback-index') : 'null');
-		console.log('localStorage user_type:', localStorage.getItem('user_type'));
+		console.log(
+			'CTA fallback index:',
+			cta ? cta.getAttribute('data-fallback-index') : 'null'
+		);
+		console.log(
+			'localStorage user_type:',
+			localStorage.getItem('user_type')
+		);
 		expect(cta.textContent).toContain('Premium CTA');
 		expect(cta.getAttribute('data-fallback-index')).toBe('0');
 	});
@@ -563,7 +564,6 @@ describe('Auto-Insert - Fallback Chain Logic', () => {
 			</script>
 		`;
 
-		
 		initAutoInsert();
 
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
@@ -602,7 +602,6 @@ describe('Auto-Insert - Fallback Chain Logic', () => {
 			</script>
 		`;
 
-		
 		initAutoInsert();
 
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
@@ -640,7 +639,6 @@ describe('Auto-Insert - DOM Insertion', () => {
 			</script>
 		`;
 
-		
 		initAutoInsert();
 
 		const cta = document.querySelector('.cta-highlights-auto-inserted');
@@ -669,7 +667,6 @@ describe('Auto-Insert - DOM Insertion', () => {
 			}
 			</script>
 		`;
-
 
 		initAutoInsert();
 
@@ -710,7 +707,6 @@ describe('Auto-Insert - Analytics Tracking', () => {
 			</script>
 		`;
 
-		
 		initAutoInsert();
 
 		const calls = getAnalyticsCalls();
@@ -748,7 +744,6 @@ describe('Auto-Insert - Analytics Tracking', () => {
 			</script>
 		`;
 
-		
 		initAutoInsert();
 
 		const calls = getAnalyticsCalls();

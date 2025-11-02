@@ -139,17 +139,29 @@ async function createTestData(page, baseURL) {
 			await page.keyboard.type('[/cta_highlights]');
 		}
 
-		// Publish post - use more specific selector to avoid ambiguity
-		await page.click('.editor-post-publish-button');
-
-		// Confirm publish (if pre-publish panel appears)
-		// Use more specific selector: the actual publish button in the panel, not the panel toggle
-		const confirmPublish = page.locator('.editor-post-publish-panel .editor-post-publish-button');
-		if (await confirmPublish.count() > 0) {
-			await confirmPublish.click();
+		// Close any modals that might be blocking the Publish button
+		const modalCloseButtons = page.locator('.components-modal__screen-overlay ~ .components-modal__frame button[aria-label*="Close"]');
+		if (await modalCloseButtons.count() > 0) {
+			await modalCloseButtons.first().click();
+			await page.waitForTimeout(500);
 		}
 
-		await page.waitForSelector('.components-snackbar:has-text("published")');
+		// Publish post - use role-based selector for better reliability
+		const publishButton = page.getByRole('button', { name: /^Publish/i });
+		await publishButton.click();
+
+		// Confirm publish (if pre-publish panel appears)
+		// Wait a bit for the panel to appear, then check for the final publish button
+		await page.waitForTimeout(500);
+		const confirmPublish = page.getByRole('button', { name: /^Publish/i }).last();
+		try {
+			await confirmPublish.click({ timeout: 2000 });
+		} catch {
+			// Button might not appear if pre-publish checks are disabled
+		}
+
+		// Wait for success notification
+		await page.waitForSelector('.components-snackbar:has-text("published")', { timeout: 10000 });
 	}
 
 	// Create test CTA auto-insert (if the page exists)

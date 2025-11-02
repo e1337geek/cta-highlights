@@ -66,19 +66,65 @@ fi
 # Get absolute path (handles Windows Git Bash path conversion)
 WORK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
+# Check if WordPress tests library needs to be installed
+WP_TESTS_DIR="/tmp/wordpress-tests-lib"
+if [ ! -f "$WP_TESTS_DIR/includes/functions.php" ]; then
+    echo -e "${YELLOW}WordPress tests library not found. Installing...${NC}"
+
+    # Create directory if it doesn't exist
+    mkdir -p "$WP_TESTS_DIR"
+
+    # Download and install WordPress tests library using a Docker container
+    docker run --rm \
+        -v "$WP_TESTS_DIR:/wp-tests" \
+        php:8.0-cli-alpine \
+        sh -c "apk add --no-cache bash curl subversion tar rsync > /dev/null 2>&1 && \
+               mkdir -p /wp-tests/includes /wp-tests/data /wp-tests/src && \
+               echo 'Downloading WordPress core...' && \
+               curl -sL https://wordpress.org/wordpress-6.4.tar.gz | tar xz -C /tmp && \
+               rsync -a /tmp/wordpress/ /wp-tests/src/ && \
+               echo 'Downloading test framework...' && \
+               svn co --quiet https://develop.svn.wordpress.org/tags/6.4/tests/phpunit/includes/ /wp-tests/includes/ && \
+               svn co --quiet https://develop.svn.wordpress.org/tags/6.4/tests/phpunit/data/ /wp-tests/data/" || {
+        echo -e "${RED}Failed to install WordPress tests library${NC}"
+        exit 1
+    }
+
+    echo -e "${GREEN}✓ WordPress tests library installed${NC}"
+fi
+
+# Create wp-tests-config.php if it doesn't exist
+if [ ! -f "$WP_TESTS_DIR/wp-tests-config.php" ]; then
+    echo -e "${YELLOW}Creating wp-tests-config.php...${NC}"
+
+    # Download the sample config and create the actual config
+    docker run --rm \
+        -v "$WP_TESTS_DIR:/wp-tests" \
+        php:8.0-cli-alpine \
+        sh -c "cd /wp-tests && \
+               curl -s https://develop.svn.wordpress.org/tags/6.4/wp-tests-config-sample.php > wp-tests-config-sample.php && \
+               sed 's/youremptytestdbnamehere/wordpress_test/' wp-tests-config-sample.php | \
+               sed 's/yourusernamehere/root/' | \
+               sed 's/yourpasswordhere/password/' | \
+               sed 's/localhost/mysql/' > wp-tests-config.php" || {
+        echo -e "${YELLOW}Warning: Could not create wp-tests-config.php automatically${NC}"
+    }
+fi
+
 # Run PHPUnit in Docker container
 echo -e "${YELLOW}Executing PHPUnit tests...${NC}"
 
 docker run --rm \
     -v "${WORK_DIR}:/app" \
+    -v "$WP_TESTS_DIR:/tmp/wordpress-tests-lib" \
     -w /app \
     $NETWORK_ARG \
     -e WP_TESTS_DB_HOST=mysql \
     -e WP_TESTS_DB_NAME=wordpress_test \
     -e WP_TESTS_DB_USER=root \
     -e WP_TESTS_DB_PASSWORD=password \
-    php:8.0-cli-alpine \
-    vendor/bin/phpunit "$@"
+    php:8.0-cli \
+    bash -c "docker-php-ext-install mysqli > /dev/null 2>&1 && vendor/bin/phpunit \"\$@\"" _ "$@"
 
 EXIT_CODE=$?
 

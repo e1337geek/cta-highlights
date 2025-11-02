@@ -22,10 +22,11 @@ if ( ! $_tests_dir ) {
 }
 
 // Forward custom config to wp-tests-config.php
+// Note: Defaults are for wp-env environment, but can be overridden via environment variables
 $_ENV['WP_TESTS_DB_NAME'] = getenv( 'WP_TESTS_DB_NAME' ) ?: 'wordpress_test';
 $_ENV['WP_TESTS_DB_USER'] = getenv( 'WP_TESTS_DB_USER' ) ?: 'root';
 $_ENV['WP_TESTS_DB_PASSWORD'] = getenv( 'WP_TESTS_DB_PASSWORD' ) ?: 'password';
-$_ENV['WP_TESTS_DB_HOST'] = getenv( 'WP_TESTS_DB_HOST' ) ?: 'localhost';
+$_ENV['WP_TESTS_DB_HOST'] = getenv( 'WP_TESTS_DB_HOST' ) ?: 'tests-mysql';
 $_ENV['WP_TESTS_TABLE_PREFIX'] = getenv( 'WP_TESTS_TABLE_PREFIX' ) ?: 'wptests_';
 
 // Load WordPress test suite
@@ -51,14 +52,18 @@ require $_tests_dir . '/includes/bootstrap.php';
 // Load test helpers
 require_once __DIR__ . '/helpers.php';
 
-// Load test factories
-require_once __DIR__ . '/Factories/CTAFactory.php';
-require_once __DIR__ . '/Factories/PostFactory.php';
-require_once __DIR__ . '/Factories/UserFactory.php';
-require_once __DIR__ . '/Factories/TemplateFactory.php';
+// Load test factories (if they exist)
+if ( file_exists( __DIR__ . '/Factories/CTAFactory.php' ) ) {
+	require_once __DIR__ . '/Factories/CTAFactory.php';
+	require_once __DIR__ . '/Factories/PostFactory.php';
+	require_once __DIR__ . '/Factories/UserFactory.php';
+	require_once __DIR__ . '/Factories/TemplateFactory.php';
+}
 
-// Load test traits
-require_once __DIR__ . '/Traits/CreatesDatabase.php';
-require_once __DIR__ . '/Traits/CreatesTemplates.php';
-require_once __DIR__ . '/Traits/CreatesShortcodes.php';
-require_once __DIR__ . '/Traits/AssertsHTML.php';
+// Load test traits (if they exist)
+if ( file_exists( __DIR__ . '/Traits/CreatesDatabase.php' ) ) {
+	require_once __DIR__ . '/Traits/CreatesDatabase.php';
+	require_once __DIR__ . '/Traits/CreatesTemplates.php';
+	require_once __DIR__ . '/Traits/CreatesShortcodes.php';
+	require_once __DIR__ . '/Traits/AssertsHTML.php';
+}

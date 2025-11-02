@@ -500,6 +500,7 @@
 			const templateName = cta.dataset.template;
 
 			// Store current focus for restoration
+			// eslint-disable-next-line @wordpress/no-global-active-element -- Required for accessibility: restore focus after CTA dismissal
 			this.previousFocus = document.activeElement;
 
 			// Show overlay FIRST (behind everything)
@@ -641,12 +642,14 @@
 
 				if (e.shiftKey) {
 					// Shift + Tab: moving backwards
+					// eslint-disable-next-line @wordpress/no-global-active-element -- Required for accessibility: focus trap implementation
 					if (document.activeElement === firstFocusable) {
 						e.preventDefault();
 						lastFocusable.focus();
 					}
 				} else {
 					// Tab: moving forwards
+					// eslint-disable-next-line @wordpress/no-global-active-element -- Required for accessibility: focus trap implementation
 					if (document.activeElement === lastFocusable) {
 						e.preventDefault();
 						firstFocusable.focus();

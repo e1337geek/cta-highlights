@@ -10,20 +10,18 @@ This guide will help you set up your local development environment for the CTA H
 # 1. Install Docker Desktop (https://www.docker.com/products/docker-desktop)
 # 2. Install Node.js 16+ (https://nodejs.org/)
 
-# 3. Check prerequisites
-bash bin/check-prerequisites.sh
+# 3. ONE-COMMAND SETUP - Sets up everything automatically!
+npm run setup:dev
 
-# 4. One-command setup (installs all dependencies)
-npm run setup
+# That's it! The setup script installs dependencies, starts wp-env,
+# and verifies everything works. You're ready to develop!
 
-# 5. Start WordPress environment
-npm run env:start
+# 4. Run tests (all tests run via wp-env - no local PHP needed!)
+npm run test:php        # PHP tests in wp-env
+npm run test:js         # JavaScript tests
+npm run test:e2e        # E2E tests
 
-# 6. Run tests (Docker-based - no PHP needed!)
-npm run test:php:docker
-npm run test:js
-
-# 7. Build plugin ZIP
+# 5. Build plugin ZIP
 npm run build:zip
 ```
 
@@ -69,16 +67,17 @@ That's it! See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed development workf
 
 ## Docker-Based Development (Recommended)
 
-This is the recommended approach that ensures consistency across all platforms and developer machines.
+This is the recommended approach that ensures consistency across all platforms and developer machines. We use **@wordpress/env (wp-env)** - the official WordPress tool for local development environments.
 
-### Why Docker?
+### Why wp-env?
 
 - ✅ **Zero PHP/Composer installation** - All PHP operations run in containers
+- ✅ **Official WordPress tool** - Maintained by the WordPress core team
 - ✅ **Consistent environment** - Same exact setup for everyone
 - ✅ **Cross-platform** - Works identically on Windows, Mac, Linux
 - ✅ **Isolated** - Doesn't interfere with system PHP installations
-- ✅ **Test multiple PHP versions** - Easy to switch between PHP 7.4, 8.0, 8.1, 8.2
-- ✅ **Matches CI/CD** - Local tests run in same environment as GitHub Actions
+- ✅ **Test multiple PHP versions** - Easy to test against PHP 7.4, 8.0, 8.1, 8.2
+- ✅ **Built-in best practices** - Includes WordPress core, PHPUnit, WP-CLI, Composer
 
 ### Setup Steps
 
@@ -86,37 +85,38 @@ This is the recommended approach that ensures consistency across all platforms a
    - Windows: [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/)
    - Mac: [Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/)
    - Linux: [Docker Engine](https://docs.docker.com/engine/install/)
+   - **Make sure Docker is running** before proceeding
 
 2. **Install Node.js** (if not already installed)
    - Visit https://nodejs.org/
-   - Download and install LTS version
+   - Download and install LTS version (16+)
 
-3. **Clone and Setup**
+3. **Clone Repository**
    ```bash
-   # Clone repository
    git clone https://github.com/your-org/cta-highlights.git
    cd cta-highlights
-
-   # Install npm dependencies
-   npm install
    ```
 
-4. **Start Development Environment**
+4. **Run One-Command Setup** ⭐
    ```bash
-   # Start WordPress with plugin activated
-   npm run env:start
+   # This single command does everything:
+   # - Checks prerequisites (Docker, Node.js)
+   # - Installs npm dependencies
+   # - Starts wp-env (WordPress environment)
+   # - Installs Composer dependencies
+   # - Sets up WordPress test library
+   # - Verifies everything works
+   npm run setup:dev
    ```
 
-   Access at:
+   The script will guide you through the process and display helpful messages.
+
+5. **Access WordPress Sites**
    - Development: http://localhost:8888 (admin/password)
    - Testing: http://localhost:8889 (admin/password)
+   - Admin: http://localhost:8888/wp-admin
 
-5. **Build Plugin ZIP** (Docker-based - no PHP/Composer needed!)
-   ```bash
-   npm run build:zip
-   ```
-
-That's it! You're ready to develop.
+That's it! You're ready to develop. Skip to [Common Development Commands](#common-development-commands) to see what you can do.
 
 ---
 
@@ -286,71 +286,62 @@ This will install:
 
 ## Running Code Quality Tools
 
+All linting and static analysis tools run in wp-env containers - **no local PHP needed!**
+
 ### Linting
 
-**Docker-based (no local PHP needed):**
 ```bash
-# Check PHP code style in Docker
-npm run lint:php:docker
+# Check all code (PHP + JavaScript)
+npm run lint
 
-# Auto-fix PHP code style in Docker
-npm run lint:fix:docker
-
-# Check all code (PHP + JS) in Docker
-npm run lint:docker
-```
-
-**Local (if you have PHP/Composer installed):**
-```bash
-# Check PHP code style locally
+# Check PHP code style (PHPCS)
 npm run lint:php
-# Or: composer run phpcs
 
-# Auto-fix PHP code style locally
+# Check PHP static analysis (PHPStan)
+npm run lint:phpstan
+
+# Check JavaScript code style (ESLint)
+npm run lint:js
+
+# Auto-fix all issues
 npm run lint:fix
 
-# Check JavaScript code style
-npm run lint:js
+# Auto-fix PHP code style
+npm run lint:fix:php
+
+# Auto-fix JavaScript code style
+npm run lint:fix:js
 ```
+
+**How it works:**
+- All PHP linting runs in wp-env's `cli` container via `wp-env run cli`
+- JavaScript linting runs locally (Node.js)
+- No local PHP installation required!
 
 ### Composer Dependency Management
 
-**Docker-based (no local Composer needed):**
 ```bash
-# Install PHP dependencies in Docker
+# Install PHP dependencies (runs in wp-env container)
 npm run composer:install
 
-# Update PHP dependencies in Docker
+# Update PHP dependencies (runs in wp-env container)
 npm run composer:update
 ```
 
-**Local (if you have Composer installed):**
-```bash
-composer install
-composer update
-```
+**Note:** All Composer commands run inside wp-env containers, so you don't need Composer installed locally.
 
 ---
 
 ## Running Tests
 
+All tests run via wp-env or in containers - **no local PHP needed!**
+
 ### PHP Tests
 
-**Docker-based (no local PHP needed):**
+All PHP tests run inside wp-env's `tests-cli` container:
+
 ```bash
-# Run all PHP tests in Docker container
-npm run test:php:docker
-
-# Run only unit tests
-npm run test:php:unit:docker
-
-# Run only integration tests
-npm run test:php:integration:docker
-```
-
-**Local (if you have PHP/Composer installed):**
-```bash
-# Run all PHP tests locally
+# Run all PHP tests (unit + integration)
 npm run test:php
 
 # Run only unit tests
@@ -362,6 +353,36 @@ npm run test:php:integration
 # Run with coverage report
 npm run test:php:coverage
 ```
+
+**How it works:**
+- Tests run in wp-env's `tests-cli` container via `wp-env run tests-cli`
+- Connects to wp-env's test database (`tests-mysql`)
+- Includes PHPUnit, WordPress test library, and all plugin dependencies
+- No local PHP installation required!
+
+### Multi-Version PHP Testing
+
+Test against specific PHP versions to debug CI failures locally:
+
+```bash
+# Test with PHP 7.4 (matches CI)
+npm run test:php:7.4
+
+# Test with PHP 8.1 (matches CI)
+npm run test:php:8.1
+
+# Test with PHP 8.2 (matches CI)
+npm run test:php:8.2
+```
+
+**How it works:**
+- Spins up a Docker container with the specified PHP version
+- Connects to wp-env's MySQL database
+- Installs WordPress test library in the container
+- Runs the full test suite
+- Perfect for debugging "works locally but fails in CI" issues!
+
+**Note:** wp-env must be running (`npm run env:start`) for these commands to work.
 
 ### JavaScript Tests
 
@@ -378,13 +399,13 @@ npm run test:js:coverage
 
 ### E2E Tests
 
-**Note**: Requires Docker Desktop to be running.
+E2E tests use Playwright and wp-env:
 
 ```bash
-# Start WordPress environment
+# wp-env starts automatically, but you can start it manually if needed
 npm run env:start
 
-# Run E2E tests
+# Run all E2E tests (all browsers)
 npm run test:e2e
 
 # Run in specific browser
@@ -392,7 +413,16 @@ npm run test:e2e:chrome
 npm run test:e2e:firefox
 npm run test:e2e:safari
 
-# Stop WordPress environment
+# Run with UI (headed mode)
+npm run test:e2e:headed
+
+# Debug mode
+npm run test:e2e:debug
+
+# View test report
+npm run test:e2e:report
+
+# Stop WordPress environment when done
 npm run env:stop
 ```
 
@@ -402,8 +432,11 @@ npm run env:stop
 # Run all tests (PHP + JS + E2E)
 npm run test:all
 
-# Run quick tests (unit tests only)
+# Run quick tests (PHP unit + JS only)
 npm run test:quick
+
+# Run tests with coverage
+npm run test:coverage
 ```
 
 ---
@@ -569,6 +602,52 @@ npm install
 3. Wait for Docker to fully start (green icon in system tray)
 4. Try again: `npm run env:start`
 
+**Issue**: "Could not find wp-env Docker network"
+
+**Solution**: This happens when wp-env isn't running properly.
+```bash
+# Stop and clean the environment
+npm run env:stop
+npm run env:clean
+
+# Start fresh
+npm run env:start
+
+# Verify wp-env is running
+docker ps | grep wp-env
+```
+
+**Issue**: "PHP tests can't connect to database"
+
+**Solution**: Make sure wp-env is running first:
+```bash
+# Check if wp-env is running
+curl http://localhost:8889
+
+# If not running, start it
+npm run env:start
+
+# Wait for it to be ready
+sleep 5
+
+# Try tests again
+npm run test:php
+```
+
+**Issue**: Multi-version PHP tests fail
+
+**Solution**: wp-env must be running for multi-version tests:
+```bash
+# Ensure wp-env is running
+npm run env:start
+
+# Check wp-env network exists
+docker network ls | grep wp-env
+
+# Try the test again
+npm run test:php:7.4
+```
+
 ### E2E Tests Fail
 
 **Issue**: WordPress not ready
@@ -584,6 +663,22 @@ npm run env:start
 
 # Wait a bit longer, then run tests
 npm run test:e2e
+```
+
+### Linting/Composer Fails
+
+**Issue**: "wp-env: command not found" or similar
+
+**Solution**: Make sure npm dependencies are installed:
+```bash
+# Install npm dependencies
+npm install
+
+# Verify wp-env is available
+npx wp-env --version
+
+# Try again
+npm run lint:php
 ```
 
 ---

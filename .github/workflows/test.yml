@@ -73,19 +73,6 @@ jobs:
       - name: Install PHP dependencies (Docker)
         run: npm run composer:install
 
-      - name: Setup WordPress test environment in Docker
-        run: |
-          docker run --rm \
-            -v "$(pwd):/app" \
-            -w /app \
-            --network ${{ job.services.mysql.network }} \
-            -e WP_TESTS_DB_HOST=mysql \
-            -e WP_TESTS_DB_NAME=wordpress_test \
-            -e WP_TESTS_DB_USER=root \
-            -e WP_TESTS_DB_PASSWORD=password \
-            php:${{ matrix.php }}-cli-alpine \
-            sh -c "apk add --no-cache bash subversion && bash tests/bin/install-wp-tests.sh wordpress_test root password mysql latest"
-
       - name: Run PHPUnit tests in Docker (PHP ${{ matrix.php }})
         run: |
           docker run --rm \
@@ -93,11 +80,24 @@ jobs:
             -w /app \
             --network ${{ job.services.mysql.network }} \
             -e WP_TESTS_DB_HOST=mysql \
-            -e WP_TESTS_DB_NAME=wordpress_test \
+            -e WP_TESTS_DB_NAME=wordpress_test_php${{ matrix.php }} \
             -e WP_TESTS_DB_USER=root \
             -e WP_TESTS_DB_PASSWORD=password \
             php:${{ matrix.php }}-cli-alpine \
-            vendor/bin/phpunit
+            sh -c "
+              set -e
+              echo '===> Installing system dependencies...'
+              apk add --no-cache bash subversion curl tar rsync
+
+              echo '===> Installing WordPress test library...'
+              bash tests/bin/install-wp-tests.sh wordpress_test_php${{ matrix.php }} root password mysql latest true
+
+              echo '===> Installing PHP mysqli extension...'
+              docker-php-ext-install mysqli > /dev/null 2>&1
+
+              echo '===> Running PHPUnit tests...'
+              vendor/bin/phpunit
+            "
 
       - name: Generate coverage report (PHP 8.0 only)
         if: matrix.php == '8.0'
@@ -107,11 +107,26 @@ jobs:
             -w /app \
             --network ${{ job.services.mysql.network }} \
             -e WP_TESTS_DB_HOST=mysql \
-            -e WP_TESTS_DB_NAME=wordpress_test \
+            -e WP_TESTS_DB_NAME=wordpress_test_php8.0 \
             -e WP_TESTS_DB_USER=root \
             -e WP_TESTS_DB_PASSWORD=password \
             php:8.0-cli-alpine \
-            sh -c "apk add --no-cache autoconf build-base linux-headers && pecl install xdebug && docker-php-ext-enable xdebug && vendor/bin/phpunit --coverage-clover coverage/clover.xml --coverage-text"
+            sh -c "
+              set -e
+              echo '===> Installing system dependencies...'
+              apk add --no-cache bash subversion curl tar rsync autoconf build-base linux-headers
+
+              echo '===> Installing WordPress test library...'
+              bash tests/bin/install-wp-tests.sh wordpress_test_php8.0 root password mysql latest true
+
+              echo '===> Installing PHP extensions (mysqli, xdebug)...'
+              docker-php-ext-install mysqli > /dev/null 2>&1
+              pecl install xdebug > /dev/null 2>&1
+              docker-php-ext-enable xdebug
+
+              echo '===> Running PHPUnit with coverage...'
+              vendor/bin/phpunit --coverage-clover coverage/clover.xml --coverage-text
+            "
 
       - name: Upload coverage to Codecov
         if: matrix.php == '8.0'
@@ -125,8 +140,6 @@ jobs:
     name: JavaScript Tests (Node ${{ matrix.node }})
     runs-on: ubuntu-latest
     needs: lint
-    # TODO: Re-enable JS tests after fixing test imports and mocks
-    if: false
 
     strategy:
       matrix:

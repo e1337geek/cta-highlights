@@ -42,10 +42,11 @@
         <const name="WP_TESTS_PHPUNIT_POLYFILLS_PATH" value="./vendor/yoast/phpunit-polyfills" />
 
         <!-- Test Database Configuration -->
+        <!-- Note: DB_HOST is 'tests-mysql' for wp-env, but can be overridden via environment variables -->
         <env name="WP_TESTS_DB_NAME" value="wordpress_test" />
         <env name="WP_TESTS_DB_USER" value="root" />
         <env name="WP_TESTS_DB_PASSWORD" value="password" />
-        <env name="WP_TESTS_DB_HOST" value="localhost" />
+        <env name="WP_TESTS_DB_HOST" value="tests-mysql" />
         <env name="WP_TESTS_TABLE_PREFIX" value="wptests_" />
 
         <!-- WordPress Configuration -->
