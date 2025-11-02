@@ -47,23 +47,14 @@ function initCTAHighlight(config = {}) {
 }
 
 describe('CTA Highlights - Storage Manager', () => {
-	let localStorage;
-
 	beforeEach(() => {
-		// Setup mocks
-		localStorage = new LocalStorageMock();
-		global.localStorage = localStorage;
-
-		// Setup document.cookie
-		global.document = {
-			cookie: '',
-		};
-
+		// Reset mocks
+		global.resetAllMocks();
 		setupWordPressEnv();
 	});
 
 	afterEach(() => {
-		localStorage.clear();
+		global.resetAllMocks();
 		resetWordPressEnv();
 	});
 
@@ -137,9 +128,9 @@ describe('CTA Highlights - Storage Manager', () => {
 		});
 
 		test('falls back to cookies when localStorage fails', () => {
-			localStorage.__setDisabled(true);
+			global.__testLocalStorage.__setDisabled(true);
 
-			
+
 			const manager = new StorageManager();
 
 			manager.set('cta_highlights_global', 3600);
@@ -225,9 +216,9 @@ describe('CTA Highlights - Storage Manager', () => {
 
 	describe('Storage Fallback Behavior', () => {
 		test('falls back to cookies when localStorage quota exceeded', () => {
-			localStorage.__setQuotaExceeded(true);
+			global.__testLocalStorage.__setQuotaExceeded(true);
 
-			
+
 			const manager = new StorageManager();
 
 			manager.set('cta_highlights_global', 3600);
@@ -253,27 +244,18 @@ describe('CTA Highlights - Storage Manager', () => {
 });
 
 describe('CTA Highlights - CTAHighlight Class', () => {
-	let localStorage;
-
 	beforeEach(() => {
-		// Setup mocks
-		localStorage = new LocalStorageMock();
-		global.localStorage = localStorage;
-		global.IntersectionObserver = IntersectionObserverMock;
+		// Reset mocks
+		global.resetAllMocks();
 
 		// Setup DOM
 		document.body.innerHTML = '';
-		document.cookie = '';
 
 		setupWordPressEnv({ debug: false });
-
-		// Reset intersection observer instances
-		IntersectionObserverMock.__reset();
 	});
 
 	afterEach(() => {
-		localStorage.clear();
-		IntersectionObserverMock.__reset();
+		global.resetAllMocks();
 		resetWordPressEnv();
 		document.body.innerHTML = '';
 	});
@@ -366,7 +348,8 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 			expect(closeBtn).not.toBeNull();
 			expect(closeBtn.getAttribute('aria-label')).toBe('Close highlight');
 			expect(closeBtn.getAttribute('type')).toBe('button');
-			expect(closeBtn.innerHTML).toBe('&times;');
+			// JSDOM decodes HTML entities, so &times; becomes ×
+			expect(closeBtn.innerHTML).toBe('×');
 		});
 	});
 
@@ -560,17 +543,14 @@ describe('CTA Highlights - CTAHighlight Class', () => {
 
 describe('CTA Highlights - Integration', () => {
 	beforeEach(() => {
-		global.localStorage = new LocalStorageMock();
-		global.IntersectionObserver = IntersectionObserverMock;
+		// Reset mocks
+		global.resetAllMocks();
 		document.body.innerHTML = '';
-		document.cookie = '';
 		setupWordPressEnv();
-		IntersectionObserverMock.__reset();
 	});
 
 	afterEach(() => {
-		global.localStorage.clear();
-		IntersectionObserverMock.__reset();
+		global.resetAllMocks();
 		resetWordPressEnv();
 	});
 

@@ -1,25 +1,16 @@
 {
   "permissions": {
     "allow": [
-      "Bash(vendor/bin/phpunit:*)",
-      "Bash(npm run test:setup:*)",
-      "Bash(unzip:*)",
-      "Bash(npm run build:zip:*)",
-      "Bash(sudo apt-get update:*)",
-      "Bash(sudo apt-get install:*)",
-      "Bash(npm run build:zip:local:*)",
-      "Bash(apt list:*)",
-      "Bash(npm run build:zip:verify:*)",
-      "Bash(bash bin/check-prerequisites.sh:*)",
-      "Bash(npm run composer:install:*)",
-      "Bash(npm run test:php:unit:docker:*)",
-      "Bash(npm run lint:php:docker:*)",
-      "Bash(npm run lint:js:*)",
-      "Bash(npm run test:setup:docker:*)",
-      "Bash(npx eslint:*)",
-      "Bash(bash bin/run-phpcbf-docker.sh:*)",
-      "Bash(composer phpcs:*)",
-      "Bash(cat:*)"
+      "Bash(npm run env:stop:*)",
+      "Bash(npx playwright install chromium)",
+      "Bash(timeout 30 npm run test:e2e:chrome:*)",
+      "Bash(git checkout:*)",
+      "Bash(python:*)",
+      "Bash(tee:*)",
+      "Bash(node -e:*)",
+      "Bash(npx jest:*)",
+      "Bash(git restore:*)",
+      "Bash(npm run test:js:*)"
     ],
     "deny": [],
     "ask": []

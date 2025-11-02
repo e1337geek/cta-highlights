@@ -7,25 +7,44 @@
  * @see https://jestjs.io/docs/configuration#setupfiles-array
  */
 
-// Mock localStorage
+// Mock localStorage with enhanced features for testing
 class LocalStorageMock {
 	constructor() {
 		this.store = {};
+		this.quotaExceeded = false;
+		this.disabled = false;
 	}
 
 	clear() {
+		if (this.disabled) {
+			throw new Error('localStorage is disabled');
+		}
 		this.store = {};
 	}
 
 	getItem(key) {
+		if (this.disabled) {
+			throw new Error('localStorage is disabled');
+		}
 		return this.store[key] || null;
 	}
 
 	setItem(key, value) {
+		if (this.disabled) {
+			throw new Error('localStorage is disabled');
+		}
+		if (this.quotaExceeded) {
+			const error = new Error('QuotaExceededError');
+			error.name = 'QuotaExceededError';
+			throw error;
+		}
 		this.store[key] = String(value);
 	}
 
 	removeItem(key) {
+		if (this.disabled) {
+			throw new Error('localStorage is disabled');
+		}
 		delete this.store[key];
 	}
 
@@ -37,10 +56,110 @@ class LocalStorageMock {
 		const keys = Object.keys(this.store);
 		return keys[index] || null;
 	}
+
+	// Test helpers
+	__setQuotaExceeded(value) {
+		this.quotaExceeded = value;
+	}
+
+	__setDisabled(value) {
+		this.disabled = value;
+	}
+
+	__reset() {
+		// console.log('[LocalStorageMock] __reset() called, clearing store:', Object.keys(this.store));
+		this.store = {};
+		this.quotaExceeded = false;
+		this.disabled = false;
+	}
 }
 
-global.localStorage = new LocalStorageMock();
-global.sessionStorage = new LocalStorageMock();
+// Create shared instances and expose them globally for test access
+const localStorageInstance = new LocalStorageMock();
+const sessionStorageInstance = new LocalStorageMock();
+
+// Expose instances for direct test access (these won't be reset by Jest)
+global.__testLocalStorage = localStorageInstance;
+global.__testSessionStorage = sessionStorageInstance;
+
+// Attach to both global and window to ensure compatibility
+global.localStorage = localStorageInstance;
+global.sessionStorage = sessionStorageInstance;
+
+// JSDOM uses window as primary object, so set it there too
+if (typeof window !== 'undefined') {
+	window.localStorage = localStorageInstance;
+	window.sessionStorage = sessionStorageInstance;
+}
+
+// Mock document.cookie with proper attribute support
+class CookieStorageMock {
+	constructor() {
+		this.cookies = {};
+	}
+
+	set(cookieString) {
+		// Parse cookie string: "name=value;expires=...;path=/;SameSite=Lax"
+		const parts = cookieString.split(';').map(part => part.trim());
+		const [nameValue] = parts;
+		const [name, value] = nameValue.split('=');
+
+		if (!name) return;
+
+		// Extract attributes
+		const attributes = {};
+		for (let i = 1; i < parts.length; i++) {
+			const [key, val] = parts[i].split('=');
+			attributes[key.toLowerCase()] = val || true;
+		}
+
+		// Store cookie with its attributes
+		this.cookies[name] = {
+			value: value || '',
+			attributes,
+			fullString: cookieString
+		};
+	}
+
+	get() {
+		// Return all cookies in the format browsers use
+		return Object.entries(this.cookies)
+			.map(([name, data]) => {
+				// Build the cookie string with attributes
+				const parts = [`${name}=${data.value}`];
+
+				if (data.attributes.expires) {
+					parts.push(`expires=${data.attributes.expires}`);
+				}
+				if (data.attributes.path) {
+					parts.push(`path=${data.attributes.path}`);
+				}
+				if (data.attributes.samesite) {
+					parts.push(`SameSite=${data.attributes.samesite}`);
+				}
+
+				return parts.join(';');
+			})
+			.join('; ');
+	}
+
+	clear() {
+		this.cookies = {};
+	}
+}
+
+const cookieStorage = new CookieStorageMock();
+
+// Override document.cookie getter/setter
+Object.defineProperty(document, 'cookie', {
+	get() {
+		return cookieStorage.get();
+	},
+	set(value) {
+		cookieStorage.set(value);
+	},
+	configurable: true
+});
 
 // Mock WordPress globals
 global.wp = {
@@ -63,23 +182,56 @@ global.jQuery = jest.fn(() => ({
 
 global.$ = global.jQuery;
 
-// Mock IntersectionObserver
+// Mock IntersectionObserver with test helpers
 global.IntersectionObserver = class IntersectionObserver {
-	constructor(callback, options) {
+	constructor(callback, options = {}) {
 		this.callback = callback;
 		this.options = options;
+		this.observedElements = new Set();
+
+		// Store instance for test access
+		if (!global.__intersectionObserverInstances) {
+			global.__intersectionObserverInstances = [];
+		}
+		global.__intersectionObserverInstances.push(this);
 	}
 
-	observe() {
-		// Mock observe
+	observe(element) {
+		this.observedElements.add(element);
 	}
 
-	unobserve() {
-		// Mock unobserve
+	unobserve(element) {
+		this.observedElements.delete(element);
 	}
 
 	disconnect() {
-		// Mock disconnect
+		this.observedElements.clear();
+	}
+
+	// Test helper: manually trigger intersection
+	__trigger(isIntersecting, element = null) {
+		const elementsToTrigger = element
+			? [element]
+			: Array.from(this.observedElements);
+
+		const entries = elementsToTrigger.map((el) => ({
+			target: el,
+			isIntersecting,
+			intersectionRatio: isIntersecting ? 1.0 : 0,
+			boundingClientRect: el.getBoundingClientRect(),
+			intersectionRect: isIntersecting
+				? el.getBoundingClientRect()
+				: { top: 0, bottom: 0, left: 0, right: 0, width: 0, height: 0 },
+			rootBounds: null,
+			time: Date.now(),
+		}));
+
+		this.callback(entries, this);
+	}
+
+	// Test helper: reset instances
+	static __reset() {
+		global.__intersectionObserverInstances = [];
 	}
 };
 
@@ -125,16 +277,20 @@ Object.defineProperty(window, 'matchMedia', {
 // Mock scrollTo
 window.scrollTo = jest.fn();
 
-// Mock getComputedStyle
-window.getComputedStyle = jest.fn((element) => ({
-	getPropertyValue: jest.fn((prop) => {
-		if (prop === 'background-color' || prop === 'backgroundColor') {
-			return 'rgb(255, 255, 255)';
-		}
-		return '';
-	}),
-	backgroundColor: 'rgb(255, 255, 255)',
-}));
+// Mock getComputedStyle - must return a CSSStyleDeclaration-like object
+Object.defineProperty(window, 'getComputedStyle', {
+	writable: true,
+	configurable: true,
+	value: jest.fn((element) => ({
+		getPropertyValue: jest.fn((prop) => {
+			if (prop === 'background-color' || prop === 'backgroundColor') {
+				return 'rgb(255, 255, 255)';
+			}
+			return '';
+		}),
+		backgroundColor: 'rgb(255, 255, 255)',
+	}))
+});
 
 // Suppress console errors in tests (optional)
 // Uncomment if you want cleaner test output
@@ -162,8 +318,63 @@ global.ctaAutoInsertData = {
 // Helper to reset mocks between tests
 global.resetAllMocks = () => {
 	jest.clearAllMocks();
-	localStorage.clear();
-	sessionStorage.clear();
+
+	// Reset localStorage - use the shared instance that has the test helpers
+	if (global.__testLocalStorage) {
+		global.__testLocalStorage.__reset();
+
+		// IMPORTANT: Re-assign to ALL possible references
+		// Jest's resetMocks: true might clear these, so we restore them
+		global.localStorage = global.__testLocalStorage;
+		if (typeof window !== 'undefined') {
+			window.localStorage = global.__testLocalStorage;
+			// Also define as a property on window to ensure it's accessible
+			Object.defineProperty(window, 'localStorage', {
+				value: global.__testLocalStorage,
+				writable: true,
+				configurable: true
+			});
+		}
+	}
+
+	// Reset sessionStorage
+	if (global.__testSessionStorage) {
+		global.__testSessionStorage.__reset();
+		global.sessionStorage = global.__testSessionStorage;
+		if (typeof window !== 'undefined') {
+			window.sessionStorage = global.__testSessionStorage;
+			Object.defineProperty(window, 'sessionStorage', {
+				value: global.__testSessionStorage,
+				writable: true,
+				configurable: true
+			});
+		}
+	}
+
+	// Reset cookies
+	cookieStorage.clear();
+
+	// Reset IntersectionObserver instances
+	if (global.__intersectionObserverInstances) {
+		global.__intersectionObserverInstances = [];
+	}
+
+	// Re-establish window.getComputedStyle (always, because resetMocks: true might break it)
+	if (typeof window !== 'undefined') {
+		Object.defineProperty(window, 'getComputedStyle', {
+			writable: true,
+			configurable: true,
+			value: jest.fn((element) => ({
+				getPropertyValue: jest.fn((prop) => {
+					if (prop === 'background-color' || prop === 'backgroundColor') {
+						return 'rgb(255, 255, 255)';
+					}
+					return '';
+				}),
+				backgroundColor: 'rgb(255, 255, 255)',
+			}))
+		});
+	}
 };
 
 // Helper to create mock DOM elements

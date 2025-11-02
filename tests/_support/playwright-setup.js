@@ -139,11 +139,12 @@ async function createTestData(page, baseURL) {
 			await page.keyboard.type('[/cta_highlights]');
 		}
 
-		// Publish post
-		await page.click('button:has-text("Publish")');
+		// Publish post - use more specific selector to avoid ambiguity
+		await page.click('.editor-post-publish-button');
 
 		// Confirm publish (if pre-publish panel appears)
-		const confirmPublish = page.locator('.editor-post-publish-panel button:has-text("Publish")');
+		// Use more specific selector: the actual publish button in the panel, not the panel toggle
+		const confirmPublish = page.locator('.editor-post-publish-panel .editor-post-publish-button');
 		if (await confirmPublish.count() > 0) {
 			await confirmPublish.click();
 		}
