@@ -179,14 +179,14 @@ class Loader {
 		 */
 		$get_att = function ( $key, $default_value = '' ) use ( $view ) {
 			$value = $view->get( $key );
-			// Use the template's default if the value is empty or not set
+			// Use the template's default if the value is empty or not set.
 			if ( null === $value || '' === $value ) {
 				return $default_value;
 			}
 			return $value;
 		};
 
-		// Make core template variables available
+		// Make core template variables available.
 		$template     = $view->get( 'template', 'default' );
 		$content      = $view->get( 'content', '' );
 		$custom_class = $view->get( 'custom_class', '' );

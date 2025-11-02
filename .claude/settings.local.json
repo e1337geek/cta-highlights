@@ -14,7 +14,11 @@
       "Bash(npm run composer:install:*)",
       "Bash(npm run test:php:unit:docker:*)",
       "Bash(npm run lint:php:docker:*)",
-      "Bash(npm run lint:js:*)"
+      "Bash(npm run lint:js:*)",
+      "Bash(npm run test:setup:docker:*)",
+      "Bash(npx eslint:*)",
+      "Bash(bash bin/run-phpcbf-docker.sh:*)",
+      "Bash(composer phpcs:*)"
     ],
     "deny": [],
     "ask": []

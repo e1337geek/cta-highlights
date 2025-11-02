@@ -81,15 +81,17 @@ class AutoInsertAdmin {
 	 * @return void
 	 */
 	public function handle_actions() {
-		// Check if we're on the right page (check both GET and POST for page parameter)
+		// Check if we're on the right page (check both GET and POST for page parameter).
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing
 		$page = isset( $_GET['page'] ) ? $_GET['page'] : ( isset( $_POST['page'] ) ? $_POST['page'] : '' );
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended, WordPress.Security.NonceVerification.Missing
 		if ( 'cta-auto-insert' !== $page ) {
 			return;
 		}
 
 		$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : '';
 
-		// Handle delete
+		// Handle delete.
 		if ( 'delete' === $action && isset( $_GET['id'] ) ) {
 			$id = absint( $_GET['id'] );
 			if ( ! wp_verify_nonce( isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '', 'delete_cta_' . $id ) ) {
@@ -101,7 +103,7 @@ class AutoInsertAdmin {
 			exit;
 		}
 
-		// Handle duplicate
+		// Handle duplicate.
 		if ( 'duplicate' === $action && isset( $_GET['id'] ) ) {
 			$id = absint( $_GET['id'] );
 			if ( ! wp_verify_nonce( isset( $_GET['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ) : '', 'duplicate_cta_' . $id ) ) {
@@ -117,7 +119,7 @@ class AutoInsertAdmin {
 			exit;
 		}
 
-		// Handle save
+		// Handle save.
 		if ( isset( $_POST['cta_auto_insert_save'] ) ) {
 			if ( ! check_admin_referer( 'cta_auto_insert_save' ) ) {
 				wp_die( esc_html__( 'Security check failed', 'cta-highlights' ) );
@@ -151,26 +153,26 @@ class AutoInsertAdmin {
 		$data['status']   = isset( $post_data['status'] ) ? sanitize_text_field( wp_unslash( $post_data['status'] ) ) : 'active';
 		$data['cta_type'] = isset( $post_data['cta_type'] ) ? sanitize_text_field( wp_unslash( $post_data['cta_type'] ) ) : 'primary';
 
-		// Post types
+		// Post types.
 		$data['post_types'] = isset( $post_data['post_types'] ) && is_array( $post_data['post_types'] )
 			? array_map( 'sanitize_text_field', wp_unslash( $post_data['post_types'] ) )
 			: array();
 
-		// Categories
+		// Categories.
 		$data['category_mode'] = isset( $post_data['category_mode'] ) ? sanitize_text_field( wp_unslash( $post_data['category_mode'] ) ) : 'include';
 		$data['category_ids']  = isset( $post_data['category_ids'] ) && is_array( $post_data['category_ids'] )
 			? array_map( 'absint', wp_unslash( $post_data['category_ids'] ) )
 			: array();
 
-		// Storage conditions
+		// Storage conditions.
 		$data['storage_conditions'] = $this->sanitize_storage_conditions( $post_data );
 
-		// Insertion settings
+		// Insertion settings.
 		$data['insertion_direction'] = isset( $post_data['insertion_direction'] ) ? sanitize_text_field( wp_unslash( $post_data['insertion_direction'] ) ) : 'forward';
 		$data['insertion_position']  = isset( $post_data['insertion_position'] ) ? absint( $post_data['insertion_position'] ) : 3;
 		$data['fallback_behavior']   = isset( $post_data['fallback_behavior'] ) ? sanitize_text_field( wp_unslash( $post_data['fallback_behavior'] ) ) : 'end';
 
-		// Fallback CTA
+		// Fallback CTA.
 		$data['fallback_cta_id'] = isset( $post_data['fallback_cta_id'] ) && ! empty( $post_data['fallback_cta_id'] )
 			? absint( $post_data['fallback_cta_id'] )
 			: null;
@@ -217,6 +219,7 @@ class AutoInsertAdmin {
 	 * @return void
 	 */
 	public function render_page() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Non-sensitive action parameter read.
 		$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : 'list';
 
 		if ( in_array( $action, array( 'edit', 'add' ), true ) ) {
@@ -244,16 +247,17 @@ class AutoInsertAdmin {
 	 * @return void
 	 */
 	private function render_edit_form() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Non-sensitive ID parameter read for display.
 		$id  = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
 		$cta = $id ? $this->database->get( $id ) : null;
 
-		// Get all CTAs for fallback dropdown
+		// Get all CTAs for fallback dropdown.
 		$all_ctas = $this->database->get_all( array( 'status' => '' ) );
 
-		// Get all post types
+		// Get all post types.
 		$post_types = get_post_types( array( 'public' => true ), 'objects' );
 
-		// Get all categories
+		// Get all categories.
 		$categories = get_categories( array( 'hide_empty' => false ) );
 
 		include CTA_HIGHLIGHTS_DIR . 'templates/admin/edit.php';

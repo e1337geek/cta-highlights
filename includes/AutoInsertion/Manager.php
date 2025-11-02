@@ -81,14 +81,14 @@ class Manager {
 	 * @return void
 	 */
 	private function init_hooks() {
-		// Output fallback chain data in footer
+		// Output fallback chain data in footer.
 		add_action( 'wp_footer', array( $this, 'output_fallback_data' ), 5 );
 
-		// Enqueue scripts for storage condition evaluation
+		// Enqueue scripts for storage condition evaluation.
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
-		// Check if we need to force enqueue base assets for auto-inserted CTAs with shortcodes
-		// Priority 5 ensures this runs early during wp_enqueue_scripts
+		// Check if we need to force enqueue base assets for auto-inserted CTAs with shortcodes.
+		// Priority 5 ensures this runs early during wp_enqueue_scripts.
 		add_filter( 'cta_highlights_force_enqueue', array( $this, 'check_auto_insert_shortcodes' ), 5 );
 	}
 
@@ -99,7 +99,7 @@ class Manager {
 	 * @return void
 	 */
 	public function output_fallback_data() {
-		// Only on singular posts
+		// Only on singular posts.
 		if ( ! is_singular() ) {
 			return;
 		}
@@ -110,24 +110,24 @@ class Manager {
 			return;
 		}
 
-		// Find matching CTA
+		// Find matching CTA.
 		$cta = $this->find_matching_cta( $post );
 
 		if ( ! $cta ) {
-			return; // No CTA = no output (conditional loading for performance)
+			return; // No CTA = no output (conditional loading for performance).
 		}
 
-		// Build fallback chain
+		// Build fallback chain.
 		$chain = $this->build_fallback_chain( $cta, $post );
 
-		// Prepare data structure
+		// Prepare data structure.
 		$data = array(
 			'postId'          => $post->ID,
 			'contentSelector' => apply_filters( 'cta_highlights_content_selector', '.entry-content', $post->ID ),
 			'ctas'            => $this->prepare_ctas_for_output( $chain ),
 		);
 
-		// Output as JSON script tag in footer
+		// Output as JSON script tag in footer.
 		echo '<script type="application/json" id="cta-highlights-auto-insert-data">';
 		echo wp_json_encode( $data );
 		echo '</script>' . "\n";
@@ -144,11 +144,11 @@ class Manager {
 		$prepared = array();
 
 		foreach ( $chain as $cta ) {
-			// Process content (shortcodes, sanitization)
+			// Process content (shortcodes, sanitization).
 			$content = wp_kses_post( $cta['content'] );
 			$content = do_shortcode( $content );
 
-			// Generate storage condition JavaScript
+			// Generate storage condition JavaScript.
 			$storage_condition_js = $this->matcher->generate_storage_condition_js( $cta['storage_conditions'] );
 
 			$prepared[] = array(
@@ -180,9 +180,9 @@ class Manager {
 		$current = $cta;
 		$depth   = 0;
 
-		// Follow the fallback chain
+		// Follow the fallback chain.
 		while ( ! empty( $current['fallback_cta_id'] ) && $depth < self::MAX_FALLBACK_DEPTH ) {
-			// Prevent circular references
+			// Prevent circular references.
 			if ( in_array( $current['fallback_cta_id'], $visited, true ) ) {
 				break;
 			}
@@ -193,14 +193,14 @@ class Manager {
 				break;
 			}
 
-			// Check if fallback matches post type/category (not storage conditions)
+			// Check if fallback matches post type/category (not storage conditions).
 			if ( $this->matcher->should_display( $fallback, $post ) ) {
 				$chain[]   = $fallback;
 				$visited[] = $fallback['id'];
 				$current   = $fallback;
 				++$depth;
 			} else {
-				// Fallback doesn't match post type/category, stop chain
+				// Fallback doesn't match post type/category, stop chain.
 				break;
 			}
 		}
@@ -217,12 +217,12 @@ class Manager {
 	 * @return array|null CTA configuration or null if none found.
 	 */
 	private function find_matching_cta( $post, $depth = 0, $visited_ids = array() ) {
-		// Prevent infinite loops
+		// Prevent infinite loops.
 		if ( $depth >= self::MAX_FALLBACK_DEPTH ) {
 			return null;
 		}
 
-		// Get all active primary CTAs (excluding fallback-only CTAs)
+		// Get all active primary CTAs (excluding fallback-only CTAs).
 		$ctas = $this->database->get_all(
 			array(
 				'status'   => 'active',
@@ -231,17 +231,17 @@ class Manager {
 		);
 
 		foreach ( $ctas as $cta ) {
-			// Skip if we've already visited this CTA (circular reference)
+			// Skip if we've already visited this CTA (circular reference).
 			if ( in_array( $cta['id'], $visited_ids, true ) ) {
 				continue;
 			}
 
-			// Check if this CTA matches the current post
+			// Check if this CTA matches the current post.
 			if ( $this->matcher->should_display( $cta, $post ) ) {
 				return $cta;
 			}
 
-			// If CTA doesn't match and has a fallback, try the fallback
+			// If CTA doesn't match and has a fallback, try the fallback.
 			if ( ! empty( $cta['fallback_cta_id'] ) ) {
 				$visited_ids[] = $cta['id'];
 				$fallback_cta  = $this->database->get( $cta['fallback_cta_id'] );
@@ -274,17 +274,17 @@ class Manager {
 	 * @return array|null CTA configuration or null if none found.
 	 */
 	private function find_matching_cta_recursive( $cta, $post, $depth, $visited_ids ) {
-		// Prevent infinite loops
+		// Prevent infinite loops.
 		if ( $depth >= self::MAX_FALLBACK_DEPTH ) {
 			return null;
 		}
 
-		// Check if this CTA matches
+		// Check if this CTA matches.
 		if ( $this->matcher->should_display( $cta, $post ) ) {
 			return $cta;
 		}
 
-		// Try this CTA's fallback
+		// Try this CTA's fallback.
 		if ( ! empty( $cta['fallback_cta_id'] ) && ! in_array( $cta['fallback_cta_id'], $visited_ids, true ) ) {
 			$visited_ids[] = $cta['id'];
 			$fallback_cta  = $this->database->get( $cta['fallback_cta_id'] );
@@ -311,12 +311,12 @@ class Manager {
 	 * @return bool
 	 */
 	public function check_auto_insert_shortcodes( $force ) {
-		// If already forced, return early
+		// If already forced, return early.
 		if ( $force ) {
 			return $force;
 		}
 
-		// Only check on singular posts
+		// Only check on singular posts.
 		if ( ! is_singular() ) {
 			return $force;
 		}
@@ -327,22 +327,22 @@ class Manager {
 			return $force;
 		}
 
-		// Get matching CTA for this post
+		// Get matching CTA for this post.
 		$cta = $this->find_matching_cta( $post );
 
 		if ( ! $cta ) {
 			return $force;
 		}
 
-		// Build the entire fallback chain
-		// This is necessary because client-side JavaScript may select any CTA from the chain
-		// based on storage conditions, so we need to check all of them
+		// Build the entire fallback chain.
+		// This is necessary because client-side JavaScript may select any CTA from the chain.
+		// based on storage conditions, so we need to check all of them.
 		$chain = $this->build_fallback_chain( $cta, $post );
 
-		// Check if ANY CTA in the chain contains the [cta_highlights] shortcode
+		// Check if ANY CTA in the chain contains the [cta_highlights] shortcode.
 		foreach ( $chain as $chain_cta ) {
 			if ( ! empty( $chain_cta['content'] ) && has_shortcode( $chain_cta['content'], 'cta_highlights' ) ) {
-				return true; // Force enqueue
+				return true; // Force enqueue.
 			}
 		}
 
@@ -359,18 +359,18 @@ class Manager {
 			return;
 		}
 
-		// Enqueue auto-insertion JavaScript
-		// Note: This script is independent and doesn't require cta-highlights-base
-		// It handles client-side insertion, position calculation, and storage evaluation
+		// Enqueue auto-insertion JavaScript.
+		// Note: This script is independent and doesn't require cta-highlights-base.
+		// It handles client-side insertion, position calculation, and storage evaluation.
 		wp_enqueue_script(
 			'cta-highlights-auto-insert',
 			CTA_HIGHLIGHTS_URL . 'assets/js/auto-insert.js',
-			array(), // No dependencies - standalone script
+			array(), // No dependencies - standalone script.
 			CTA_HIGHLIGHTS_VERSION,
-			true // In footer
+			true // In footer.
 		);
 
-		// Add defer attribute for performance (non-blocking)
+		// Add defer attribute for performance (non-blocking).
 		wp_script_add_data( 'cta-highlights-auto-insert', 'defer', true );
 	}
 

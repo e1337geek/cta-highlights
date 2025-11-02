@@ -36,24 +36,24 @@ class Inserter {
 	 * @return string Modified content.
 	 */
 	public function insert( $content, $cta, $storage_condition_js ) {
-		// Parse content into DOM elements
+		// Parse content into DOM elements.
 		$elements = $this->parse_content_elements( $content );
 
 		if ( empty( $elements ) ) {
-			return $content; // No elements to insert into
+			return $content; // No elements to insert into.
 		}
 
-		// Calculate insertion position
+		// Calculate insertion position.
 		$position = $this->calculate_position( $elements, $cta );
 
 		if ( false === $position ) {
-			return $content; // Position not found (e.g., skip on insufficient content)
+			return $content; // Position not found (e.g., skip on insufficient content).
 		}
 
-		// Build CTA HTML
+		// Build CTA HTML.
 		$cta_html = $this->build_cta_html( $cta, $storage_condition_js, 0, 1 );
 
-		// Insert CTA at position
+		// Insert CTA at position.
 		return $this->inject_at_position( $content, $elements, $position, $cta_html );
 	}
 
@@ -68,20 +68,20 @@ class Inserter {
 			return array();
 		}
 
-		// Use DOMDocument to parse HTML
+		// Use DOMDocument to parse HTML.
 		$dom = new \DOMDocument( '1.0', 'UTF-8' );
 
-		// Suppress warnings for malformed HTML
+		// Suppress warnings for malformed HTML.
 		libxml_use_internal_errors( true );
 
-		// Load HTML with UTF-8 encoding
+		// Load HTML with UTF-8 encoding.
 		$dom->loadHTML( '<?xml encoding="UTF-8">' . $content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD );
 
 		libxml_clear_errors();
 
 		$elements = array();
 
-		// Get direct children of body (or root if no body)
+		// Get direct children of body (or root if no body).
 		$body = $dom->getElementsByTagName( 'body' )->item( 0 );
 		$root = $body ? $body : $dom;
 
@@ -89,18 +89,21 @@ class Inserter {
 			return array();
 		}
 
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- childNodes is a native DOMDocument property.
 		foreach ( $root->childNodes as $index => $node ) {
-			// Only count element nodes (ignore text nodes, comments, etc.)
+			// Only count element nodes (ignore text nodes, comments, etc.).
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- nodeType is a native DOMDocument property.
 			if ( XML_ELEMENT_NODE !== $node->nodeType ) {
 				continue;
 			}
 
-			// Get the HTML of this element
+			// Get the HTML of this element.
 			$element_html = $dom->saveHTML( $node );
 
 			$elements[] = array(
 				'index'    => $index,
 				'html'     => $element_html,
+				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- nodeName is a native DOMDocument property.
 				'tag_name' => $node->nodeName,
 			);
 		}
@@ -122,29 +125,29 @@ class Inserter {
 		$fallback       = $cta['fallback_behavior'];
 
 		if ( 'forward' === $direction ) {
-			// Insert after the Nth element (1-indexed in UI, 0-indexed in array)
+			// Insert after the Nth element (1-indexed in UI, 0-indexed in array).
 			$target_index = $position - 1;
 
 			if ( $target_index >= $total_elements ) {
-				// Insufficient elements
+				// Insufficient elements.
 				if ( 'end' === $fallback ) {
-					return $total_elements - 1; // Insert after last element
+					return $total_elements - 1; // Insert after last element.
 				} else {
-					return false; // Skip insertion
+					return false; // Skip insertion.
 				}
 			}
 
 			return $target_index;
 		} else {
-			// Reverse: Insert N elements from the end
+			// Reverse: Insert N elements from the end.
 			$target_index = $total_elements - $position;
 
 			if ( $target_index < 0 ) {
-				// Insufficient elements
+				// Insufficient elements.
 				if ( 'end' === $fallback ) {
-					return $total_elements - 1; // Insert after last element
+					return $total_elements - 1; // Insert after last element.
 				} else {
-					return false; // Skip insertion
+					return false; // Skip insertion.
 				}
 			}
 
@@ -183,11 +186,11 @@ class Inserter {
 
 		$content = wp_kses_post( $cta['content'] );
 
-		// Process shortcodes in content
+		// Process shortcodes in content.
 		$content = do_shortcode( $content );
 
-		// Only hide with display:none if there are storage conditions to evaluate
-		// Otherwise, show it immediately
+		// Only hide with display:none if there are storage conditions to evaluate.
+		// Otherwise, show it immediately.
 		$style = $has_storage_conditions ? ' style="display:none;"' : '';
 
 		return sprintf(
@@ -209,20 +212,20 @@ class Inserter {
 	 * @return string Modified content.
 	 */
 	private function inject_at_position( $content, $elements, $position, $cta_html ) {
-		// Find the HTML string to insert after
+		// Find the HTML string to insert after.
 		$target_element = $elements[ $position ];
 
-		// Find position of this element in original content
+		// Find position of this element in original content.
 		$element_pos = strpos( $content, $target_element['html'] );
 
 		if ( false === $element_pos ) {
-			return $content; // Element not found (shouldn't happen)
+			return $content; // Element not found (shouldn't happen).
 		}
 
-		// Calculate insertion point (after the element)
+		// Calculate insertion point (after the element).
 		$insertion_point = $element_pos + strlen( $target_element['html'] );
 
-		// Insert CTA HTML
+		// Insert CTA HTML.
 		return substr_replace( $content, "\n\n" . $cta_html . "\n\n", $insertion_point, 0 );
 	}
 }

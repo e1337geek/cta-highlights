@@ -201,7 +201,7 @@
 				// Evaluate storage conditions
 				try {
 					// eslint-disable-next-line no-eval -- Evaluating user-configured storage conditions from admin
-				const conditionPassed = eval(cta.storage_condition_js);
+					const conditionPassed = eval(cta.storage_condition_js);
 
 					if (conditionPassed) {
 						this.log(
@@ -367,7 +367,7 @@
 		calculateInsertPosition(elements, cta) {
 			const totalElements = elements.length;
 			// eslint-disable-next-line @wordpress/no-unused-vars-before-return -- Variable used after early return check
-		const position = parseInt(cta.insertion_position, 10);
+			const position = parseInt(cta.insertion_position, 10);
 			const direction = cta.insertion_direction;
 			const fallbackBehavior = cta.fallback_behavior;
 

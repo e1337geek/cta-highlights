@@ -81,22 +81,22 @@ class PostMetaBox {
 	 * @return void
 	 */
 	public function save_meta_box( $post_id ) {
-		// Check nonce
+		// Check nonce.
 		if ( ! isset( $_POST['cta_highlights_meta_box_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['cta_highlights_meta_box_nonce'] ) ), 'cta_highlights_meta_box' ) ) {
 			return;
 		}
 
-		// Check autosave
+		// Check autosave.
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}
 
-		// Check permissions
+		// Check permissions.
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			return;
 		}
 
-		// Save or delete meta
+		// Save or delete meta.
 		if ( isset( $_POST['cta_highlights_disable_auto_insert'] ) && '1' === $_POST['cta_highlights_disable_auto_insert'] ) {
 			update_post_meta( $post_id, self::META_KEY, '1' );
 		} else {

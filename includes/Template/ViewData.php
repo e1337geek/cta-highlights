@@ -37,6 +37,8 @@ class ViewData implements ArrayAccess {
 	/**
 	 * Get a value with optional default
 	 *
+	 * phpcs:ignore Universal.NamingConventions.NoReservedKeywordParameterNames.defaultFound
+	 *
 	 * @param string $key     Data key.
 	 * @param mixed  $default Default value if key doesn't exist.
 	 * @return mixed
@@ -115,7 +117,7 @@ class ViewData implements ArrayAccess {
 	 */
 	#[\ReturnTypeWillChange]
 	public function offsetSet( $offset, $value ) {
-		// Read-only - do nothing
+		// Read-only - do nothing.
 	}
 
 	/**
@@ -126,6 +128,6 @@ class ViewData implements ArrayAccess {
 	 */
 	#[\ReturnTypeWillChange]
 	public function offsetUnset( $offset ) {
-		// Read-only - do nothing
+		// Read-only - do nothing.
 	}
 }

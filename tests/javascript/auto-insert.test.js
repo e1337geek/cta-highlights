@@ -11,11 +11,15 @@
  * - DOM insertion
  * - Analytics tracking
  *
- * @package CTAHighlights\Tests\JavaScript
+ * @package
  */
 
 const LocalStorageMock = require('./__mocks__/localStorage');
-const { setupWordPressEnv, resetWordPressEnv, getAnalyticsCalls } = require('./__mocks__/wordpress');
+const {
+	setupWordPressEnv,
+	resetWordPressEnv,
+	getAnalyticsCalls,
+} = require('./__mocks__/wordpress');
 const fs = require('fs');
 const path = require('path');
 

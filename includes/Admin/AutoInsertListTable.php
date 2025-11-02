@@ -85,8 +85,10 @@ class AutoInsertListTable extends \WP_List_Table {
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Non-sensitive sorting parameters for list table display.
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'id';
 		$order   = isset( $_GET['order'] ) ? sanitize_text_field( wp_unslash( $_GET['order'] ) ) : 'ASC';
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$this->items = $this->database->get_all(
 			array(
@@ -208,17 +210,18 @@ class AutoInsertListTable extends \WP_List_Table {
 	protected function column_conditions( $item ) {
 		$conditions = array();
 
-		// Post types
+		// Post types.
 		if ( ! empty( $item['post_types'] ) ) {
 			$post_type_names = array();
 			foreach ( $item['post_types'] as $post_type ) {
 				$post_type_obj     = get_post_type_object( $post_type );
 				$post_type_names[] = $post_type_obj ? $post_type_obj->labels->name : $post_type;
 			}
+			/* translators: %s: comma-separated list of post type names */
 			$conditions[] = sprintf( __( 'Post Types: %s', 'cta-highlights' ), implode( ', ', $post_type_names ) );
 		}
 
-		// Categories
+		// Categories.
 		if ( ! empty( $item['category_ids'] ) ) {
 			$category_names = array();
 			foreach ( $item['category_ids'] as $cat_id ) {
@@ -228,15 +231,17 @@ class AutoInsertListTable extends \WP_List_Table {
 				}
 			}
 			if ( ! empty( $category_names ) ) {
-				$mode         = isset( $item['category_mode'] ) ? $item['category_mode'] : 'include';
-				$mode_label   = 'include' === $mode ? __( 'Include', 'cta-highlights' ) : __( 'Exclude', 'cta-highlights' );
+				$mode       = isset( $item['category_mode'] ) ? $item['category_mode'] : 'include';
+				$mode_label = 'include' === $mode ? __( 'Include', 'cta-highlights' ) : __( 'Exclude', 'cta-highlights' );
+				/* translators: 1: mode label (Include or Exclude), 2: comma-separated list of category names */
 				$conditions[] = sprintf( __( 'Categories (%1$s): %2$s', 'cta-highlights' ), $mode_label, implode( ', ', $category_names ) );
 			}
 		}
 
-		// Storage conditions
+		// Storage conditions.
 		if ( ! empty( $item['storage_conditions'] ) ) {
-			$count        = count( $item['storage_conditions'] );
+			$count = count( $item['storage_conditions'] );
+			/* translators: %d: number of localStorage conditions */
 			$conditions[] = sprintf( _n( '%d localStorage condition', '%d localStorage conditions', $count, 'cta-highlights' ), $count );
 		}
 

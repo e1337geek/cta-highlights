@@ -24,22 +24,22 @@ class Matcher {
 	 * @return bool
 	 */
 	public function should_display( $cta, $post ) {
-		// Check if auto-insertion is disabled for this post
+		// Check if auto-insertion is disabled for this post.
 		if ( get_post_meta( $post->ID, '_cta_highlights_disable_auto_insert', true ) ) {
 			return false;
 		}
 
-		// Check post type match
+		// Check post type match.
 		if ( ! $this->matches_post_type( $cta, $post ) ) {
 			return false;
 		}
 
-		// Check category match
+		// Check category match.
 		if ( ! $this->matches_categories( $cta, $post ) ) {
 			return false;
 		}
 
-		// Storage conditions are evaluated client-side in JavaScript
+		// Storage conditions are evaluated client-side in JavaScript.
 		return true;
 	}
 
@@ -52,7 +52,7 @@ class Matcher {
 	 */
 	private function matches_post_type( $cta, $post ) {
 		if ( empty( $cta['post_types'] ) ) {
-			return true; // No restriction
+			return true; // No restriction.
 		}
 
 		return in_array( $post->post_type, $cta['post_types'], true );
@@ -67,22 +67,22 @@ class Matcher {
 	 */
 	private function matches_categories( $cta, $post ) {
 		if ( empty( $cta['category_ids'] ) ) {
-			return true; // No restriction
+			return true; // No restriction.
 		}
 
 		$post_categories = wp_get_post_categories( $post->ID );
 
 		if ( empty( $post_categories ) ) {
-			// Post has no categories
-			return 'exclude' === $cta['category_mode']; // Only match if we're excluding
+			// Post has no categories.
+			return 'exclude' === $cta['category_mode']; // Only match if we're excluding.
 		}
 
 		$has_match = (bool) array_intersect( $cta['category_ids'], $post_categories );
 
 		if ( 'include' === $cta['category_mode'] ) {
-			return $has_match; // Must be in one of the selected categories
+			return $has_match; // Must be in one of the selected categories.
 		} else {
-			return ! $has_match; // Must NOT be in any of the selected categories
+			return ! $has_match; // Must NOT be in any of the selected categories.
 		}
 	}
 
@@ -118,8 +118,8 @@ class Matcher {
 			return 'true';
 		}
 
-		// Determine logic operator (all conditions must pass for MVP - AND logic)
-		// In future versions, we can add support for mixed AND/OR logic
+		// Determine logic operator (all conditions must pass for MVP - AND logic).
+		// In future versions, we can add support for mixed AND/OR logic.
 		return '(' . implode( ' && ', $js_parts ) . ')';
 	}
 
@@ -133,13 +133,15 @@ class Matcher {
 	 * @return string JavaScript condition code.
 	 */
 	private function generate_single_condition_js( $key, $operator, $value, $datatype ) {
-		$key_js   = json_encode( $key );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode -- json_encode is appropriate here for JavaScript code generation.
+		$key_js = json_encode( $key );
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.json_encode_json_encode -- json_encode is appropriate here for JavaScript code generation.
 		$value_js = json_encode( $value );
 
-		// Get value from storage (localStorage or cookie)
+		// Get value from storage (localStorage or cookie).
 		$get_value_js = "this.storageManager.get({$key_js})";
 
-		// Handle different data types and operators
+		// Handle different data types and operators.
 		switch ( $datatype ) {
 			case 'number':
 				return $this->generate_numeric_condition( $get_value_js, $operator, $value_js );
@@ -153,7 +155,7 @@ class Matcher {
 			case 'date':
 				return $this->generate_date_condition( $get_value_js, $operator, $value_js );
 
-			default: // string
+			default: // String.
 				return $this->generate_string_condition( $get_value_js, $operator, $value_js );
 		}
 	}
@@ -172,7 +174,7 @@ class Matcher {
 			$operator = '=';
 		}
 
-		// Convert '=' to '===' for strict comparison
+		// Convert '=' to '===' for strict comparison.
 		if ( '=' === $operator ) {
 			$operator = '===';
 		} elseif ( '!=' === $operator ) {

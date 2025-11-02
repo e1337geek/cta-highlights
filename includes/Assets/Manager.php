@@ -1,26 +1,83 @@
 <?php
+/**
+ * Asset Manager
+ *
+ * Handles enqueueing of CSS and JavaScript assets for the CTA Highlights plugin.
+ * Implements conditional asset loading based on shortcode detection.
+ *
+ * @package CTAHighlights\Assets
+ * @since 1.0.0
+ */
+
 namespace CTAHighlights\Assets;
 
 use CTAHighlights\Template\Registry;
 
+/**
+ * Manager class for handling plugin assets
+ *
+ * @since 1.0.0
+ */
 class Manager {
+	/**
+	 * Plugin directory path
+	 *
+	 * @var string
+	 */
 	private $plugin_dir;
+
+	/**
+	 * Plugin URL
+	 *
+	 * @var string
+	 */
 	private $plugin_url;
+
+	/**
+	 * Plugin version
+	 *
+	 * @var string
+	 */
 	private $version;
+
+	/**
+	 * Whether shortcode was detected in current request
+	 *
+	 * @var bool
+	 */
 	private $has_shortcode = false;
 
+	/**
+	 * Constructor
+	 *
+	 * @param string $plugin_dir Plugin directory path.
+	 * @param string $plugin_url Plugin URL.
+	 * @param string $version Plugin version.
+	 */
 	public function __construct( $plugin_dir, $plugin_url, $version ) {
 		$this->plugin_dir = trailingslashit( $plugin_dir );
 		$this->plugin_url = trailingslashit( $plugin_url );
 		$this->version    = $version;
 	}
 
+	/**
+	 * Initialize asset manager
+	 *
+	 * Registers WordPress hooks for asset enqueueing.
+	 *
+	 * @return void
+	 */
 	public function init() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'maybe_enqueue_assets' ) );
 		add_action( 'wp_footer', array( $this, 'enqueue_template_styles' ) );
 		add_action( 'wp_head', array( $this, 'add_resource_hints' ), 1 );
 	}
 
+	/**
+	 * Conditionally enqueue assets if shortcode is detected
+	 *
+	 * @return void
+	 */
 	public function maybe_enqueue_assets() {
 		if ( $this->detect_shortcode() ) {
 			$this->has_shortcode = true;
@@ -28,6 +85,13 @@ class Manager {
 		}
 	}
 
+	/**
+	 * Detect if CTA shortcode is present in current content
+	 *
+	 * Checks post content, widgets, and filter hooks.
+	 *
+	 * @return bool True if shortcode detected, false otherwise.
+	 */
 	private function detect_shortcode() {
 		global $post;
 
@@ -48,6 +112,11 @@ class Manager {
 		return false;
 	}
 
+	/**
+	 * Check if shortcode exists in any active widgets
+	 *
+	 * @return bool True if shortcode found in widgets, false otherwise.
+	 */
 	private function check_widgets_for_shortcode() {
 		$sidebars = wp_get_sidebars_widgets();
 
@@ -76,6 +145,13 @@ class Manager {
 		return false;
 	}
 
+	/**
+	 * Enqueue base CSS and JavaScript assets
+	 *
+	 * Loads the core plugin assets and localizes JavaScript configuration.
+	 *
+	 * @return void
+	 */
 	public function enqueue_base_assets() {
 		$css_file = $this->plugin_dir . 'assets/css/cta-highlights.css';
 		if ( file_exists( $css_file ) ) {
@@ -106,6 +182,11 @@ class Manager {
 		}
 	}
 
+	/**
+	 * Get JavaScript configuration object
+	 *
+	 * @return array Configuration array to be localized for JavaScript.
+	 */
 	private function get_js_config() {
 		return array(
 			'globalCooldown'   => absint( apply_filters( 'cta_highlights_global_cooldown', 3600 ) ),
@@ -115,6 +196,13 @@ class Manager {
 		);
 	}
 
+	/**
+	 * Enqueue template-specific stylesheets
+	 *
+	 * Loads CSS for each template that was used on the page.
+	 *
+	 * @return void
+	 */
 	public function enqueue_template_styles() {
 		if ( ! $this->has_shortcode ) {
 			return;
@@ -132,6 +220,14 @@ class Manager {
 		}
 	}
 
+	/**
+	 * Enqueue CSS for a specific template
+	 *
+	 * Checks theme directory first, then plugin directory.
+	 *
+	 * @param string $template_name Template name.
+	 * @return void
+	 */
 	private function enqueue_template_css( $template_name ) {
 		$theme_css_path = get_stylesheet_directory() . '/cta-highlights-templates/' . $template_name . '.css';
 		$theme_css_url  = get_stylesheet_directory_uri() . '/cta-highlights-templates/' . $template_name . '.css';
@@ -158,6 +254,13 @@ class Manager {
 		}
 	}
 
+	/**
+	 * Add resource hints to page head
+	 *
+	 * Adds DNS prefetch and preconnect hints for better performance.
+	 *
+	 * @return void
+	 */
 	public function add_resource_hints() {
 		if ( ! $this->has_shortcode ) {
 			return;
