@@ -18,7 +18,8 @@
       "Bash(npm run test:setup:docker:*)",
       "Bash(npx eslint:*)",
       "Bash(bash bin/run-phpcbf-docker.sh:*)",
-      "Bash(composer phpcs:*)"
+      "Bash(composer phpcs:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []
