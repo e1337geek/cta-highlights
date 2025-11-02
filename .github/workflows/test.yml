@@ -105,7 +105,8 @@ jobs:
               apk add --no-cache bash subversion curl tar rsync mysql-client
 
               echo '===> Installing WordPress test library...'
-              bash tests/bin/install-wp-tests.sh wordpress_test_php${{ matrix.php }} root password mysql latest
+              MYSQL_PWD=password mysqladmin --host=mysql --user=root --skip-ssl create wordpress_test_php${{ matrix.php }} || true
+              bash tests/bin/install-wp-tests.sh wordpress_test_php${{ matrix.php }} root password mysql latest true
 
               echo '===> Installing PHP mysqli extension...'
               docker-php-ext-install mysqli > /dev/null 2>&1
@@ -132,7 +133,8 @@ jobs:
               apk add --no-cache bash subversion curl tar rsync mysql-client autoconf build-base linux-headers
 
               echo '===> Installing WordPress test library...'
-              bash tests/bin/install-wp-tests.sh wordpress_test_php8.0 root password mysql latest
+              MYSQL_PWD=password mysqladmin --host=mysql --user=root --skip-ssl create wordpress_test_php8.0 || true
+              bash tests/bin/install-wp-tests.sh wordpress_test_php8.0 root password mysql latest true
 
               echo '===> Installing PHP extensions (mysqli, xdebug)...'
               docker-php-ext-install mysqli > /dev/null 2>&1
