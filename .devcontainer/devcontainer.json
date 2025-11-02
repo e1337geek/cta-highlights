@@ -1,0 +1,104 @@
+{
+  "name": "CTA Highlights Development",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "plugin-dev",
+  "workspaceFolder": "/workspace",
+
+  // Features to add to the dev container
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  // Configure tool-specific properties
+  "customizations": {
+    "vscode": {
+      // Extensions to install
+      "extensions": [
+        // PHP
+        "bmewburn.vscode-intelephense-client",
+        "xdebug.php-debug",
+        "wongjn.php-sniffer",
+
+        // JavaScript
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+
+        // WordPress
+        "wordpresstoolbox.wordpress-toolbox",
+
+        // Testing
+        "hbenl.vscode-test-explorer",
+
+        // Docker
+        "ms-azuretools.vscode-docker",
+
+        // Git
+        "eamodio.gitlens",
+
+        // Utilities
+        "editorconfig.editorconfig",
+        "streetsidesoftware.code-spell-checker"
+      ],
+
+      // VS Code settings
+      "settings": {
+        // PHP
+        "php.validate.executablePath": "/usr/local/bin/php",
+        "php.suggest.basic": true,
+        "intelephense.files.maxSize": 5000000,
+
+        // PHPCS
+        "phpSniffer.standard": "WordPress",
+        "phpSniffer.executablesFolder": "/workspace/vendor/bin/",
+
+        // ESLint
+        "eslint.validate": ["javascript"],
+        "eslint.workingDirectories": ["/workspace"],
+
+        // Editor
+        "editor.formatOnSave": false,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+
+        // Files
+        "files.watcherExclude": {
+          "**/node_modules/**": true,
+          "**/vendor/**": true,
+          "**/.git/**": true
+        },
+
+        // Terminal
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+
+  // Run commands after container is created
+  "postCreateCommand": "npm install && composer install",
+
+  // Run commands when starting the container
+  "postStartCommand": "echo 'Development container ready! Run npm run env:start to start WordPress.'",
+
+  // Forward ports for WordPress and testing
+  "forwardPorts": [8888, 8889],
+  "portsAttributes": {
+    "8888": {
+      "label": "WordPress Development",
+      "onAutoForward": "notify"
+    },
+    "8889": {
+      "label": "WordPress Testing",
+      "onAutoForward": "silent"
+    }
+  },
+
+  // Run as non-root user
+  "remoteUser": "vscode",
+
+  // Mount Docker socket for wp-env
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ]
+}

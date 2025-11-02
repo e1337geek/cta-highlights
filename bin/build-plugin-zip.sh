@@ -44,7 +44,9 @@ rsync -av --progress \
     --exclude='.gitattributes' \
     --exclude='.wp-env.json' \
     --exclude='.eslintrc.js' \
+    --exclude='.eslintignore' \
     --exclude='.editorconfig' \
+    --exclude='.claude' \
     --exclude='CLAUDE.md' \
     --exclude='phpcs.xml*' \
     --exclude='phpunit.xml*' \
@@ -52,8 +54,6 @@ rsync -av --progress \
     --exclude='playwright.config.js' \
     --exclude='node_modules' \
     --exclude='vendor' \
-    --exclude='composer.json' \
-    --exclude='composer.lock' \
     --exclude='package.json' \
     --exclude='package-lock.json' \
     --exclude='tests' \
@@ -69,6 +69,14 @@ rsync -av --progress \
     --exclude='.DS_Store' \
     --exclude='Thumbs.db' \
     --exclude='docs' \
+    --exclude='.devcontainer' \
+    --exclude='CONTRIBUTING.md' \
+    --exclude='DEVELOPMENT-SETUP.md' \
+    --exclude='GITHUB-SETUP.md' \
+    --exclude='RELEASE.md' \
+    --exclude='PHPCS-FIXES-NEEDED.md' \
+    --exclude='templates/admin' \
+    --exclude='templates/example-*.php' \
     . "$RELEASE_DIR/"
 
 # Install production Composer dependencies

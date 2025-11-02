@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  plugin-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    volumes:
+      # Mount the plugin directory
+      - ..:/workspace:cached
+
+      # Mount Docker socket for wp-env
+      - /var/run/docker.sock:/var/run/docker.sock
+
+      # Persist bash history
+      - devcontainer-bashhistory:/home/vscode/.bash_history
+
+    # Keep container running
+    command: /bin/sh -c "while sleep 1000; do :; done"
+
+    # Network mode for accessing wp-env containers
+    network_mode: bridge
+
+    # User to run as
+    user: vscode
+
+    # Environment variables
+    environment:
+      - COMPOSER_ALLOW_SUPERUSER=1
+
+volumes:
+  devcontainer-bashhistory:

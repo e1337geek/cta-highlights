@@ -1,0 +1,66 @@
+# Multi-stage Dockerfile for building CTA Highlights WordPress plugin distribution ZIP
+# This ensures 100% containerized builds with zero host dependencies except Docker
+#
+# Usage:
+#   docker build -f Dockerfile.build -t cta-highlights-builder .
+#   docker create --name temp cta-highlights-builder
+#   docker cp temp:/cta-highlights-{version}.zip ./build/
+#   docker rm temp
+
+# Stage 1: Copy plugin files
+# Uses .dockerignore to exclude dev files automatically
+FROM alpine:latest AS source
+WORKDIR /plugin
+# Copy all files (exclusions handled by .dockerignore)
+COPY . .
+
+# Stage 2: Install Composer dependencies
+FROM composer:2 AS composer-deps
+WORKDIR /plugin
+
+# Copy only what's needed for Composer
+COPY --from=source /plugin /plugin
+
+# Install production dependencies if composer.json exists
+RUN if [ -f composer.json ]; then \
+      composer install \
+        --no-dev \
+        --optimize-autoloader \
+        --no-interaction \
+        --ignore-platform-reqs; \
+      # Remove composer files after installation
+      rm -f composer.json composer.lock; \
+    fi
+
+# Stage 3: Create ZIP file
+FROM alpine:latest AS builder
+WORKDIR /workspace
+
+# Install zip utility
+RUN apk add --no-cache zip
+
+# Copy plugin files with Composer dependencies installed
+COPY --from=composer-deps /plugin /workspace/cta-highlights
+
+# Extract version from plugin file
+RUN VERSION=$(grep "Version:" /workspace/cta-highlights/cta-highlights.php | head -1 | awk '{print $3}') && \
+    echo "Building version: $VERSION" && \
+    # Create the ZIP file
+    zip -r "cta-highlights-${VERSION}.zip" cta-highlights -q && \
+    # Store version for reference
+    echo "$VERSION" > /workspace/VERSION.txt
+
+# Final stage: Lightweight image with just the ZIP file
+FROM alpine:latest AS export
+
+# Copy ZIP from builder stage
+COPY --from=builder /workspace/*.zip /
+COPY --from=builder /workspace/VERSION.txt /
+
+# Default command to list files (useful for debugging)
+CMD ["ls", "-lh", "/"]
+
+# To extract the ZIP:
+# docker create --name temp <image>
+# docker cp temp:/cta-highlights-{version}.zip ./build/
+# docker rm temp

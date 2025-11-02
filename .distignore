@@ -11,7 +11,9 @@
 # Development files
 /.wp-env.json
 /.eslintrc.js
+/.eslintignore
 /.editorconfig
+/.claude
 /CLAUDE.md
 /phpcs.xml
 /phpcs.xml.dist
@@ -36,11 +38,13 @@
 # Build files
 /build
 /dist
+/bin
 /.distignore
 
 # IDE
 /.vscode
 /.idea
+/.devcontainer
 *.sublime-project
 *.sublime-workspace
 .DS_Store
@@ -49,5 +53,16 @@ Thumbs.db
 # CI/CD
 /.github/workflows
 
-# Documentation (keep README.md)
+# Documentation (keep only README.md and CHANGELOG.md)
 /docs
+/CONTRIBUTING.md
+/DEVELOPMENT-SETUP.md
+/GITHUB-SETUP.md
+/RELEASE.md
+/PHPCS-FIXES-NEEDED.md
+
+# Admin templates (not needed for plugin operation)
+/templates/admin
+
+# Example templates
+/templates/example-*.php

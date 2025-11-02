@@ -1,0 +1,70 @@
+# .dockerignore
+# Files to exclude when building Docker images
+# This matches .distignore to ensure consistent builds
+
+# Version control
+.git
+.github
+.gitignore
+.gitattributes
+
+# Development files
+.wp-env.json
+.eslintrc.js
+.eslintignore
+.editorconfig
+.claude
+CLAUDE.md
+phpcs.xml
+phpcs.xml.dist
+phpunit.xml
+phpunit.xml.dist
+jest.config.js
+playwright.config.js
+
+# Dependencies (will be installed fresh in container)
+node_modules
+vendor
+
+# Package manager files (will be removed after install)
+package.json
+package-lock.json
+
+# Tests
+tests
+coverage
+.phpunit.result.cache
+
+# Build files
+build
+dist
+bin
+.distignore
+.dockerignore
+Dockerfile.build
+
+# IDE
+.vscode
+.idea
+.devcontainer
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# CI/CD
+.github/workflows
+
+# Documentation (keep only README.md and CHANGELOG.md)
+docs
+CONTRIBUTING.md
+DEVELOPMENT-SETUP.md
+GITHUB-SETUP.md
+RELEASE.md
+PHPCS-FIXES-NEEDED.md
+
+# Admin templates (not needed for plugin operation)
+templates/admin
+
+# Example templates
+templates/example-*.php
