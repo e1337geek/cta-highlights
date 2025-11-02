@@ -140,11 +140,46 @@ async function createTestData(page, baseURL) {
 		}
 
 		// Close any modals that might be blocking the Publish button
-		const modalCloseButtons = page.locator('.components-modal__screen-overlay ~ .components-modal__frame button[aria-label*="Close"]');
-		if (await modalCloseButtons.count() > 0) {
-			await modalCloseButtons.first().click();
-			await page.waitForTimeout(500);
+		// WordPress editor can show various modals (Welcome Guide, Feature Announcements, etc.)
+
+		// Strategy 1: Close Welcome Guide (most common)
+		const welcomeGuideClose = page.locator('button[aria-label="Close"]');
+		if (await welcomeGuideClose.count() > 0) {
+			try {
+				await welcomeGuideClose.first().click({ timeout: 1000 });
+				await page.waitForTimeout(300);
+			} catch {
+				// Welcome guide might not be present
+			}
 		}
+
+		// Strategy 2: Close any modal with Close button in header
+		const modalHeaderClose = page.locator('.components-modal__header button[aria-label*="Close"], .components-modal__header button[aria-label*="close"]');
+		let attempts = 0;
+		while (await modalHeaderClose.count() > 0 && attempts < 5) {
+			try {
+				await modalHeaderClose.first().click({ timeout: 1000 });
+				await page.waitForTimeout(300);
+				attempts++;
+			} catch {
+				break;
+			}
+		}
+
+		// Strategy 3: Wait for all modal overlays to be removed
+		try {
+			await page.waitForFunction(() => {
+				return document.querySelectorAll('.components-modal__screen-overlay').length === 0;
+			}, { timeout: 3000 });
+		} catch {
+			// Timeout is OK - might not have had modals
+		}
+
+		// Strategy 4: Force remove any remaining overlays (nuclear option)
+		await page.evaluate(() => {
+			const overlays = document.querySelectorAll('.components-modal__screen-overlay');
+			overlays.forEach(overlay => overlay.remove());
+		});
 
 		// Publish post - use role-based selector for better reliability
 		const publishButton = page.getByRole('button', { name: /^Publish/i });

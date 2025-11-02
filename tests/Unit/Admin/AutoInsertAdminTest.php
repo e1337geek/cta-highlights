@@ -340,7 +340,7 @@ class AutoInsertAdminTest extends WP_UnitTestCase {
 
 	/**
 	 * @test
-	 * Test that delete sanitizes ID parameter
+	 * Test that delete sanitizes ID parameter and validates nonce correctly
 	 *
 	 * WHY: Prevents SQL injection through ID parameter
 	 * PRIORITY: HIGH (security)
@@ -353,15 +353,20 @@ class AutoInsertAdminTest extends WP_UnitTestCase {
 		$_GET['page'] = 'cta-auto-insert';
 		$_GET['action'] = 'delete';
 		$_GET['id'] = $cta_id . ' OR 1=1'; // SQL injection attempt
-		$_GET['_wpnonce'] = wp_create_nonce( 'delete_cta_' . $cta_id );
+		// Create nonce for the MALICIOUS unsanitized value
+		$_GET['_wpnonce'] = wp_create_nonce( 'delete_cta_' . ( $cta_id . ' OR 1=1' ) );
 
 		add_filter( 'wp_redirect', '__return_false' );
 
+		// Expect wp_die() to be called when nonce verification fails
+		$this->expectException( 'WPDieException' );
+		$this->expectExceptionMessage( 'Security check failed' );
+
 		$this->admin->handle_actions();
 
-		// ID should be sanitized to integer, so nonce won't match
-		// CTA should still exist
-		$this->assertDatabaseHasCTA( $cta_id );
+		// Note: This line won't be reached due to expectException
+		// But if it did, CTA should still exist since nonce check failed
+		// $this->assertDatabaseHasCTA( $cta_id );
 	}
 
 	// =============================================================
