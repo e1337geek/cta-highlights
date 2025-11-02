@@ -10,7 +10,6 @@ module.exports = {
 
 	// Setup files
 	setupFiles: [
-		'jest-localstorage-mock',
 		'<rootDir>/tests/_support/jest-setup.js',
 	],
 

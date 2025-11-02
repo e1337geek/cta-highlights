@@ -200,8 +200,10 @@
 
 				// Evaluate storage conditions
 				try {
-					// eslint-disable-next-line no-eval -- Evaluating user-configured storage conditions from admin
-					const conditionPassed = eval(cta.storage_condition_js);
+					// Provide 'this' context for eval with storageManager
+					// eslint-disable-next-line no-eval,@wordpress/no-unused-vars-before-return -- Evaluating user-configured storage conditions, 'this' used in eval
+					const context = { storageManager: this.storageManager };
+					const conditionPassed = (function() { return eval(cta.storage_condition_js); }).call(context);
 
 					if (conditionPassed) {
 						this.log(

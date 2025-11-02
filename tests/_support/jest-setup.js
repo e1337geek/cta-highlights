@@ -7,6 +7,41 @@
  * @see https://jestjs.io/docs/configuration#setupfiles-array
  */
 
+// Mock localStorage
+class LocalStorageMock {
+	constructor() {
+		this.store = {};
+	}
+
+	clear() {
+		this.store = {};
+	}
+
+	getItem(key) {
+		return this.store[key] || null;
+	}
+
+	setItem(key, value) {
+		this.store[key] = String(value);
+	}
+
+	removeItem(key) {
+		delete this.store[key];
+	}
+
+	get length() {
+		return Object.keys(this.store).length;
+	}
+
+	key(index) {
+		const keys = Object.keys(this.store);
+		return keys[index] || null;
+	}
+}
+
+global.localStorage = new LocalStorageMock();
+global.sessionStorage = new LocalStorageMock();
+
 // Mock WordPress globals
 global.wp = {
 	hooks: {
@@ -91,8 +126,14 @@ Object.defineProperty(window, 'matchMedia', {
 window.scrollTo = jest.fn();
 
 // Mock getComputedStyle
-window.getComputedStyle = jest.fn(() => ({
-	getPropertyValue: jest.fn(() => ''),
+window.getComputedStyle = jest.fn((element) => ({
+	getPropertyValue: jest.fn((prop) => {
+		if (prop === 'background-color' || prop === 'backgroundColor') {
+			return 'rgb(255, 255, 255)';
+		}
+		return '';
+	}),
+	backgroundColor: 'rgb(255, 255, 255)',
 }));
 
 // Suppress console errors in tests (optional)
@@ -115,7 +156,7 @@ global.ctaHighlightsConfig = {
 global.ctaAutoInsertData = {
 	fallbackChain: [],
 	contentSelector: '.entry-content',
-	debug: false,
+	debug: true,
 };
 
 // Helper to reset mocks between tests
