@@ -216,13 +216,17 @@ jobs:
           sudo ln -s ~/.docker/cli-plugins/docker-compose /usr/local/bin/docker-compose
 
       - name: Start WordPress environment
-        run: npm run env:start
+        run: |
+          npm run env:start || true
+          # wp-env sometimes fails on first start in CI, retry if needed
+          sleep 10
+          npm run env:start || npm run env:start
 
       - name: Wait for WordPress to be ready
         run: |
           echo "Waiting for WordPress..."
-          timeout 60 bash -c 'until curl -s http://localhost:8888 > /dev/null; do sleep 2; done' || true
-          sleep 5
+          timeout 120 bash -c 'until curl -s http://localhost:8888 > /dev/null; do sleep 2; done'
+          sleep 10
 
       - name: Run Playwright tests (Chrome only in CI)
         run: npm run test:e2e:chrome
