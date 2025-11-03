@@ -42,10 +42,13 @@ class PostMetaBoxTest extends WP_UnitTestCase {
 	 * Cleanup after each test
 	 */
 	public function tearDown(): void {
-		parent::tearDown();
-
 		// Clean up $_POST
 		$_POST = array();
+
+		// Logout current user
+		wp_set_current_user( 0 );
+
+		parent::tearDown();
 	}
 
 	// =============================================================
@@ -219,6 +222,8 @@ class PostMetaBoxTest extends WP_UnitTestCase {
 
 	/**
 	 * @test
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 * Test that autosave is blocked
 	 *
 	 * WHY: Prevents unintended saves during autosave

@@ -400,8 +400,12 @@ class CapabilitiesTest extends WP_UnitTestCase {
 			'Custom capability should be assignable'
 		);
 
-		// Remove custom capability
+		// Remove custom capability from role
 		$role->remove_cap( 'manage_cta_highlights' );
+
+		// Refresh current user to clear capability cache
+		$user = wp_get_current_user();
+		$user->get_role_caps();
 
 		$this->assertFalse(
 			current_user_can( 'manage_cta_highlights' ),

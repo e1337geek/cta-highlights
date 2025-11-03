@@ -42,7 +42,11 @@ class ViewData implements ArrayAccess {
 	 * @return mixed
 	 */
 	public function get( $key, $default = '' ) { // phpcs:ignore Universal.NamingConventions.NoReservedKeywordParameterNames.defaultFound -- Common WordPress pattern
-		return $this->data[ $key ] ?? $default;
+		// Use array_key_exists to preserve null values
+		if ( array_key_exists( $key, $this->data ) ) {
+			return $this->data[ $key ];
+		}
+		return $default;
 	}
 
 	/**

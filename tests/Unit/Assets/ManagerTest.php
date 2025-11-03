@@ -58,6 +58,21 @@ class ManagerTest extends WP_UnitTestCase {
 	 * Teardown after each test
 	 */
 	public function tearDown(): void {
+		// Dequeue all plugin assets
+		wp_dequeue_style( 'cta-highlights-base' );
+		wp_deregister_style( 'cta-highlights-base' );
+		wp_dequeue_script( 'cta-highlights-base' );
+		wp_deregister_script( 'cta-highlights-base' );
+		wp_dequeue_script( 'cta-highlights-auto-insert' );
+		wp_deregister_script( 'cta-highlights-auto-insert' );
+
+		// Clear template-specific styles
+		$templates = array( 'default', 'banner', 'sidebar', 'inline' );
+		foreach ( $templates as $template ) {
+			wp_dequeue_style( 'cta-highlights-template-' . $template );
+			wp_deregister_style( 'cta-highlights-template-' . $template );
+		}
+
 		$this->registry->clear();
 		parent::tearDown();
 	}

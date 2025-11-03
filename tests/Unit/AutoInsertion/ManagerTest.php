@@ -46,6 +46,10 @@ class ManagerTest extends WP_UnitTestCase {
 	 * Teardown after each test
 	 */
 	public function tearDown(): void {
+		// Dequeue auto-insert script
+		wp_dequeue_script( 'cta-highlights-auto-insert' );
+		wp_deregister_script( 'cta-highlights-auto-insert' );
+
 		$this->teardownDatabase();
 		parent::tearDown();
 	}
@@ -374,7 +378,7 @@ class ManagerTest extends WP_UnitTestCase {
 			$data = json_decode( $matches[1], true );
 
 			$this->assertIsArray( $data, 'JSON should decode to array' );
-			$this->assertNull( json_last_error(), 'JSON should be valid' );
+			$this->assertEquals( JSON_ERROR_NONE, json_last_error(), 'JSON should be valid' );
 		}
 	}
 

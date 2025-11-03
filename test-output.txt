@@ -1,0 +1,673 @@
+
+> cta-highlights@0.1.0 test:php
+> wp-env run tests-cli --env-cwd=wp-content/plugins/cta-highlights vendor/bin/phpunit
+
+ℹ Starting 'vendor/bin/phpunit' on the tests-cli container. 
+
+time="2025-11-02T09:24:30-08:00" level=warning msg="C:\\Users\\Brady\\.wp-env\\d14fb8c55c3e5bc5e59f259ca67cc3e6\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+Installing...
+Running as single site... To run multisite, use -c tests/phpunit/multisite.xml
+Not running ajax tests. To execute these, use --group ajax.
+Not running ms-files tests. To execute these, use --group ms-files.
+Not running external-http tests. To execute these, use --group external-http.
+PHPUnit 9.6.29 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.2.29
+Configuration: /var/www/html/wp-content/plugins/cta-highlights/phpunit.xml
+Warning:       No code coverage driver available
+
+..........................FF......F.FF.S<style id='wp-emoji-styles-inline-css' type='text/css'>
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+</style>
+<link rel='stylesheet' id='wp-block-library-css' href='http://localhost:8889/wp-includes/css/dist/block-library/style.min.css?ver=6.4.2' type='text/css' media='all' />
+<style id='classic-theme-styles-inline-css' type='text/css'>
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+</style>
+<style id='global-styles-inline-css' type='text/css'>
+body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}body .is-layout-grid{display: grid;}body .is-layout-grid > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}
+body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}body .is-layout-grid{display: grid;}body .is-layout-grid > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}
+body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}body .is-layout-grid{display: grid;}body .is-layout-grid > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}
+body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}body .is-layout-grid{display: grid;}body .is-layout-grid > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}
+body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}body .is-layout-grid{display: grid;}body .is-layout-grid > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}
+</style>
+<link rel='stylesheet' id='cta-highlights-base-css' href='http://localhost:8889/wp-content/plugins/cta-highlights/assets/css/cta-highlights.css?ver=1761447459' type='text/css' media='all' />
+<script type="text/javascript" id="cta-highlights-base-js-extra">
+/* <![CDATA[ */
+var ctaHighlightsConfig = {"globalCooldown":"3600","templateCooldown":"86400","overlayColor":"rgba(0, 0, 0, 0.7)","debug":"1"};
+var ctaHighlightsConfig = {"globalCooldown":"3600","templateCooldown":"86400","overlayColor":"rgba(0, 0, 0, 0.7)","debug":"1"};
+var ctaHighlightsConfig = {"globalCooldown":"3600","templateCooldown":"86400","overlayColor":"rgba(0, 0, 0, 0.7)","debug":"1"};
+var ctaHighlightsConfig = {"globalCooldown":"3600","templateCooldown":"86400","overlayColor":"rgba(0, 0, 0, 0.7)","debug":"1"};
+var ctaHighlightsConfig = {"globalCooldown":"3600","templateCooldown":"86400","overlayColor":"rgba(0, 0, 0, 0.7)","debug":"1"};
+var ctaHighlightsConfig = {"globalCooldown":"3600","templateCooldown":"86400","overlayColor":"rgba(0, 0, 0, 0.7)","debug":"1"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="http://localhost:8889/wp-content/plugins/cta-highlights/assets/js/cta-highlights.js?ver=1762057192" id="cta-highlights-base-js"></script>
+<script type="text/javascript" src="http://localhost:8889/wp-content/plugins/cta-highlights/assets/js/auto-insert.js?ver=0.1.0" id="cta-highlights-auto-insert-js"></script>
+		<div class="cta-highlights-debug" style="position:fixed;bottom:0;right:0;background:#000;color:#0f0;padding:1rem;font-size:12px;font-family:monospace;z-index:999999;max-width:300px;border:2px solid #0f0;">
+			<strong style="color:#fff;">CTA Highlights Debug</strong><br>
+			<strong>Version:</strong> 1.0.0<br>
+			<strong>Templates Used:</strong><br>
+							&nbsp;&nbsp;- default<br>
+						<button onclick="this.parentElement.style.display='none'" style="margin-top:0.5rem;padding:0.25rem 0.5rem;cursor:pointer;background:#0f0;color:#000;border:none;font-family:monospace;">
+				Close [X]
+			</button>
+		</div>
+		.		<div class="cta-highlights-debug" style="position:fixed;bottom:0;right:0;background:#000;color:#0f0;padding:1rem;font-size:12px;font-family:monospace;z-index:999999;max-width:300px;border:2px solid #0f0;">
+			<strong style="color:#fff;">CTA Highlights Debug</strong><br>
+			<strong>Version:</strong> 1.0.0<br>
+			<strong>Templates Used:</strong><br>
+							&nbsp;&nbsp;- default<br>
+						<button onclick="this.parentElement.style.display='none'" style="margin-top:0.5rem;padding:0.25rem 0.5rem;cursor:pointer;background:#0f0;color:#000;border:none;font-family:monospace;">
+				Close [X]
+			</button>
+		</div>
+		.		<div class="cta-highlights-debug" style="position:fixed;bottom:0;right:0;background:#000;color:#0f0;padding:1rem;font-size:12px;font-family:monospace;z-index:999999;max-width:300px;border:2px solid #0f0;">
+			<strong style="color:#fff;">CTA Highlights Debug</strong><br>
+			<strong>Version:</strong> 1.0.0<br>
+			<strong>Templates Used:</strong><br>
+							&nbsp;&nbsp;- default<br>
+							&nbsp;&nbsp;- banner<br>
+						<button onclick="this.parentElement.style.display='none'" style="margin-top:0.5rem;padding:0.25rem 0.5rem;cursor:pointer;background:#0f0;color:#000;border:none;font-family:monospace;">
+				Close [X]
+			</button>
+		</div>
+		..........		<div class="cta-highlights-debug" style="position:fixed;bottom:0;right:0;background:#000;color:#0f0;padding:1rem;font-size:12px;font-family:monospace;z-index:999999;max-width:300px;border:2px solid #0f0;">
+			<strong style="color:#fff;">CTA Highlights Debug</strong><br>
+			<strong>Version:</strong> 1.0.0<br>
+			<strong>Templates Used:</strong><br>
+							&nbsp;&nbsp;- default<br>
+						<button onclick="this.parentElement.style.display='none'" style="margin-top:0.5rem;padding:0.25rem 0.5rem;cursor:pointer;background:#0f0;color:#000;border:none;font-family:monospace;">
+				Close [X]
+			</button>
+		</div>
+		...........  63 / 319 ( 19%)
+.....................................F.EEEEEEEEEEEEE.........EE 126 / 319 ( 39%)
+..............F..........F...F.......FFF....F[02-Nov-2025 17:24:47 UTC] CTA Highlights Security: Path traversal attempt in template name: ../../../wp-config
+[02-Nov-2025 17:24:47 UTC] CTA Highlights Security: Path traversal attempt in template name: ../../../../../../etc/passwd
+[02-Nov-2025 17:24:47 UTC] CTA Highlights Security: Path traversal attempt in template name: ..\..\..\windows\system32\config\sam
+[02-Nov-2025 17:24:47 UTC] CTA Highlights Security: Path traversal attempt in template name: ....//....//....//etc/passwd
+[02-Nov-2025 17:24:47 UTC] CTA Highlights Security: Path traversal attempt in template name: ..%2F..%2F..%2Fwp-config
+...EF..F.E.FR[02-Nov-2025 17:24:48 UTC] CTA Highlights Security: Template file not accessible: 
+F[02-Nov-2025 17:24:48 UTC] CTA Highlights Security: Template file not accessible: 
+F[02-Nov-2025 17:24:48 UTC] CTA Highlights Security: Template file not accessible: 
+F[02-Nov-2025 17:24:48 UTC] CTA Highlights Security: Template file not accessible: 
+F[02-Nov-2025 17:24:48 UTC] CTA Highlights Security: Template file not accessible: 
+F 189 / 319 ( 59%)
+[02-Nov-2025 17:24:48 UTC] CTA Highlights Security: Template file not accessible: 
+[02-Nov-2025 17:24:48 UTC] CTA Highlights Security: Template file not accessible: 
+F[02-Nov-2025 17:24:48 UTC] CTA Highlights Security: Template file not accessible: 
+F[02-Nov-2025 17:24:48 UTC] CTA Highlights Security: Template file not accessible: 
+F[02-Nov-2025 17:24:48 UTC] CTA Highlights Security: Template file not accessible: 
+F[02-Nov-2025 17:24:48 UTC] CTA Highlights Security: Template file not accessible: 
+F[02-Nov-2025 17:24:48 UTC] CTA Highlights Security: Path traversal attempt in template name: ../../../evil
+......................................................EEEE 252 / 319 ( 78%)
+EEEEEEE.E.EES..............F........F............E<section class="cta-highlights-wrapper cta-highlights-template-default" aria-label="Call to Action">
+<div class="cta-container">
+    <div class="cta-logo-container">
+        <a href="#"><img class="cta-logo" src="#" /></a>
+    </div>
+    <div class="cta-content-container">
+        <p class="cta-title">Programmatic Test</p>
+        <p class="cta-content">Programmatic content</p>
+        <a class="cta-button button" href="#">Learn More</a>
+    </div>
+</div></section>F.E[02-Nov-2025 17:24:52 UTC] CTA Highlights Security: Template file not accessible: load-test
+F[02-Nov-2025 17:24:52 UTC] CTA Highlights Security: Template file not accessible: complex
+F.E.E.[02-Nov-2025 17:24:52 UTC] CTA Highlights Security: Path traversal attempt in template name: ../../../evil
+EEE 315 / 319 ( 98%)
+.[02-Nov-2025 17:24:52 UTC] CTA Highlights Security: Template file not accessible: truly-nonexistent-template-xyz
+FEF                                                            319 / 319 (100%)
+
+Time: 00:16.989, Memory: 44.50 MB
+
+There were 39 errors:
+
+1) CTAHighlights\Tests\Unit\AutoInsertion\MatcherTest::it_matches_cta_to_correct_post_type
+Error: Call to undefined method CTAHighlights\Tests\Factories\CTAFactory::get_cta_data()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/AutoInsertion/MatcherTest.php:61
+
+2) CTAHighlights\Tests\Unit\AutoInsertion\MatcherTest::it_doesnt_match_wrong_post_type
+Error: Call to undefined method CTAHighlights\Tests\Factories\CTAFactory::get_cta_data()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/AutoInsertion/MatcherTest.php:82
+
+3) CTAHighlights\Tests\Unit\AutoInsertion\MatcherTest::it_matches_all_post_types_when_empty
+Error: Call to undefined method CTAHighlights\Tests\Factories\CTAFactory::get_cta_data()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/AutoInsertion/MatcherTest.php:103
+
+4) CTAHighlights\Tests\Unit\AutoInsertion\MatcherTest::it_matches_multiple_post_types
+Error: Call to undefined method CTAHighlights\Tests\Factories\CTAFactory::get_cta_data()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/AutoInsertion/MatcherTest.php:127
+
+5) CTAHighlights\Tests\Unit\AutoInsertion\MatcherTest::it_matches_included_categories
+Error: Call to undefined method CTAHighlights\Tests\Factories\CTAFactory::get_cta_data()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/AutoInsertion/MatcherTest.php:156
+
+6) CTAHighlights\Tests\Unit\AutoInsertion\MatcherTest::it_doesnt_match_posts_not_in_included_categories
+Error: Call to undefined method CTAHighlights\Tests\Factories\CTAFactory::get_cta_data()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/AutoInsertion/MatcherTest.php:181
+
+7) CTAHighlights\Tests\Unit\AutoInsertion\MatcherTest::it_doesnt_match_uncategorized_posts_in_include_mode
+Error: Call to undefined method CTAHighlights\Tests\Factories\CTAFactory::get_cta_data()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/AutoInsertion/MatcherTest.php:205
+
+8) CTAHighlights\Tests\Unit\AutoInsertion\MatcherTest::it_doesnt_match_excluded_categories
+Error: Call to undefined method CTAHighlights\Tests\Factories\CTAFactory::get_cta_data()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/AutoInsertion/MatcherTest.php:233
+
+9) CTAHighlights\Tests\Unit\AutoInsertion\MatcherTest::it_matches_posts_not_in_excluded_categories
+Error: Call to undefined method CTAHighlights\Tests\Factories\CTAFactory::get_cta_data()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/AutoInsertion/MatcherTest.php:258
+
+10) CTAHighlights\Tests\Unit\AutoInsertion\MatcherTest::it_matches_uncategorized_posts_in_exclude_mode
+Error: Call to undefined method CTAHighlights\Tests\Factories\CTAFactory::get_cta_data()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/AutoInsertion/MatcherTest.php:282
+
+11) CTAHighlights\Tests\Unit\AutoInsertion\MatcherTest::it_matches_all_categories_when_empty
+Error: Call to undefined method CTAHighlights\Tests\Factories\CTAFactory::get_cta_data()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/AutoInsertion/MatcherTest.php:306
+
+12) CTAHighlights\Tests\Unit\AutoInsertion\MatcherTest::it_respects_meta_box_disable_flag
+Error: Call to undefined method CTAHighlights\Tests\Factories\CTAFactory::get_cta_data()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/AutoInsertion/MatcherTest.php:333
+
+13) CTAHighlights\Tests\Unit\AutoInsertion\MatcherTest::it_displays_when_meta_box_not_set
+Error: Call to undefined method CTAHighlights\Tests\Factories\CTAFactory::get_cta_data()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/AutoInsertion/MatcherTest.php:356
+
+14) CTAHighlights\Tests\Unit\AutoInsertion\MatcherTest::it_matches_with_all_conditions_met
+Error: Call to undefined method CTAHighlights\Tests\Factories\CTAFactory::get_cta_data()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/AutoInsertion/MatcherTest.php:598
+
+15) CTAHighlights\Tests\Unit\AutoInsertion\MatcherTest::it_doesnt_match_when_any_condition_fails
+Error: Call to undefined method CTAHighlights\Tests\Factories\CTAFactory::get_cta_data()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/AutoInsertion/MatcherTest.php:623
+
+16) CTAHighlights\Tests\Unit\Template\LoaderTest::it_only_allows_php_extension
+file_put_contents(/wordpress-phpunit/includes/../data/themedir1/default/cta-highlights-templates/template.txt): Failed to open stream: No such file or directory
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Template/LoaderTest.php:162
+
+17) CTAHighlights\Tests\Unit\Template\LoaderTest::it_respects_template_override_hierarchy
+Undefined array key "theme"
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Template/LoaderTest.php:330
+
+18) CTAHighlights\Tests\Integration\CapabilitiesTest::it_allows_editor_to_use_meta_box
+Error: Call to undefined method CTAHighlights\Tests\Factories\UserFactory::create_and_login_editor()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/CapabilitiesTest.php:101
+
+19) CTAHighlights\Tests\Integration\CapabilitiesTest::it_allows_editor_to_edit_any_post_meta
+Error: Call to undefined method CTAHighlights\Tests\Factories\UserFactory::create_and_login_editor()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/CapabilitiesTest.php:122
+
+20) CTAHighlights\Tests\Integration\CapabilitiesTest::it_allows_author_to_edit_own_posts
+Error: Call to undefined method CTAHighlights\Tests\Factories\UserFactory::create_and_login_author()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/CapabilitiesTest.php:147
+
+21) CTAHighlights\Tests\Integration\CapabilitiesTest::it_prevents_author_from_editing_others_posts
+Error: Call to undefined method CTAHighlights\Tests\Factories\UserFactory::create_and_login_author()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/CapabilitiesTest.php:165
+
+22) CTAHighlights\Tests\Integration\CapabilitiesTest::it_allows_author_to_use_meta_box_on_own_posts
+Error: Call to undefined method CTAHighlights\Tests\Factories\UserFactory::create_and_login_author()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/CapabilitiesTest.php:186
+
+23) CTAHighlights\Tests\Integration\CapabilitiesTest::it_allows_contributor_to_edit_own_drafts
+Error: Call to undefined method CTAHighlights\Tests\Factories\UserFactory::create_and_login_contributor()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/CapabilitiesTest.php:208
+
+24) CTAHighlights\Tests\Integration\CapabilitiesTest::it_prevents_contributor_from_editing_published_posts
+Error: Call to undefined method CTAHighlights\Tests\Factories\UserFactory::create_and_login_contributor()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/CapabilitiesTest.php:231
+
+25) CTAHighlights\Tests\Integration\CapabilitiesTest::it_prevents_subscriber_from_editing_posts
+Error: Call to undefined method CTAHighlights\Tests\Factories\UserFactory::create_and_login_subscriber()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/CapabilitiesTest.php:258
+
+26) CTAHighlights\Tests\Integration\CapabilitiesTest::it_prevents_subscriber_from_accessing_meta_box
+Error: Call to undefined method CTAHighlights\Tests\Factories\UserFactory::create_and_login_subscriber()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/CapabilitiesTest.php:281
+
+27) CTAHighlights\Tests\Integration\CapabilitiesTest::it_requires_edit_post_capability_for_meta_save
+Error: Call to undefined method CTAHighlights\Tests\Factories\UserFactory::create_and_login_author()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/CapabilitiesTest.php:302
+
+28) CTAHighlights\Tests\Integration\CapabilitiesTest::it_restricts_admin_interface_to_editors
+Error: Call to undefined method CTAHighlights\Tests\Factories\UserFactory::create_and_login_editor()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/CapabilitiesTest.php:339
+
+29) CTAHighlights\Tests\Integration\CapabilitiesTest::it_supports_custom_capabilities
+Error: Call to undefined method CTAHighlights\Tests\Factories\UserFactory::create_and_login_author()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/CapabilitiesTest.php:395
+
+30) CTAHighlights\Tests\Integration\CapabilitiesTest::it_respects_per_post_capabilities
+Error: Call to undefined method CTAHighlights\Tests\Factories\UserFactory::create_and_login_author()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/CapabilitiesTest.php:441
+
+31) CTAHighlights\Tests\Integration\CapabilitiesTest::it_checks_capabilities_before_actions
+Error: Call to undefined method CTAHighlights\Tests\Factories\UserFactory::create_and_login_subscriber()
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/CapabilitiesTest.php:468
+
+32) CTAHighlights\Tests\Integration\ShortcodeRenderingTest::it_renders_template_programmatically
+TypeError: PHPUnit\Framework\Assert::assertStringContainsString(): Argument #2 ($haystack) must be of type string, null given, called in /var/www/html/wp-content/plugins/cta-highlights/tests/Integration/ShortcodeRenderingTest.php on line 479
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/ShortcodeRenderingTest.php:479
+
+33) CTAHighlights\Tests\Integration\TemplateOverrideTest::it_falls_back_to_default_template
+TypeError: PHPUnit\Framework\Assert::assertStringContainsString(): Argument #2 ($haystack) must be of type string, null given, called in /var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php on line 119
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php:119
+
+34) CTAHighlights\Tests\Integration\TemplateOverrideTest::it_clears_template_cache
+TypeError: PHPUnit\Framework\Assert::assertStringContainsString(): Argument #2 ($haystack) must be of type string, null given, called in /var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php on line 243
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php:243
+
+35) CTAHighlights\Tests\Integration\TemplateOverrideTest::it_finds_theme_template_in_cta_highlights_templates_directory
+TypeError: PHPUnit\Framework\Assert::assertStringContainsString(): Argument #2 ($haystack) must be of type string, null given, called in /var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php on line 291
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php:291
+
+36) CTAHighlights\Tests\Integration\TemplateOverrideTest::it_prevents_path_traversal_in_template_name
+TypeError: PHPUnit\Framework\Assert::assertStringContainsString(): Argument #2 ($haystack) must be of type string, null given, called in /var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php on line 326
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php:326
+
+37) CTAHighlights\Tests\Integration\TemplateOverrideTest::it_only_loads_php_templates
+TypeError: PHPUnit\Framework\Assert::assertStringEndsWith(): Argument #2 ($string) must be of type string, null given, called in /var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php on line 342
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php:342
+
+38) CTAHighlights\Tests\Integration\TemplateOverrideTest::it_supports_child_theme_overrides
+TypeError: PHPUnit\Framework\Assert::assertStringContainsString(): Argument #2 ($haystack) must be of type string, null given, called in /var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php on line 370
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php:370
+
+39) CTAHighlights\Tests\Integration\TemplateOverrideTest::it_handles_template_errors_gracefully
+Undefined variable $undefined_variable
+
+/var/www/html/wp-content/plugins/cta-highlights/includes/Template/Loader.php:216
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php:437
+
+--
+
+There were 33 failures:
+
+1) CTAHighlights\Tests\Unit\Admin\PostMetaBoxTest::it_saves_meta_when_checkbox_checked
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+-'1'
++''
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Admin/PostMetaBoxTest.php:267
+
+2) CTAHighlights\Tests\Unit\Admin\PostMetaBoxTest::it_deletes_meta_when_checkbox_unchecked
+Failed asserting that a string is empty.
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Admin/PostMetaBoxTest.php:292
+
+3) CTAHighlights\Tests\Unit\Admin\PostMetaBoxTest::it_completes_full_workflow
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+-'1'
++''
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Admin/PostMetaBoxTest.php:473
+
+4) CTAHighlights\Tests\Unit\Assets\ManagerTest::it_doesnt_enqueue_assets_when_no_shortcode
+Base CSS should not be enqueued
+Failed asserting that true is false.
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Assets/ManagerTest.php:111
+
+5) CTAHighlights\Tests\Unit\Assets\ManagerTest::it_doesnt_enqueue_on_archive_pages
+Should not enqueue on archive pages
+Failed asserting that true is false.
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Assets/ManagerTest.php:139
+
+6) CTAHighlights\Tests\Unit\AutoInsertion\ManagerTest::it_doesnt_enqueue_scripts_on_archive_pages
+Auto-insert script should not be enqueued on archive pages
+Failed asserting that true is false.
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/AutoInsertion/ManagerTest.php:553
+
+7) CTAHighlights\Tests\Unit\Core\PluginTest::it_checks_database_migration
+Auto-insert table should exist after migration check
+Failed asserting that false is true.
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Core/PluginTest.php:288
+
+8) CTAHighlights\Tests\Unit\Shortcode\HandlerTest::it_strips_html_event_handlers
+Failed asserting that '<section class="cta-highlights-wrapper testquot onclickquotalert039XSS039quot classquot cta-highlights-template-default" aria-label="Call to Action">\r\n
+<div class="cta-container">\r\n
+    <div class="cta-logo-container">\r\n
+        <a href="#"><img class="cta-logo" src="#" /></a>\r\n
+    </div>\r\n
+    <div class="cta-content-container">\r\n
+        <p class="cta-title">Test&quot; onload=&quot;alert(&#039;XSS&#039;)&quot; data-foo=&quot;</p>\r\n
+        <p class="cta-content"></p>\r\n
+        <a class="cta-button button" href="#">Learn More</a>\r\n
+    </div>\r\n
+</div></section>' does not contain "onload=".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Shortcode/HandlerTest.php:178
+
+9) CTAHighlights\Tests\Unit\Shortcode\HandlerTest::it_handles_sql_injection_attempts
+Failed asserting that '<section class="cta-highlights-wrapper cta-highlights-template-default" aria-label="Call to Action">\r\n
+<div class="cta-container">\r\n
+    <div class="cta-logo-container">\r\n
+        <a href="#"><img class="cta-logo" src="#" /></a>\r\n
+    </div>\r\n
+    <div class="cta-content-container">\r\n
+        <p class="cta-title">&#039;; DROP TABLE wp_posts; --</p>\r\n
+        <p class="cta-content"></p>\r\n
+        <a class="cta-button button" href="#">Learn More</a>\r\n
+    </div>\r\n
+</div></section>' does not contain "DROP TABLE".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Shortcode/HandlerTest.php:283
+
+10) CTAHighlights\Tests\Unit\Shortcode\HandlerTest::it_shows_error_to_admins_for_missing_template
+Failed asserting that '<section class="cta-highlights-wrapper cta-highlights-template-default" aria-label="Call to Action">\r\n
+<div class="cta-container">\r\n
+    <div class="cta-logo-container">\r\n
+        <a href="#"><img class="cta-logo" src="#" /></a>\r\n
+    </div>\r\n
+    <div class="cta-content-container">\r\n
+        <p class="cta-title">Default CTA Title</p>\r\n
+        <p class="cta-content"></p>\r\n
+        <a class="cta-button button" href="#">Learn More</a>\r\n
+    </div>\r\n
+</div></section>' contains "CTA Highlights Error".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Shortcode/HandlerTest.php:446
+
+11) CTAHighlights\Tests\Unit\Shortcode\HandlerTest::it_returns_empty_for_missing_template_non_admin
+Failed asserting that a string is empty.
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Shortcode/HandlerTest.php:471
+
+12) CTAHighlights\Tests\Unit\Shortcode\HandlerTest::it_passes_all_attributes_to_template
+Failed asserting that '<section class="cta-highlights-wrapper cta-highlights-template-default" aria-label="Call to Action">\r\n
+<div class="cta-container">\r\n
+    <div class="cta-logo-container">\r\n
+        <a href="#"><img class="cta-logo" src="#" /></a>\r\n
+    </div>\r\n
+    <div class="cta-content-container">\r\n
+        <p class="cta-title">Test Title</p>\r\n
+        <p class="cta-content"></p>\r\n
+        <a class="cta-button button" href="#">Test Button</a>\r\n
+    </div>\r\n
+</div></section>' contains "TITLE:Test Title".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Shortcode/HandlerTest.php:500
+
+13) CTAHighlights\Tests\Unit\Shortcode\HandlerTest::it_adds_template_specific_class
+HTML <section> element does not have class 'cta-highlights-template-custom-template'
+Failed asserting that false is true.
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Traits/AssertsHTML.php:103
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Shortcode/HandlerTest.php:611
+
+14) CTAHighlights\Tests\Unit\Template\LoaderTest::it_requires_php_extension
+Failed asserting that null is not null.
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Template/LoaderTest.php:192
+
+15) CTAHighlights\Tests\Unit\Template\LoaderTest::it_loads_valid_templates
+Failed asserting that null is not null.
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Template/LoaderTest.php:295
+
+16) CTAHighlights\Tests\Unit\Template\LoaderTest::it_validates_cached_paths
+Failed asserting that null is not null.
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Template/LoaderTest.php:376
+
+17) CTAHighlights\Tests\Unit\Template\LoaderTest::it_renders_template_with_variables
+Failed asserting that '' contains "Test Title".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Template/LoaderTest.php:451
+
+18) CTAHighlights\Tests\Unit\Template\LoaderTest::it_escapes_output_in_templates
+Failed asserting that '' contains "&lt;script&gt;".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Template/LoaderTest.php:470
+
+19) CTAHighlights\Tests\Unit\Template\LoaderTest::it_uses_template_default_when_attribute_is_empty
+Failed asserting that '' contains "Template Default Title".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Template/LoaderTest.php:493
+
+20) CTAHighlights\Tests\Unit\Template\LoaderTest::it_uses_template_default_when_attribute_is_not_set
+Failed asserting that '' contains "Custom Default Button".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Template/LoaderTest.php:510
+
+21) CTAHighlights\Tests\Unit\Template\LoaderTest::it_uses_shortcode_value_when_provided
+Failed asserting that '' contains "Shortcode Value".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Template/LoaderTest.php:529
+
+22) CTAHighlights\Tests\Unit\Template\LoaderTest::it_allows_different_defaults_per_template
+Failed asserting that '' contains "Buy Now".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Template/LoaderTest.php:551
+
+23) CTAHighlights\Tests\Unit\Template\LoaderTest::it_handles_various_data_types_in_get_att
+Failed asserting that '' contains "string:default_str;".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Template/LoaderTest.php:573
+
+24) CTAHighlights\Tests\Unit\Template\LoaderTest::it_preserves_zero_and_false_values
+Failed asserting that '' contains "zero:0;".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Template/LoaderTest.php:597
+
+25) CTAHighlights\Tests\Unit\Template\LoaderTest::it_provides_get_att_as_callable
+Failed asserting that '' contains "callable:yes".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Template/LoaderTest.php:618
+
+26) CTAHighlights\Tests\Unit\Template\LoaderTest::it_handles_multiple_get_att_calls_independently
+Failed asserting that '' contains "Custom Title".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Template/LoaderTest.php:642
+
+27) CTAHighlights\Tests\Integration\HooksFiltersTest::it_runs_database_migration_check
+Database table should exist after migration
+Failed asserting that false is true.
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/HooksFiltersTest.php:440
+
+28) CTAHighlights\Tests\Integration\ShortcodeRenderingTest::it_loads_template_from_theme_override
+Failed asserting that '<section class="cta-highlights-wrapper cta-highlights-template-default" aria-label="Call to Action">\r\n
+<div class="cta-container">\r\n
+    <div class="cta-logo-container">\r\n
+        <a href="#"><img class="cta-logo" src="#" /></a>\r\n
+    </div>\r\n
+    <div class="cta-content-container">\r\n
+        <p class="cta-title">Theme Override</p>\r\n
+        <p class="cta-content">Content</p>\r\n
+        <a class="cta-button button" href="#">Learn More</a>\r\n
+    </div>\r\n
+</div></section>' contains "custom-theme-template".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/ShortcodeRenderingTest.php:170
+
+29) CTAHighlights\Tests\Integration\TemplateOverrideTest::it_uses_theme_template_over_plugin_template
+Failed asserting that '/var/www/html/wp-content/plugins/cta-highlights/templates/override-test.php' contains "cta-highlights-templates".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php:82
+
+30) CTAHighlights\Tests\Integration\TemplateOverrideTest::it_loads_and_renders_theme_template
+Failed asserting that '' contains "load-test".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php:147
+
+31) CTAHighlights\Tests\Integration\TemplateOverrideTest::it_passes_complex_data_to_template
+Failed asserting that '' contains "Complex Title".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php:180
+
+32) CTAHighlights\Tests\Integration\TemplateOverrideTest::it_handles_missing_template_file_gracefully
+Failed asserting that a string is not empty.
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php:418
+
+33) CTAHighlights\Tests\Integration\TemplateOverrideTest::it_uses_theme_override_in_shortcode_rendering
+Failed asserting that '<section class="cta-highlights-wrapper cta-highlights-template-default" aria-label="Call to Action">\r\n
+<div class="cta-container">\r\n
+    <div class="cta-logo-container">\r\n
+        <a href="#"><img class="cta-logo" src="#" /></a>\r\n
+    </div>\r\n
+    <div class="cta-content-container">\r\n
+        <p class="cta-title">Override Test</p>\r\n
+        <p class="cta-content">Content</p>\r\n
+        <a class="cta-button button" href="#">Learn More</a>\r\n
+    </div>\r\n
+</div></section>' contains "my-custom-override".
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/TemplateOverrideTest.php:466
+
+--
+
+There was 1 risky test:
+
+1) CTAHighlights\Tests\Unit\Template\LoaderTest::it_rejects_unreadable_files
+This test did not perform any assertions
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Template/LoaderTest.php:402
+
+--
+
+There were 2 skipped tests:
+
+1) CTAHighlights\Tests\Unit\Assets\ManagerTest::it_enqueues_template_css_when_template_used
+Template CSS file does not exist
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Unit/Assets/ManagerTest.php:213
+
+2) CTAHighlights\Tests\Integration\CapabilitiesTest::it_supports_multisite_super_admin_if_applicable
+Not a multisite installation
+
+/var/www/html/wp-content/plugins/cta-highlights/tests/Integration/CapabilitiesTest.php:491
+
+ERRORS!
+Tests: 319, Assertions: 606, Errors: 39, Failures: 33, Skipped: 2, Risky: 1.
+✖ Command failed with exit code 2
+Command failed with exit code 2

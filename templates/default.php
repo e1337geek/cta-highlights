@@ -1,7 +1,7 @@
 <?php
 /**
  * Default CTA Highlights Template
- * 
+ *
  * Available variables (all with defaults):
  * @var string $template        Template name
  * @var string $custom_class    Custom CSS class applied to wrapper

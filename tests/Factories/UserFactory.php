@@ -158,6 +158,50 @@ class UserFactory {
 	}
 
 	/**
+	 * Create an editor and set as current user
+	 *
+	 * @param array $overrides Override default attributes.
+	 * @return int|\WP_Error User ID or error.
+	 */
+	public static function create_and_login_editor( $overrides = array() ) {
+		$overrides['role'] = 'editor';
+		return self::create_and_login( $overrides );
+	}
+
+	/**
+	 * Create an author and set as current user
+	 *
+	 * @param array $overrides Override default attributes.
+	 * @return int|\WP_Error User ID or error.
+	 */
+	public static function create_and_login_author( $overrides = array() ) {
+		$overrides['role'] = 'author';
+		return self::create_and_login( $overrides );
+	}
+
+	/**
+	 * Create a contributor and set as current user
+	 *
+	 * @param array $overrides Override default attributes.
+	 * @return int|\WP_Error User ID or error.
+	 */
+	public static function create_and_login_contributor( $overrides = array() ) {
+		$overrides['role'] = 'contributor';
+		return self::create_and_login( $overrides );
+	}
+
+	/**
+	 * Create a subscriber and set as current user
+	 *
+	 * @param array $overrides Override default attributes.
+	 * @return int|\WP_Error User ID or error.
+	 */
+	public static function create_and_login_subscriber( $overrides = array() ) {
+		$overrides['role'] = 'subscriber';
+		return self::create_and_login( $overrides );
+	}
+
+	/**
 	 * Create a user with specific capabilities
 	 *
 	 * @param array $capabilities Capabilities to add.

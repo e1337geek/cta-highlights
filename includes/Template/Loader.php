@@ -58,6 +58,11 @@ class Loader {
 	 * @return string|null Template file path or null if not found.
 	 */
 	public function locate_template( $template_name ) {
+		// Log security event if path traversal is attempted
+		if ( $this->contains_path_traversal( $template_name ) ) {
+			$this->log_security_event( 'Path traversal attempt in template name: ' . $template_name );
+		}
+
 		$template_name = sanitize_file_name( $template_name );
 
 		if ( isset( $this->template_cache[ $template_name ] ) ) {
@@ -159,11 +164,19 @@ class Loader {
 	/**
 	 * Render a template with given arguments.
 	 *
-	 * @param string $template_path Path to template file.
+	 * @param string $template_path Path to template file or template name.
 	 * @param array  $template_args Template arguments/variables.
 	 * @return string Rendered template output.
 	 */
 	public function render( $template_path, array $template_args = array() ) {
+		// If template_path doesn't exist as a file, try to locate it as a template name
+		if ( ! file_exists( $template_path ) ) {
+			$located = $this->locate_template( $template_path );
+			if ( $located ) {
+				$template_path = $located;
+			}
+		}
+
 		$view = new ViewData( $template_args );
 
 		/**
@@ -191,11 +204,19 @@ class Loader {
 		$content      = $view->get( 'content', '' );
 		$custom_class = $view->get( 'custom_class', '' );
 
+		// Also make view available as $data for backwards compatibility
+		$data = $view;
+
 		ob_start();
 
 		do_action( 'cta_highlights_before_template_include', $template_path, $view );
 
-		include $template_path;
+		// Verify file exists before including to prevent errors
+		if ( file_exists( $template_path ) && is_readable( $template_path ) ) {
+			include $template_path;
+		} else {
+			$this->log_security_event( 'Template file not accessible: ' . $template_path );
+		}
 
 		do_action( 'cta_highlights_after_template_include', $template_path, $view );
 
@@ -212,6 +233,34 @@ class Loader {
 		$this->template_cache = array();
 
 		do_action( 'cta_highlights_template_cache_cleared' );
+	}
+
+	/**
+	 * Check if a string contains path traversal characters.
+	 *
+	 * @param string $string String to check.
+	 * @return bool True if path traversal detected.
+	 */
+	private function contains_path_traversal( $string ) {
+		// Check for common path traversal patterns
+		$patterns = array(
+			'../',
+			'..\\',
+			'..%2f',
+			'..%5c',
+			'%2e%2e/',
+			'%2e%2e\\',
+		);
+
+		$lower_string = strtolower( $string );
+
+		foreach ( $patterns as $pattern ) {
+			if ( false !== strpos( $lower_string, $pattern ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -232,7 +281,7 @@ class Loader {
 	/**
 	 * Get all available templates from plugin and theme.
 	 *
-	 * @return array List of templates with their metadata.
+	 * @return array List of templates with their metadata, keyed by template name.
 	 */
 	public function get_all_templates() {
 		$templates = array();
@@ -240,29 +289,34 @@ class Loader {
 		$plugin_templates_dir = $this->plugin_dir . 'templates/';
 		if ( is_dir( $plugin_templates_dir ) ) {
 			$plugin_files = glob( $plugin_templates_dir . '*.php' );
-			foreach ( $plugin_files as $file ) {
-				$template_name               = basename( $file, '.php' );
-				$templates[ $template_name ] = array(
-					'name'     => $template_name,
-					'path'     => $file,
-					'location' => 'plugin',
-				);
+			if ( is_array( $plugin_files ) ) {
+				foreach ( $plugin_files as $file ) {
+					$template_name               = basename( $file, '.php' );
+					$templates[ $template_name ] = array(
+						'name'     => $template_name,
+						'path'     => $file,
+						'location' => 'plugin',
+					);
+				}
 			}
 		}
 
 		$theme_templates_dir = get_stylesheet_directory() . '/' . self::TEMPLATE_SUBDIR;
 		if ( is_dir( $theme_templates_dir ) ) {
 			$theme_files = glob( $theme_templates_dir . '*.php' );
-			foreach ( $theme_files as $file ) {
-				$template_name               = basename( $file, '.php' );
-				$templates[ $template_name ] = array(
-					'name'     => $template_name,
-					'path'     => $file,
-					'location' => 'theme',
-				);
+			if ( is_array( $theme_files ) ) {
+				foreach ( $theme_files as $file ) {
+					$template_name               = basename( $file, '.php' );
+					$templates[ $template_name ] = array(
+						'name'     => $template_name,
+						'path'     => $file,
+						'location' => 'theme',
+					);
+				}
 			}
 		}
 
-		return array_values( $templates );
+		// Return associative array keyed by template name
+		return $templates;
 	}
 }

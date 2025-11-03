@@ -432,9 +432,9 @@ class HooksFiltersTest extends WP_UnitTestCase {
 		// Trigger migration check
 		$this->plugin->check_database_migration();
 
-		// Verify table exists
+		// Verify table exists using the correct table name from Database class
 		global $wpdb;
-		$table_name   = $wpdb->prefix . 'cta_highlights_auto_insert';
+		$table_name   = $wpdb->prefix . 'cta_auto_insertions';
 		$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$table_name}'" ) === $table_name;
 
 		$this->assertTrue( $table_exists, 'Database table should exist after migration' );

@@ -56,9 +56,12 @@ class TemplateFactory {
 
 		$dir = self::$locations[ $location ];
 
-		// Create directory if it doesn't exist
+		// Create directory if it doesn't exist (including parent directories)
 		if ( ! file_exists( $dir ) ) {
-			wp_mkdir_p( $dir );
+			if ( ! wp_mkdir_p( $dir ) ) {
+				// If wp_mkdir_p failed, return false
+				return false;
+			}
 		}
 
 		$file_path = $dir . '/' . $name . '.php';
@@ -66,6 +69,11 @@ class TemplateFactory {
 		// Use default content if none provided
 		if ( empty( $content ) ) {
 			$content = self::get_default_template_content( $name );
+		}
+
+		// Ensure directory is writable before attempting to write
+		if ( ! is_writable( $dir ) ) {
+			return false;
 		}
 
 		// Write file

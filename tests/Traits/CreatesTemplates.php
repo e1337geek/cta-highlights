@@ -28,6 +28,15 @@ trait CreatesTemplates {
 	 */
 	protected function setupTemplates() {
 		$this->created_template_files = array();
+
+		// Ensure template directories exist
+		$locations = array( 'theme', 'parent', 'plugin' );
+		foreach ( $locations as $location ) {
+			$dir = TemplateFactory::get_directory( $location );
+			if ( $dir && ! file_exists( $dir ) ) {
+				wp_mkdir_p( $dir );
+			}
+		}
 	}
 
 	/**

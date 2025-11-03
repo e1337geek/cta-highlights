@@ -112,18 +112,25 @@ class CTAFactory {
 	/**
 	 * Create a circular fallback chain (for testing error handling)
 	 *
+	 * @param int $size Number of CTAs in chain (minimum 2).
 	 * @return array Array of CTA IDs.
 	 */
-	public static function create_circular_chain() {
+	public static function create_circular_chain( $size = 2 ) {
 		$database = new Database();
+		$ids = array();
 
-		$id1 = self::create( array( 'name' => 'CTA 1' ) );
-		$id2 = self::create( array( 'name' => 'CTA 2', 'fallback_cta_id' => $id1 ) );
+		// Create CTAs
+		for ( $i = 0; $i < $size; $i++ ) {
+			$ids[] = self::create( array( 'name' => 'CTA ' . ( $i + 1 ) ) );
+		}
 
-		// Create circular reference
-		$database->update( $id1, array( 'fallback_cta_id' => $id2 ) );
+		// Link them in a chain with last pointing to first (circular)
+		for ( $i = 0; $i < $size; $i++ ) {
+			$next_index = ( $i + 1 ) % $size; // Wrap around to create circle
+			$database->update( $ids[ $i ], array( 'fallback_cta_id' => $ids[ $next_index ] ) );
+		}
 
-		return array( $id1, $id2 );
+		return $ids;
 	}
 
 	/**
@@ -169,5 +176,16 @@ class CTAFactory {
 	 */
 	public static function defaults() {
 		return self::$defaults;
+	}
+
+	/**
+	 * Get CTA data from database by ID
+	 *
+	 * @param int $cta_id CTA ID.
+	 * @return array|null CTA data or null if not found.
+	 */
+	public static function get_cta_data( $cta_id ) {
+		$database = new Database();
+		return $database->get( $cta_id );
 	}
 }
