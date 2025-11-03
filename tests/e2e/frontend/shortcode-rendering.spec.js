@@ -43,13 +43,10 @@ test.describe('Shortcode Rendering', () => {
 			});
 
 			// Publish post
-			await page.click('#publish');
-			await page.waitForSelector('.notice-success');
+			await adminPage.publish();
 
 			// Get permalink
-			const permalink = await page
-				.locator('#sample-permalink a')
-				.getAttribute('href');
+			const permalink = await adminPage.getPermalink();
 
 			// Visit frontend
 			await frontendPage.goto(permalink);

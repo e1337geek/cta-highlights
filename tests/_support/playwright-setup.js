@@ -246,7 +246,7 @@ async function createTestData(page, baseURL) {
  * Save authentication state for test reuse
  */
 async function saveAuthState(context) {
-	const authFile = path.join(__dirname, '..', '_output', 'auth-state.json');
+	const authFile = path.join(__dirname, '..', '_output', '.auth', 'admin.json');
 
 	// Ensure directory exists
 	const dir = path.dirname(authFile);

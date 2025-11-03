@@ -67,9 +67,13 @@ class CTAAdminPage {
 	 * Wait for WordPress admin page to load
 	 */
 	async waitForPageLoad() {
+		// Wait for admin bar to be attached (don't require visible, as it may be hidden on some pages)
 		await this.page.waitForSelector(this.selectors.adminBar, {
-			state: 'visible',
+			state: 'attached',
 		});
+		// Wait for page to be loaded
+		await this.page.waitForLoadState('domcontentloaded');
+		// Wait for any active spinners to finish
 		await this.page
 			.waitForSelector('.spinner.is-active', {
 				state: 'hidden',
@@ -92,7 +96,18 @@ class CTAAdminPage {
 	 * @param {string} title - CTA title
 	 */
 	async fillTitle(title) {
-		await this.page.fill(this.selectors.titleInput, title);
+		const isBlockEditor =
+			(await this.page.locator(this.selectors.blockEditor).count()) > 0;
+
+		if (isBlockEditor) {
+			// Block Editor - use the aria-label selector
+			const titleSelector = '.editor-post-title__input, [aria-label="Add title"]';
+			await this.page.click(titleSelector);
+			await this.page.fill(titleSelector, title);
+		} else {
+			// Classic Editor
+			await this.page.fill(this.selectors.titleInput, title);
+		}
 	}
 
 	/**
@@ -250,8 +265,29 @@ class CTAAdminPage {
 	 * Publish CTA
 	 */
 	async publish() {
-		await this.page.click(this.selectors.publishButton);
-		await this.waitForNotice('success');
+		const isBlockEditor =
+			(await this.page.locator(this.selectors.blockEditor).count()) > 0;
+
+		if (isBlockEditor) {
+			// Block Editor - use role-based selector
+			const publishButton = this.page.getByRole('button', { name: /^Publish/i });
+			await publishButton.click();
+
+			// Check if pre-publish panel appears
+			await this.page.waitForTimeout(500);
+			const confirmPublish = this.page.getByRole('button', { name: /^Publish/i }).last();
+			const isVisible = await confirmPublish.isVisible().catch(() => false);
+			if (isVisible) {
+				await confirmPublish.click();
+			}
+
+			// Wait for publish to complete
+			await this.page.waitForTimeout(1000);
+		} else {
+			// Classic Editor
+			await this.page.click(this.selectors.publishButton);
+			await this.waitForNotice('success');
+		}
 	}
 
 	/**
@@ -300,6 +336,57 @@ class CTAAdminPage {
 		const url = this.page.url();
 		const match = url.match(/post=(\d+)/);
 		return match ? match[1] : null;
+	}
+
+	/**
+	 * Get post permalink after publishing
+	 *
+	 * @return {Promise<string>} - Post permalink URL
+	 */
+	async getPermalink() {
+		const isBlockEditor =
+			(await this.page.locator(this.selectors.blockEditor).count()) > 0;
+
+		if (isBlockEditor) {
+			// Block Editor - get from sample permalink or editor header
+			const samplePermalink = await this.page
+				.locator('#sample-permalink a')
+				.getAttribute('href')
+				.catch(() => null);
+
+			if (samplePermalink) {
+				return samplePermalink;
+			}
+
+			// Fallback: construct from post ID
+			const postId = await this.getCurrentPostId();
+			return `${this.page.url().split('/wp-admin')[0]}/?p=${postId}`;
+		} else {
+			// Classic Editor - get from permalink field or construct from post ID
+			const permalinkInput = await this.page
+				.locator('#sample-permalink a')
+				.getAttribute('href')
+				.catch(() => null);
+
+			if (permalinkInput) {
+				return permalinkInput;
+			}
+
+			// After publishing, get from the Permalink field
+			const permalinkField = await this.page
+				.locator('.edit-slug-box a')
+				.getAttribute('href')
+				.catch(() => null);
+
+			if (permalinkField) {
+				return permalinkField;
+			}
+
+			// Fallback: construct from post ID
+			const postId = await this.getCurrentPostId();
+			const baseUrl = this.page.url().split('/wp-admin')[0];
+			return `${baseUrl}/?p=${postId}`;
+		}
 	}
 
 	/**

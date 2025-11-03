@@ -15,11 +15,12 @@ class CTAFrontendPage {
 
 		// Selectors
 		this.selectors = {
-			// CTA elements
+			// CTA elements (matching actual template structure)
 			ctaWrapper: '.cta-highlights-wrapper',
-			ctaContent: '.cta-highlights-content',
-			ctaTitle: '.cta-highlights-title',
+			ctaContent: '.cta-content',
+			ctaTitle: '.cta-title',
 			ctaInner: '.cta-highlights-inner',
+			ctaContainer: '.cta-container',
 			closeButton: '.cta-highlights-close',
 
 			// Highlight effect
