@@ -96,13 +96,13 @@ class Handler {
 
 		$template_path = $this->template_loader->locate_template( $template_name );
 
-		// Fallback to default template if requested template not found
+		// Fallback to default template if requested template not found.
 		if ( ! $template_path && 'default' !== $template_name ) {
 			$template_path = $this->template_loader->locate_template( 'default' );
 			$template_name = 'default';
 		}
 
-		// Only show error if even the default template is missing
+		// Only show error if even the default template is missing.
 		if ( ! $template_path ) {
 			return $this->render_error( $template_name );
 		}
@@ -110,7 +110,7 @@ class Handler {
 		$processed_content = $this->process_content( $content );
 		$atts['content']   = $processed_content;
 
-		// Also set cta_content if not already set (for template compatibility)
+		// Also set cta_content if not already set (for template compatibility).
 		if ( empty( $atts['cta_content'] ) && ! empty( $processed_content ) ) {
 			$atts['cta_content'] = $processed_content;
 		}
@@ -154,16 +154,16 @@ class Handler {
 	 */
 	private function map_attribute_aliases( array $atts ) {
 		$alias_map = array(
-			// Short names to full names
+			// Short names to full names.
 			'title'       => 'cta_title',
-			'text'        => 'cta_title',  // For backwards compatibility
+			'text'        => 'cta_title',  // For backwards compatibility.
 			'content'     => 'cta_content',
 			'button_text' => 'cta_button_text',
 			'button_url'  => 'cta_button_url',
 			'button'      => 'cta_button_text',
 			'link'        => 'cta_button_url',
 			'duration'    => 'highlight_duration',
-			// Alternate names
+			// Alternate names.
 			'cta_text'    => 'cta_title',
 			'cta_button'  => 'cta_button_text',
 			'cta_link'    => 'cta_button_url',
@@ -192,42 +192,42 @@ class Handler {
 		$sanitized = array();
 
 		foreach ( $atts as $key => $value ) {
-			// Skip if not a string (already sanitized types)
+			// Skip if not a string (already sanitized types).
 			if ( ! is_string( $value ) ) {
 				$sanitized[ $key ] = $value;
 				continue;
 			}
 
-			// Sanitize based on attribute type
+			// Sanitize based on attribute type.
 			switch ( $key ) {
 				case 'cta_link':
 				case 'cta_button_url':
 				case 'cta_logo_img':
 				case 'cta_logo_link':
-					// URL attributes - use esc_url_raw to sanitize
+					// URL attributes - use esc_url_raw to sanitize.
 					$sanitized[ $key ] = esc_url_raw( $value );
 					break;
 
 				case 'custom_class':
-					// Class attribute - already sanitized in build_wrapper_html
+					// Class attribute - already sanitized in build_wrapper_html.
 					$sanitized[ $key ] = $value;
 					break;
 
 				case 'highlight':
 				case 'template':
 				case 'alignment':
-					// Safe attribute values - these are validated elsewhere
+					// Safe attribute values - these are validated elsewhere.
 					$sanitized[ $key ] = $value;
 					break;
 
 				case 'highlight_duration':
-					// Numeric value
+					// Numeric value.
 					$sanitized[ $key ] = (string) absint( $value );
 					break;
 
 				case 'content':
 				case 'cta_content':
-					// Content can contain safe HTML - use wp_kses_post
+					// Content can contain safe HTML - use wp_kses_post.
 					$sanitized[ $key ] = wp_kses_post( $value );
 					break;
 
@@ -238,8 +238,8 @@ class Handler {
 				case 'background':
 				case 'text_color':
 				default:
-					// Text attributes - strip all HTML tags and event handlers
-					// This prevents XSS attempts including event handlers and script injection
+					// Text attributes - strip all HTML tags and event handlers.
+					// This prevents XSS attempts including event handlers and script injection.
 					$sanitized[ $key ] = sanitize_text_field( $value );
 					break;
 			}

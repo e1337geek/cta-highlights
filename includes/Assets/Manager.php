@@ -95,18 +95,18 @@ class Manager {
 	private function detect_shortcode() {
 		global $post;
 
-		// Check post content on singular pages
+		// Check post content on singular pages.
 		if ( is_singular() && $post instanceof \WP_Post && has_shortcode( $post->post_content, 'cta_highlights' ) ) {
 			return true;
 		}
 
-		// Check widgets (can appear on any page type)
+		// Check widgets (can appear on any page type).
 		if ( $this->check_widgets_for_shortcode() ) {
 			return true;
 		}
 
-		// Only check force_enqueue filter on singular pages
-		// This prevents auto-insertion logic from enqueueing assets on archive pages
+		// Only check force_enqueue filter on singular pages.
+		// This prevents auto-insertion logic from enqueueing assets on archive pages.
 		if ( is_singular() ) {
 			$force_enqueue = apply_filters( 'cta_highlights_force_enqueue', false );
 

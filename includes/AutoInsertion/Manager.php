@@ -178,7 +178,7 @@ class Manager {
 		$chain   = array( $cta );
 		$visited = array( $cta['id'] );
 		$current = $cta;
-		$depth   = 1; // Start at 1 since we already have the initial CTA
+		$depth   = 1; // Start at 1 since we already have the initial CTA.
 
 		// Follow the fallback chain.
 		while ( ! empty( $current['fallback_cta_id'] ) && $depth < self::MAX_FALLBACK_DEPTH ) {

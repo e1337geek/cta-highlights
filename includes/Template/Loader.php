@@ -58,7 +58,7 @@ class Loader {
 	 * @return string|null Template file path or null if not found.
 	 */
 	public function locate_template( $template_name ) {
-		// Log security event if path traversal is attempted
+		// Log security event if path traversal is attempted.
 		if ( $this->contains_path_traversal( $template_name ) ) {
 			$this->log_security_event( 'Path traversal attempt in template name: ' . $template_name );
 		}
@@ -169,7 +169,7 @@ class Loader {
 	 * @return string Rendered template output.
 	 */
 	public function render( $template_path, array $template_args = array() ) {
-		// If template_path doesn't exist as a file, try to locate it as a template name
+		// If template_path doesn't exist as a file, try to locate it as a template name.
 		if ( ! file_exists( $template_path ) ) {
 			$located = $this->locate_template( $template_path );
 			if ( $located ) {
@@ -211,7 +211,7 @@ class Loader {
 
 		do_action( 'cta_highlights_before_template_include', $template_path, $view );
 
-		// Verify file exists before including to prevent errors
+		// Verify file exists before including to prevent errors.
 		if ( file_exists( $template_path ) && is_readable( $template_path ) ) {
 			include $template_path;
 		} else {
@@ -242,7 +242,7 @@ class Loader {
 	 * @return bool True if path traversal detected.
 	 */
 	private function contains_path_traversal( $string ) {
-		// Check for common path traversal patterns
+		// Check for common path traversal patterns.
 		$patterns = array(
 			'../',
 			'..\\',
@@ -316,7 +316,7 @@ class Loader {
 			}
 		}
 
-		// Return associative array keyed by template name
+		// Return associative array keyed by template name.
 		return $templates;
 	}
 }
