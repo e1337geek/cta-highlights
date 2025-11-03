@@ -199,16 +199,26 @@ class CTAFrontendPage {
 	 * Clear localStorage cooldowns
 	 */
 	async clearCooldowns() {
-		await this.page.evaluate(() => {
-			const keys = [];
-			for (let i = 0; i < window.localStorage.length; i++) {
-				const key = window.localStorage.key(i);
-				if (key.startsWith('cta_highlights_')) {
-					keys.push(key);
+		try {
+			await this.page.evaluate(() => {
+				// Check if localStorage is available (won't be on about:blank)
+				if (typeof window.localStorage === 'undefined') {
+					return;
 				}
-			}
-			keys.forEach((key) => window.localStorage.removeItem(key));
-		});
+
+				const keys = [];
+				for (let i = 0; i < window.localStorage.length; i++) {
+					const key = window.localStorage.key(i);
+					if (key.startsWith('cta_highlights_')) {
+						keys.push(key);
+					}
+				}
+				keys.forEach((key) => window.localStorage.removeItem(key));
+			});
+		} catch (error) {
+			// Ignore localStorage errors (e.g., on about:blank or file:// URLs)
+			// This is expected in beforeEach when no page is loaded yet
+		}
 	}
 
 	/**
