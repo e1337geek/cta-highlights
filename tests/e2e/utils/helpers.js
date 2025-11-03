@@ -10,8 +10,11 @@
  * @param {import('@playwright/test').Page} page - Playwright page
  */
 async function waitForAdminPage(page) {
-	// Wait for admin bar (indicates WordPress is loaded)
-	await page.waitForSelector('#wpadminbar', { state: 'visible' });
+	// Wait for admin bar (indicates WordPress is loaded) - use 'attached' not 'visible' as it may be hidden on some pages
+	await page.waitForSelector('#wpadminbar', { state: 'attached' });
+
+	// Wait for page to be loaded
+	await page.waitForLoadState('domcontentloaded');
 
 	// Wait for any loading spinners to disappear
 	await page
