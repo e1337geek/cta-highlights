@@ -52,6 +52,9 @@ module.exports = defineConfig({
 		// Base URL for tests
 		baseURL: process.env.WP_BASE_URL || 'http://localhost:8888',
 
+		// Load authentication state from setup
+		storageState: 'tests/_output/.auth/admin.json',
+
 		// Collect trace when retrying the failed test
 		trace: 'on-first-retry',
 
