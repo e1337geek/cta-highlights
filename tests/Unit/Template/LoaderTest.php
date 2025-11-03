@@ -414,9 +414,14 @@ class LoaderTest extends WP_UnitTestCase {
 	 * PRIORITY: MEDIUM (error handling)
 	 */
 	public function it_rejects_unreadable_files() {
-		// Skip on Windows as chmod works differently
+		// Skip on Windows as chmod works differently.
 		if ( 'WIN' === strtoupper( substr( PHP_OS, 0, 3 ) ) ) {
 			$this->markTestSkipped( 'Chmod test not applicable on Windows' );
+		}
+
+		// Skip in Docker/CI environments where chmod doesn't restrict root access.
+		if ( function_exists( 'posix_geteuid' ) && posix_geteuid() === 0 ) {
+			$this->markTestSkipped( 'Test cannot run as root user (chmod restrictions do not apply)' );
 		}
 
 		$template_path = $this->createTemplate(
@@ -425,16 +430,16 @@ class LoaderTest extends WP_UnitTestCase {
 			'plugin'
 		);
 
-		// Make file unreadable (chmod 000)
+		// Make file unreadable (chmod 000).
 		if ( $template_path ) {
 			chmod( $template_path, 0000 );
 
-			// Clear cache to force fresh lookup
+			// Clear cache to force fresh lookup.
 			$this->loader->clear_cache();
 
 			$result = $this->loader->locate_template( 'unreadable' );
 
-			// Restore permissions for cleanup
+			// Restore permissions for cleanup.
 			chmod( $template_path, 0644 );
 
 			$this->assertNull(
