@@ -238,10 +238,10 @@ class Loader {
 	/**
 	 * Check if a string contains path traversal characters.
 	 *
-	 * @param string $string String to check.
+	 * @param string $input String to check.
 	 * @return bool True if path traversal detected.
 	 */
-	private function contains_path_traversal( $string ) {
+	private function contains_path_traversal( $input ) {
 		// Check for common path traversal patterns.
 		$patterns = array(
 			'../',
@@ -252,7 +252,7 @@ class Loader {
 			'%2e%2e\\',
 		);
 
-		$lower_string = strtolower( $string );
+		$lower_string = strtolower( $input );
 
 		foreach ( $patterns as $pattern ) {
 			if ( false !== strpos( $lower_string, $pattern ) ) {
