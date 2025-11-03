@@ -204,7 +204,7 @@ class Loader {
 		$content      = $view->get( 'content', '' );
 		$custom_class = $view->get( 'custom_class', '' );
 
-		// Also make view available as $data for backwards compatibility
+		// Also make view available as $data for backwards compatibility.
 		$data = $view;
 
 		ob_start();
